@@ -325,7 +325,7 @@ export default class ConsistentEvaluationPage extends LocalizeMixin(LitElement) 
 		this.submissionInfo = undefined;
 		this._fileEvidenceUrl = undefined;
 		this._textEvidence = undefined;
-		this.userProgressOutcomeHref = undefined;
+		//this.userProgressOutcomeHref = undefined;
 	}
 
 	_hideScrollbars() {
