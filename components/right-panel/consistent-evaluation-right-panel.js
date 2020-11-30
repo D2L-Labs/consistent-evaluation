@@ -59,13 +59,9 @@ export class ConsistentEvaluationRightPanel extends LocalizeConsistentEvaluation
 				attribute: false,
 				type: Object
 			},
-			rubricAssessmentHref: {
-				attribute: 'rubric-assessment-href',
-				type: String
-			},
-			rubricHref: {
-				attribute: 'rubric-href',
-				type: String
+			rubricHrefs: {
+				attribute: false,
+				type: Object
 			},
 			evaluationHref: {
 				attribute: 'evaluation-href',
@@ -117,8 +113,7 @@ export class ConsistentEvaluationRightPanel extends LocalizeConsistentEvaluation
 			return html`
 				<d2l-consistent-evaluation-rubric
 					header=${this.localize('rubrics')}
-					href=${this.rubricHref}
-					assessment-href=${ifDefined(this.rubricAssessmentHref)}
+					.rubricHrefs=${this.rubricHrefs}
 					.token=${this.token}
 					?read-only=${this.rubricReadOnly}
 					@d2l-rubric-total-score-changed=${this._syncRubricGrade}
