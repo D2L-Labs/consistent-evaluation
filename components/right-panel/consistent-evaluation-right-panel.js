@@ -61,7 +61,7 @@ export class ConsistentEvaluationRightPanel extends LocalizeConsistentEvaluation
 			},
 			rubricHrefs: {
 				attribute: false,
-				type: Object
+				type: Array
 			},
 			evaluationHref: {
 				attribute: 'evaluation-href',

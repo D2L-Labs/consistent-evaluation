@@ -11,7 +11,7 @@ class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(LitElement
 			},
 			rubricHrefs: {
 				attribute: false,
-				type: Object
+				type: Array
 			},
 			token: {
 				type: String
@@ -32,9 +32,11 @@ class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(LitElement
 	}
 
 	_getRubrics() {
-		const rubrics = [];
-		this.rubricHrefs.forEach(rubric => {
-			rubrics.push(html`
+		const rubrics =	this.rubricHrefs.map(rubric => {
+			if (!rubric) {
+				return html``;
+			}
+			return html`
 				<div class="d2l-consistent-evaluation-rubric">
 					<d2l-rubric
 						href=${rubric.rubricHref}
@@ -46,7 +48,7 @@ class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(LitElement
 						selected
 					></d2l-rubric>
 				</div>
-			`);
+			`;
 		});
 
 		return html`${rubrics}`;

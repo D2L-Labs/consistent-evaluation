@@ -78,8 +78,8 @@ export class ConsistentEvaluationHrefController {
 					if (assessmentEntity && assessmentEntity.entity) {
 						const rubricHref = this._getHref(assessmentEntity.entity, rubricRel);
 						return {
-							'rubricHref' : rubricHref,
-							'rubricAssessmentHref' : rubricAssessmentHref
+							rubricHref,
+							rubricAssessmentHref
 						};
 					}
 				}));

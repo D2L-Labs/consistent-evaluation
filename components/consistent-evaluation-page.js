@@ -53,7 +53,7 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 			},
 			rubricHrefs: {
 				attribute: false,
-				type: Object
+				type: Array
 			},
 			rubricReadOnly: {
 				attribute: 'rubric-read-only',
