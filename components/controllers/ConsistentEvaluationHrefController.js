@@ -77,9 +77,16 @@ export class ConsistentEvaluationHrefController {
 					const assessmentEntity = await this._getEntityFromHref(rubricAssessmentHref, bypassCache);
 					if (assessmentEntity && assessmentEntity.entity) {
 						const rubricHref = this._getHref(assessmentEntity.entity, rubricRel);
+						const rubricEntity = await this._getEntityFromHref(rubricHref, bypassCache);
+						const rubricTitle = rubricEntity.entity.properties.name;
+						const rubricId = rubricEntity.entity.properties.rubricId;
+						console.log(rubricId);
+
 						return {
 							rubricHref,
-							rubricAssessmentHref
+							rubricAssessmentHref,
+							rubricTitle,
+							rubricId
 						};
 					}
 				}));

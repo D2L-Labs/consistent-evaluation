@@ -219,6 +219,8 @@ export class ConsistentEvaluationRightPanel extends LocalizeConsistentEvaluation
 	}
 
 	_syncRubricGrade(e) {
+		const test = e.target.getAttribute("rubric-id");
+
 		if (e.detail.score === null || !this.allowEvaluationWrite) {
 			return;
 		}

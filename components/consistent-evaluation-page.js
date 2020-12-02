@@ -337,6 +337,17 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 		);
 	}
 
+	async _transientSaveActiveScoringRubric(e) {
+		await this._mutex.dispatch(
+			async() => {
+				const entity = await this._controller.fetchEvaluationEntity(false);
+				const rubricId = e.detail.rubricId;
+
+				this.evaluationEntity = await this._controller.transientSaveActiveScoringRubric(entity, rubricId);
+			}
+		);
+	}
+
 	async _transientSaveCoaEvalOverride(e) {
 		// Call transientSaveFeedback to 'unsave' the evaluation
 		if (e.detail && e.detail.sirenActionPromise) {
@@ -724,6 +735,7 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 						@on-d2l-consistent-eval-feedback-edit=${this._transientSaveFeedback}
 						@on-d2l-consistent-eval-grade-changed=${this._transientSaveGrade}
 						@d2l-outcomes-coa-eval-override-change=${this._transientSaveCoaEvalOverride}
+						@d2l-consistent-eval-active-scoring-rubric-change=${this._transientSaveActiveScoringRubric}
 					></consistent-evaluation-right-panel>
 				</div>
 				<div slot="footer">
