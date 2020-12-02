@@ -15,7 +15,6 @@ describe('d2l-consistent-evaluation-submissions-page', () => {
 		page = await visualDiff.createPage(browser, { viewport: { width: 1000, height: 2000 } });
 		await page.goto(`${visualDiff.getBaseUrl()}/test/perceptual/consistent-evaluation-submissions-page.visual-diff.html`, { waitUntil: ['networkidle0', 'load'] });
 		await page.bringToFront();
-		await visualDiff.disableAnimations(page);
 	});
 
 	after(async() => await browser.close());
