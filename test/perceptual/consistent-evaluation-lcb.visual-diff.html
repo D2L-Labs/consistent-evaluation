@@ -10,30 +10,19 @@
 			import '@brightspace-ui/core/components/typography/typography.js';
 			import '../../components/header/d2l-consistent-evaluation-learner-context-bar.js';
 
-			fetch('data/submission1.json').then(response => response.json()).then(entity => {
-				const submissionList = [{'href' : entity}, {'href' : entity}, {'href' : entity}];
-				const panels = document.getElementsByTagName('d2l-consistent-evaluation-learner-context-bar');
-				for (let i = 0; i < panels.length; i++) {
-					if (panels[i].id === 'lcb-is-exempt') {
-						panels[i].submissionInfo = { 'isExempt': 'true', 'submissionList': submissionList};
-						continue;
-					}
-					panels[i].submissionInfo = {'submissionList': submissionList};
+			const submissionList = [
+				{'href': 'data/submission3.json'},
+				{'href': 'data/submission2.json'},
+				{'href': 'data/submission1.json'}];
+
+			const panels = document.getElementsByTagName('d2l-consistent-evaluation-learner-context-bar');
+			for (let i = 0; i < panels.length; i++) {
+				if (panels[i].id === 'lcb-is-exempt') {
+					panels[i].submissionInfo = { 'isExempt': 'true', submissionList: submissionList};
+					continue;
 				}
-			});
-
-			// const submissionList = [
-			// 	{'href': 'data/submission3.json'},
-			// 	{'href': 'data/submission2.json'},
-			// 	{'href': 'data/submission1.json'}];
-			// const panels = document.getElementsByTagName('d2l-consistent-evaluation-learner-context-bar');
-			// for (let i = 0; i < panels.length; i++) {
-			// 	if (panels[i].id === 'lcb-is-exempt') {
-			// 		panels[i].submissionInfo = { 'isExempt': 'true', 'submissionList': submissionList};
-			// 		continue;
-			// 	}
-			// 	panels[i].submissionInfo = {'submissionList': submissionList};
-
+				panels[i].submissionInfo = {submissionList: submissionList};
+			}
 		</script>
 		<style>
 			html {
@@ -46,6 +35,14 @@
 		</style>
 	</head>
 	<body class="d2l-typography">
+
+		<div id="skeleton">
+			<d2l-consistent-evaluation-learner-context-bar
+				user-href="data/user.json"
+				token="token"
+				skeleton="skeleton"
+			></d2l-consistent-evaluation-learner-context-bar>
+		</div>
 
 		<div id="default">
 			<d2l-consistent-evaluation-learner-context-bar
