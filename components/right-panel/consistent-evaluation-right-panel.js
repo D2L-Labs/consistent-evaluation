@@ -28,10 +28,6 @@ export class ConsistentEvaluationRightPanel extends LocalizeConsistentEvaluation
 				attribute: 'allow-record-audio',
 				type: Boolean
 			},
-			attachmentsHref: {
-				attribute: 'attachments-href',
-				type: String
-			},
 			feedbackText: {
 				attribute: false
 			},
@@ -186,7 +182,6 @@ export class ConsistentEvaluationRightPanel extends LocalizeConsistentEvaluation
 					.feedbackText=${this.feedbackText}
 					.attachments=${this.feedbackAttachments}
 					.richTextEditorConfig=${this.richTextEditorConfig}
-					attachments-href=${ifDefined(this.attachmentsHref)}
 				></d2l-consistent-evaluation-feedback-presentational>
 			`;
 		}
