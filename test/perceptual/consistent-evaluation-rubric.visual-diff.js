@@ -12,7 +12,7 @@ describe('d2l-consistent-evaluation-rubric', () => {
 			headless: true,
 			args: ['--no-sandbox', '--disable-setuid-sandbox', '--lang=en-GB']
 		});
-		page = await visualDiff.createPage(browser, { viewport: { width: 900, height: 900 } });
+		page = await visualDiff.createPage(browser, { viewport: { width: 1000, height: 1000 } });
 		await page.goto(`${visualDiff.getBaseUrl()}/test/perceptual/consistent-evaluation-rubric.visual-diff.html`, { waitUntil: ['networkidle0', 'load'] });
 		await page.bringToFront();
 	});
@@ -21,6 +21,11 @@ describe('d2l-consistent-evaluation-rubric', () => {
 
 	it('renders rubric', async function() {
 		const rect = await visualDiff.getRect(page, '#default');
+		await visualDiff.screenshotAndCompare(page, this.test.fullTitle(), { clip: rect });
+	});
+
+	it('renders multiple rubrics', async function() {
+		const rect = await visualDiff.getRect(page, '#multiple-rubrics');
 		await visualDiff.screenshotAndCompare(page, this.test.fullTitle(), { clip: rect });
 	});
 });
