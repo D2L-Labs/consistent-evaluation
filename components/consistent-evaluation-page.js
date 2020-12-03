@@ -336,8 +336,8 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 			async() => {
 				const entity = await this._controller.fetchEvaluationEntity(false);
 
-				const fileSelfLink = e.detail.file;
-				this.evaluationEntity = await this._controller.transientRemoveFeedbackAttachment(entity, fileSelfLink);
+				const fileIdentifier = e.detail.file;
+				this.evaluationEntity = await this._controller.transientRemoveFeedbackAttachment(entity, fileIdentifier);
 			}
 		);
 
@@ -751,7 +751,6 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 						rubric-assessment-href=${ifDefined(this.rubricAssessmentHref)}
 						outcomes-href=${ifDefined(this.outcomesHref)}
 						coa-eval-override-href=${ifDefined(this.coaDemonstrationHref)}
-						attachments-href=${ifDefined(this._getAttachmentsLink())}
 						.richTextEditorConfig=${this._getRichTextEditorConfig()}
 						.grade=${this._grade}
 						.gradeItemInfo=${this.gradeItemInfo}
