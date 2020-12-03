@@ -18,6 +18,7 @@ import { ifDefined } from 'lit-html/directives/if-defined.js';
 import { LocalizeConsistentEvaluation } from '../lang/localize-consistent-evaluation.js';
 import { Rels } from 'd2l-hypermedia-constants';
 import { SkeletonMixin } from '@brightspace-ui/core/components/skeleton/skeleton-mixin.js';
+import { TransientSaveAwaiter } from './transient-save-awaiter.js';
 
 const DIALOG_ACTION_LEAVE = 'leave';
 const DIALOG_ACTION_DISCARD = 'discard';
@@ -50,13 +51,9 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 				attribute: 'special-access-href',
 				type: String
 			},
-			rubricAssessmentHref: {
-				attribute: 'rubric-assessment-href',
-				type: String
-			},
-			rubricHref: {
-				attribute: 'rubric-href',
-				type: String
+			rubricHrefs: {
+				attribute: false,
+				type: Array
 			},
 			rubricReadOnly: {
 				attribute: 'rubric-read-only',
@@ -126,6 +123,9 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 			_feedbackText: {
 				attribute: false
 			},
+			_attachmentsInfo: {
+				attribute: false
+			},
 			_grade: {
 				attribute: false
 			},
@@ -172,11 +172,18 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 		this._token = undefined;
 		this._controller = undefined;
 		this._evaluationEntity = undefined;
+		this._attachmentsInfo = {
+			canAddFeedbackFile: false,
+			canRecordFeedbackVideo: false,
+			canRecordFeedbackAudio: false,
+			attachments: []
+		};
 		this._displayToast = false;
 		this._toastMessage = '';
 		this._mutex = new Awaiter();
 		this._unsavedChangesDialogOpened = false;
 		this.unsavedChangesHandler = this._confirmUnsavedChangesBeforeUnload.bind(this);
+		this._transientSaveAwaiter = new TransientSaveAwaiter();
 	}
 
 	get evaluationEntity() {
@@ -264,6 +271,7 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 		this._controller = new ConsistentEvaluationController(this._evaluationHref, this._token);
 		const bypassCache = true;
 		this.evaluationEntity = await this._controller.fetchEvaluationEntity(bypassCache);
+		this._attachmentsInfo = await this._controller.fetchAttachments(this.evaluationEntity);
 	}
 
 	_noFeedbackComponent() {
@@ -310,6 +318,32 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 		);
 	}
 
+	async _transientAddAttachment(e) {
+		await this._mutex.dispatch(
+			async() => {
+				const entity = await this._controller.fetchEvaluationEntity(false);
+
+				const files = e.detail.files;
+				this.evaluationEntity = await this._controller.transientAddFeedbackAttachment(entity, files);
+			}
+		);
+
+		this._attachmentsInfo = await this._controller.fetchAttachments(this.evaluationEntity);
+	}
+
+	async _transientRemoveAttachment(e) {
+		await this._mutex.dispatch(
+			async() => {
+				const entity = await this._controller.fetchEvaluationEntity(false);
+
+				const fileIdentifier = e.detail.file;
+				this.evaluationEntity = await this._controller.transientRemoveFeedbackAttachment(entity, fileIdentifier);
+			}
+		);
+
+		this._attachmentsInfo = await this._controller.fetchAttachments(this.evaluationEntity);
+	}
+
 	async _transientSaveGrade(e) {
 		await this._mutex.dispatch(
 			async() => {
@@ -339,8 +373,12 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 		);
 	}
 
-	async _transientSaveCoaEvalOverride() {
+	async _transientSaveCoaEvalOverride(e) {
 		// Call transientSaveFeedback to 'unsave' the evaluation
+		if (e.detail && e.detail.sirenActionPromise) {
+			this._transientSaveAwaiter.addTransientSave(e.detail.sirenActionPromise);
+		}
+
 		await this._mutex.dispatch(
 			async() => {
 				const entity = await this._controller.fetchEvaluationEntity(false);
@@ -355,6 +393,7 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 			bubbles: true
 		}));
 
+		await this._transientSaveAwaiter.awaitAllTransientSaves();
 		await this._mutex.dispatch(
 			async() => {
 				const entity = await this._controller.fetchEvaluationEntity(false);
@@ -375,6 +414,7 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 			bubbles: true
 		}));
 
+		await this._transientSaveAwaiter.awaitAllTransientSaves();
 		await this._mutex.dispatch(
 			async() => {
 				const entity = await this._controller.fetchEvaluationEntity(false);
@@ -395,6 +435,7 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 			bubbles: true
 		}));
 
+		await this._transientSaveAwaiter.awaitAllTransientSaves();
 		await this._mutex.dispatch(
 			async() => {
 				const entity = await this._controller.fetchEvaluationEntity(false);
@@ -416,6 +457,7 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 			bubbles: true
 		}));
 
+		await this._transientSaveAwaiter.awaitAllTransientSaves();
 		await this._mutex.dispatch(
 			async() => {
 				const entity = await this._controller.fetchEvaluationEntity(false);
@@ -666,6 +708,11 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 	}
 
 	render() {
+		const canAddFeedbackFile = this._attachmentsInfo.canAddFeedbackFile;
+		const canRecordFeedbackVideo = this._attachmentsInfo.canRecordFeedbackVideo;
+		const canRecordFeedbackAudio = this._attachmentsInfo.canRecordFeedbackAudio;
+		const attachments = this._attachmentsInfo.attachments;
+
 		return html`
 			<d2l-template-primary-secondary
 				resizable
@@ -699,23 +746,28 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 					<consistent-evaluation-right-panel
 						evaluation-href=${ifDefined(this.evaluationHref)}
 						.feedbackText=${this._feedbackText}
-						rubric-href=${ifDefined(this.rubricHref)}
+						.rubricHrefs=${this.rubricHrefs}
+						.feedbackAttachments=${attachments}
 						rubric-assessment-href=${ifDefined(this.rubricAssessmentHref)}
 						outcomes-href=${ifDefined(this.outcomesHref)}
 						coa-eval-override-href=${ifDefined(this.coaDemonstrationHref)}
-						attachments-href=${ifDefined(this._getAttachmentsLink())}
 						.richTextEditorConfig=${this._getRichTextEditorConfig()}
 						.grade=${this._grade}
 						.gradeItemInfo=${this.gradeItemInfo}
 						.token=${this.token}
 						?rubric-read-only=${this.rubricReadOnly}
-						?hide-rubric=${this.rubricHref === undefined}
+						?hide-rubric=${this.rubricHrefs === undefined}
 						?hide-grade=${this._noGradeComponent()}
 						?hide-outcomes=${this.outcomesHref === undefined}
 						?hide-feedback=${this._noFeedbackComponent()}
 						?hide-coa-eval-override=${this.coaDemonstrationHref === undefined}
 						?allow-evaluation-write=${this._allowEvaluationWrite()}
+						?allow-add-file=${canAddFeedbackFile}
+						?allow-record-video=${canRecordFeedbackVideo}
+						?allow-record-audio=${canRecordFeedbackAudio}
 						@on-d2l-consistent-eval-feedback-edit=${this._transientSaveFeedback}
+						@on-d2l-consistent-eval-feedback-attachments-add=${this._transientAddAttachment}
+						@on-d2l-consistent-eval-feedback-attachments-remove=${this._transientRemoveAttachment}
 						@on-d2l-consistent-eval-grade-changed=${this._transientSaveGrade}
 						@d2l-outcomes-coa-eval-override-change=${this._transientSaveCoaEvalOverride}
 					></consistent-evaluation-right-panel>
