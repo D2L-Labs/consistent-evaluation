@@ -10,9 +10,17 @@ class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(LitElement
 			header: {
 				type: String
 			},
-			rubricHrefs: {
+			rubricInfo: {
 				attribute: false,
 				type: Array
+			},
+			activeScoringRubric: {
+				attribute: false,
+				type: Number
+			},
+			showSelector: {
+				attribute: 'show-selector',
+				type: Boolean
 			},
 			token: {
 				type: String
@@ -29,18 +37,47 @@ class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(LitElement
 			.d2l-consistent-evaluation-rubric:nth-child(n + 2) {
 				margin-top: 0.7rem;
 			}
+
+			.d2l-consistent-evaluation-active-scoring-rubric {
+				margin-top: 0.7rem;
+			}
 		`];
 	}
 
+	_syncRubricGrade(e) {
+		let score = e.detail.score;
+		if( score === null ) {
+			return
+		}
+
+		const targetRubricId = parseInt(e.target.getAttribute('rubric-id'));
+
+		if( this.activeScoringRubric != targetRubricId ) {
+			return;
+		}
+
+		let currentRubricInfo = this.rubricInfo.find(rubric => rubric.rubricId === targetRubricId);
+
+		this.dispatchEvent(new CustomEvent('d2l-consistent-eval-rubric-total-score-changed', {
+			composed: true,
+			bubbles: true,
+			detail: {
+				score: score,
+				rubricInfo: currentRubricInfo
+			}
+		}));
+	}
+
 	_getRubrics() {
-		const rubrics =	this.rubricHrefs.map(rubric => {
+		const rubrics =	this.rubricInfo.map(rubric => {
 			if (!rubric) {
 				return html``;
 			}
+
 			return html`
 				<div class="d2l-consistent-evaluation-rubric">
 					<d2l-rubric
-						rubric-id="${rubric.rubricHref}"
+						rubric-id=${rubric.rubricId}
 						href=${rubric.rubricHref}
 						assessment-href=${rubric.rubricAssessmentHref}
 						.token=${this.token}
@@ -48,6 +85,7 @@ class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(LitElement
 						force-compact
 						overall-score-flag
 						selected
+						@d2l-rubric-total-score-changed=${this._syncRubricGrade}
 					></d2l-rubric>
 				</div>
 			`;
@@ -69,15 +107,18 @@ class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(LitElement
 	}
 
 	_getRubricList() {
+		if(!this.showSelector) {
+			return html``;
+		}
 		return html`
-			<select class="d2l-input-select d2l-truncate" aria-label=${this.localize('userSubmissions')} @change=${this._onSelectChange}>
-				${this.rubricHrefs.map(rubric => {
+			<select class="d2l-input-select d2l-truncate d2l-consistent-evaluation-active-scoring-rubric" aria-label=${'ACTIVE SCORING RUBRIC (LT)'} @change=${this._onSelectChange}>
+				<option label=${'No scoring rubric (LT)'} ?selected=${!this.activeScoringRubric}></option>
+				${this.rubricInfo.map(rubric => {
 					return html`
-						<option value=${rubric.rubricId} label=${rubric.rubricTitle} class="select-option"></option>
+						<option value="${rubric.rubricId}" label=${rubric.rubricTitle} class="select-option" ?selected=${rubric.rubricId == this.activeScoringRubric}></option>
 					`
 				})}
 		`;
-
 	}
 
 	render() {

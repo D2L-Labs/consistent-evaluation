@@ -65,32 +65,11 @@ export class ConsistentEvaluationHrefController {
 			evaluationHref = this._getHref(root, evaluationRel);
 			nextHref = this._getHref(root, nextRel);
 			previousHref = this._getHref(root, previousRel);
-			rubricHrefs = this._getHrefs(root, assessmentRel);
 			actorHref = this._getHref(root, actorRel);
 			userHref = this._getHref(root, userRel);
 			alignmentsHref = this._getHref(root, alignmentsRel);
 			groupHref = this._getHref(root, groupRel);
 			userProgressOutcomeHref = this._getHref(root, userProgressOutcomeRel);
-
-			if (rubricHrefs) {
-				rubricHrefs = await Promise.all(rubricHrefs.map(async rubricAssessmentHref => {
-					const assessmentEntity = await this._getEntityFromHref(rubricAssessmentHref, bypassCache);
-					if (assessmentEntity && assessmentEntity.entity) {
-						const rubricHref = this._getHref(assessmentEntity.entity, rubricRel);
-						const rubricEntity = await this._getEntityFromHref(rubricHref, bypassCache);
-						const rubricTitle = rubricEntity.entity.properties.name;
-						const rubricId = rubricEntity.entity.properties.rubricId;
-						console.log(rubricId);
-
-						return {
-							rubricHref,
-							rubricAssessmentHref,
-							rubricTitle,
-							rubricId
-						};
-					}
-				}));
-			}
 
 			if (alignmentsHref) {
 				const alignmentsEntity = await this._getEntityFromHref(alignmentsHref, bypassCache);
@@ -256,5 +235,35 @@ export class ConsistentEvaluationHrefController {
 			}
 		}
 		return undefined;
+	}
+
+	async getRubricInfo() {
+		let rubricHrefs = undefined;
+		let root = await this._getRootEntity(false);
+		if (root && root.entity) {
+			rubricHrefs = this._getHrefs(root.entity, assessmentRel);
+			if (rubricHrefs) {
+				rubricHrefs = await Promise.all(rubricHrefs.map(async rubricAssessmentHref => {
+					const assessmentEntity = await this._getEntityFromHref(rubricAssessmentHref, false);
+					if (assessmentEntity && assessmentEntity.entity) {
+						const rubricHref = this._getHref(assessmentEntity.entity, rubricRel);
+						const rubricEntity = await this._getEntityFromHref(rubricHref, false);
+						const rubricTitle = rubricEntity.entity.properties.name;
+						const rubricId = rubricEntity.entity.properties.rubricId;
+						const rubricOutOf = rubricEntity.entity.properties.outOf;
+
+						return {
+							rubricHref,
+							rubricAssessmentHref,
+							rubricTitle,
+							rubricId,
+							rubricOutOf
+						};
+					}
+				}));
+			}
+		}
+
+		return rubricHrefs;
 	}
 }

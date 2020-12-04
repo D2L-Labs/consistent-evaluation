@@ -51,7 +51,7 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 				attribute: 'special-access-href',
 				type: String
 			},
-			rubricHrefs: {
+			rubricInfo: {
 				attribute: false,
 				type: Array
 			},
@@ -141,7 +141,11 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 			_unsavedAnnotationsDialogOpened: {
 				type: Boolean,
 				attribute: false
-			}
+			},
+			_activeScoringRubric: {
+				attribute: false,
+				type: Number
+			},
 		};
 	}
 
@@ -265,6 +269,16 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 			return this.localize('overallAchievement');
 		}
 		return this.organizationName;
+	}
+
+	get _activeScoringRubric() {
+		if (this.evaluationEntity ) {
+			const activeScoringRubricEntity = this.evaluationEntity.getSubEntityByRel('active-scoring-rubric');
+			if(activeScoringRubricEntity) {
+				return activeScoringRubricEntity.properties.activeScoringRubric;
+			}
+		}
+		return undefined;
 	}
 
 	async _initializeController() {
@@ -757,7 +771,8 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 					<consistent-evaluation-right-panel
 						evaluation-href=${ifDefined(this.evaluationHref)}
 						.feedbackText=${this._feedbackText}
-						.rubricHrefs=${this.rubricHrefs}
+						.rubricInfo=${this.rubricInfo}
+						.activeScoringRubric=${this._activeScoringRubric}
 						.feedbackAttachments=${attachments}
 						rubric-assessment-href=${ifDefined(this.rubricAssessmentHref)}
 						outcomes-href=${ifDefined(this.outcomesHref)}
@@ -768,7 +783,6 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 						.gradeItemInfo=${this.gradeItemInfo}
 						.token=${this.token}
 						?rubric-read-only=${this.rubricReadOnly}
-						?hide-rubric=${this.rubricHrefs === undefined}
 						?hide-grade=${this._noGradeComponent()}
 						?hide-outcomes=${this.outcomesHref === undefined}
 						?hide-feedback=${this._noFeedbackComponent()}

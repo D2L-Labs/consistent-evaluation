@@ -224,6 +224,11 @@ export class ConsistentEvaluationController {
 			throw new Error(ConsistentEvaluationControllerErrors.ACTIVE_SCORING_RUBRIC_NOT_FOUND);
 		}
 
+		if(!rubricId) {
+			//API requires a value
+			rubricId = '';
+		}
+
 		return await this._performAction(targetEntity, 'SetActiveScoringRubric', 'value', rubricId);
 	}
 
