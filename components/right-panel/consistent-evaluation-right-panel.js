@@ -5,7 +5,6 @@ import './consistent-evaluation-grade-result.js';
 import './consistent-evaluation-coa-eval-override.js';
 import { css, html, LitElement } from 'lit-element';
 import { Grade, GradeType } from '@brightspace-ui-labs/grade-result/src/controller/Grade';
-import { ifDefined } from 'lit-html/directives/if-defined.js';
 import { LocalizeConsistentEvaluation } from '../../lang/localize-consistent-evaluation.js';
 
 export class ConsistentEvaluationRightPanel extends LocalizeConsistentEvaluation(LitElement) {
