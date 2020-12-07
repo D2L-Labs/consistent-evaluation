@@ -1,11 +1,11 @@
 import 'd2l-polymer-siren-behaviors/store/entity-store.js';
 import { Grade, GradeType } from '@brightspace-ui-labs/grade-result/src/controller/Grade';
 
-
 export function mapRubricScoreToGrade(rubricInfo, currentGrade, newScore) {
 	let score = currentGrade.score;
 	let letterGrade = currentGrade.letterGrade;
 	let outOf = 100;
+
 	if (rubricInfo.rubricOutOf) {
 		outOf = rubricInfo.rubricOutOf;
 	}
@@ -36,7 +36,7 @@ export function mapRubricScoreToGrade(rubricInfo, currentGrade, newScore) {
 export async function getRubricAssessmentScore(rubricInfo, token) {
 	if (rubricInfo && rubricInfo.rubricAssessmentHref) {
 		const assessment = await window.D2L.Siren.EntityStore.fetch(rubricInfo.rubricAssessmentHref, token, false);
-		if(assessment && assessment.entity){
+		if (assessment && assessment.entity) {
 			return assessment.entity.properties.score;
 		}
 
