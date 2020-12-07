@@ -3,8 +3,8 @@ import './consistent-evaluation-outcomes.js';
 import './consistent-evaluation-rubric.js';
 import './consistent-evaluation-grade-result.js';
 import './consistent-evaluation-coa-eval-override.js';
-import { mapRubricScoreToGrade, getRubricAssessmentScore } from '../helpers/rubricGradeSyncHelpers.js';
 import { css, html, LitElement } from 'lit-element';
+import { getRubricAssessmentScore, mapRubricScoreToGrade} from '../helpers/rubricGradeSyncHelpers.js';
 import { ifDefined } from 'lit-html/directives/if-defined.js';
 import { LocalizeConsistentEvaluation } from '../../lang/localize-consistent-evaluation.js';
 
@@ -128,7 +128,7 @@ export class ConsistentEvaluationRightPanel extends LocalizeConsistentEvaluation
 
 	_renderRubric() {
 		if (this.rubricInfo && this.rubricInfo.length > 0) {
-			let hasOutOf = this.grade.getScoreOutOf();
+			const hasOutOf = this.grade.getScoreOutOf();
 
 			return html`
 				<d2l-consistent-evaluation-rubric
@@ -234,7 +234,7 @@ export class ConsistentEvaluationRightPanel extends LocalizeConsistentEvaluation
 			const rubrics = this.shadowRoot.querySelector('d2l-consistent-evaluation-rubric')
 				.shadowRoot.querySelectorAll('d2l-consistent-evaluation-right-panel-block d2l-rubric');
 
-			[...rubrics].map( rubric => {
+			[...rubrics].map(rubric => {
 				const accordionCollapse = rubric
 					.shadowRoot.querySelector('d2l-rubric-adapter')
 					.shadowRoot.querySelector('div d2l-labs-accordion d2l-labs-accordion-collapse');
@@ -275,7 +275,11 @@ export class ConsistentEvaluationRightPanel extends LocalizeConsistentEvaluation
 
 	async _updateScoreWithNewRubric(e) {
 		const newRubricId = e.detail.rubricId;
-		const currentRubricInfo = this.rubricInfo.find(rubric => rubric.rubricId == newRubricId);
+		const currentRubricInfo = this.rubricInfo.find(rubric => rubric.rubricId === newRubricId);
+		if (!currentRubricInfo) {
+			// user selected "no grading rubric"
+			return;
+		}
 		const newScore = await getRubricAssessmentScore(currentRubricInfo, this.token);
 
 		const newGrade = mapRubricScoreToGrade(
