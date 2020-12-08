@@ -5,7 +5,6 @@ import './consistent-evaluation-grade-result.js';
 import './consistent-evaluation-coa-eval-override.js';
 import { css, html, LitElement } from 'lit-element';
 import { getRubricAssessmentScore, mapRubricScoreToGrade} from '../helpers/rubricGradeSyncHelpers.js';
-import { ifDefined } from 'lit-html/directives/if-defined.js';
 import { LocalizeConsistentEvaluation } from '../../lang/localize-consistent-evaluation.js';
 
 export class ConsistentEvaluationRightPanel extends LocalizeConsistentEvaluation(LitElement) {
@@ -27,10 +26,6 @@ export class ConsistentEvaluationRightPanel extends LocalizeConsistentEvaluation
 			canRecordFeedbackAudio: {
 				attribute: 'allow-record-audio',
 				type: Boolean
-			},
-			attachmentsHref: {
-				attribute: 'attachments-href',
-				type: String
 			},
 			feedbackText: {
 				attribute: false
@@ -186,7 +181,6 @@ export class ConsistentEvaluationRightPanel extends LocalizeConsistentEvaluation
 					.feedbackText=${this.feedbackText}
 					.attachments=${this.feedbackAttachments}
 					.richTextEditorConfig=${this.richTextEditorConfig}
-					attachments-href=${ifDefined(this.attachmentsHref)}
 				></d2l-consistent-evaluation-feedback-presentational>
 			`;
 		}
