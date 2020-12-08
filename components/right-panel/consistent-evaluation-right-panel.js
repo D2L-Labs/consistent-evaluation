@@ -136,10 +136,10 @@ export class ConsistentEvaluationRightPanel extends LocalizeConsistentEvaluation
 					.rubricInfo=${this.rubricInfo}
 					active-scoring-rubric=${this.activeScoringRubric}
 					.token=${this.token}
-					?show-selector=${hasOutOf}
+					?show-active-scoring-rubric-options=${hasOutOf}
 					?read-only=${this.rubricReadOnly}
-					@d2l-consistent-eval-rubric-total-score-changed=${this._syncRubricGrade}
-					@d2l-consistent-eval-active-scoring-rubric-change=${this._updateScoreWithNewRubric}
+					@d2l-consistent-eval-rubric-total-score-changed=${this._syncGradeToRubricScore}
+					@d2l-consistent-eval-active-scoring-rubric-change=${this._updateScoreWithActiveScoringRubric}
 					@d2l-rubric-compact-expanded-changed=${this._updateRubricOpenState}
 				></d2l-consistent-evaluation-rubric>
 			`;
@@ -253,7 +253,7 @@ export class ConsistentEvaluationRightPanel extends LocalizeConsistentEvaluation
 		}
 	}
 
-	_syncRubricGrade(e) {
+	_syncGradeToRubricScore(e) {
 		if (!this.allowEvaluationWrite) {
 			return;
 		}
@@ -268,7 +268,7 @@ export class ConsistentEvaluationRightPanel extends LocalizeConsistentEvaluation
 		);
 	}
 
-	async _updateScoreWithNewRubric(e) {
+	async _updateScoreWithActiveScoringRubric(e) {
 		const newRubricId = e.detail.rubricId;
 		const currentRubricInfo = this.rubricInfo.find(rubric => rubric.rubricId === newRubricId);
 		if (!currentRubricInfo) {
