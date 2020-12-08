@@ -75,7 +75,7 @@ export class ConsistentEvaluationRightPanel extends LocalizeConsistentEvaluation
 				type: Array
 			},
 			activeScoringRubric: {
-				attribute: false,
+				attribute: 'active-scoring-rubric',
 				type: Number
 			},
 			evaluationHref: {
@@ -123,7 +123,7 @@ export class ConsistentEvaluationRightPanel extends LocalizeConsistentEvaluation
 		this.canAddFeedbackFile = false;
 		this.canRecordFeedbackVideo = false;
 		this.canRecordFeedbackAudio = false;
-		this.rubricOpen = false;
+		this.rubricsOpen = 0;
 	}
 
 	_renderRubric() {
@@ -134,7 +134,7 @@ export class ConsistentEvaluationRightPanel extends LocalizeConsistentEvaluation
 				<d2l-consistent-evaluation-rubric
 					header=${this.localize('rubrics')}
 					.rubricInfo=${this.rubricInfo}
-					.activeScoringRubric=${this.activeScoringRubric}
+					active-scoring-rubric=${this.activeScoringRubric}
 					.token=${this.token}
 					?show-selector=${hasOutOf}
 					?read-only=${this.rubricReadOnly}
@@ -222,7 +222,11 @@ export class ConsistentEvaluationRightPanel extends LocalizeConsistentEvaluation
 
 	_updateRubricOpenState(e) {
 		if (e.detail) {
-			this.rubricOpen = e.detail.expanded;
+			if(e.detail.expanded) {
+				this.rubricsOpen++;
+			} else if(this.rubricsOpen > 0) {
+				this.rubricsOpen--;
+			}
 		}
 	}
 
@@ -254,23 +258,14 @@ export class ConsistentEvaluationRightPanel extends LocalizeConsistentEvaluation
 			return;
 		}
 
-		if (!this.rubricOpen) {
+		if (this.rubricsOpen === 0) {
 			return;
 		}
 
-		this.grade = mapRubricScoreToGrade(
-			e.detail.rubricInfo,
-			this.grade,
-			e.detail.score
+		this._updateGrade(
+			e.detail.score,
+			e.detail.rubricInfo
 		);
-
-		this.dispatchEvent(new CustomEvent('on-d2l-consistent-eval-grade-changed', {
-			composed: true,
-			bubbles: true,
-			detail: {
-				grade: this.grade
-			}
-		}));
 	}
 
 	async _updateScoreWithNewRubric(e) {
@@ -282,8 +277,16 @@ export class ConsistentEvaluationRightPanel extends LocalizeConsistentEvaluation
 		}
 		const newScore = await getRubricAssessmentScore(currentRubricInfo, this.token);
 
+		this._updateGrade(
+			newScore,
+			currentRubricInfo
+		);
+	}
+
+	_updateGrade(newScore, rubricInfo) {
+
 		const newGrade = mapRubricScoreToGrade(
-			currentRubricInfo,
+			rubricInfo,
 			this.grade,
 			newScore
 		);

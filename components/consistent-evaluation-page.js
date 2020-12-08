@@ -143,7 +143,7 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 				attribute: false
 			},
 			_activeScoringRubric: {
-				attribute: false,
+				attribute: 'active-scoring-rubric',
 				type: Number
 			},
 		};
@@ -275,7 +275,10 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 		if (this.evaluationEntity) {
 			const activeScoringRubricEntity = this.evaluationEntity.getSubEntityByRel('active-scoring-rubric');
 			if (activeScoringRubricEntity) {
-				return activeScoringRubricEntity.properties.activeScoringRubric;
+				if(activeScoringRubricEntity.properties.activeScoringRubric){
+					return parseInt(activeScoringRubricEntity.properties.activeScoringRubric);
+				}
+				return null;
 			}
 		}
 		return undefined;
@@ -772,7 +775,7 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 						evaluation-href=${ifDefined(this.evaluationHref)}
 						.feedbackText=${this._feedbackText}
 						.rubricInfo=${this.rubricInfo}
-						.activeScoringRubric=${this._activeScoringRubric}
+						active-scoring-rubric=${this._activeScoringRubric}
 						.feedbackAttachments=${attachments}
 						rubric-assessment-href=${ifDefined(this.rubricAssessmentHref)}
 						outcomes-href=${ifDefined(this.outcomesHref)}
