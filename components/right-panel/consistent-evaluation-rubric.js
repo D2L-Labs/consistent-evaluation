@@ -2,7 +2,6 @@ import './consistent-evaluation-right-panel-block';
 import 'd2l-rubric/d2l-rubric.js';
 import { css, html, LitElement } from 'lit-element';
 import { labelStyles } from '@brightspace-ui/core/components/typography/styles.js';
-
 import { LocalizeConsistentEvaluation } from '../../lang/localize-consistent-evaluation.js';
 import { selectStyles } from '@brightspace-ui/core/components/inputs/input-select-styles.js';
 
@@ -20,8 +19,8 @@ class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(LitElement
 				attribute: 'active-scoring-rubric',
 				type: Number
 			},
-			showSelector: {
-				attribute: 'show-selector',
+			showActiveScoringRubricOptions: {
+				attribute: 'show-active-scoring-rubric-options',
 				type: Boolean
 			},
 			token: {
@@ -55,7 +54,7 @@ class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(LitElement
 		}
 	}
 
-	_syncRubricGrade(e) {
+	_syncActiveScoringRubricGrade(e) {
 		const score = e.detail.score;
 		if (score === null) {
 			return;
@@ -79,6 +78,18 @@ class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(LitElement
 		}));
 	}
 
+	_onActiveScoringRubricChange(e) {
+		const rubricId = e.target.value;
+
+		this.dispatchEvent(new CustomEvent('d2l-consistent-eval-active-scoring-rubric-change', {
+			composed: true,
+			bubbles: true,
+			detail: {
+				rubricId: parseInt(rubricId)
+			}
+		}));
+	}
+
 	_getRubrics() {
 		const rubrics =	this.rubricInfo.map(rubric => {
 			if (!rubric) {
@@ -96,7 +107,7 @@ class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(LitElement
 						force-compact
 						overall-score-flag
 						selected
-						@d2l-rubric-total-score-changed=${this._syncRubricGrade}
+						@d2l-rubric-total-score-changed=${this._syncActiveScoringRubricGrade}
 					></d2l-rubric>
 				</div>
 			`;
@@ -105,21 +116,8 @@ class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(LitElement
 		return html`${rubrics}`;
 	}
 
-	_onSelectChange(e) {
-		const rubricId = e.target.value;
-
-		this.dispatchEvent(new CustomEvent('d2l-consistent-eval-active-scoring-rubric-change', {
-			composed: true,
-			bubbles: true,
-			detail: {
-				rubricId: parseInt(rubricId)
-			}
-		}));
-	}
-
-	_getRubricList() {
-		// title for grading rubric change selected to int?
-		if (!this.showSelector) {
+	_getActiveScoringRubricSelectDropdown() {
+		if (!this.showActiveScoringRubricOptions) {
 			return html``;
 		}
 		const scoringRubrics = this.rubricInfo.filter(rubric => rubric.rubricScoringMethod !== 0);
@@ -128,7 +126,7 @@ class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(LitElement
 		}
 		return html`
 			<h3 class="d2l-label-text">${this.localize('gradingRubric')}</h3>
-			<select class="d2l-input-select d2l-truncate d2l-consistent-evaluation-active-scoring-rubric" aria-label=${this.localize('activeGradingRubric')} @change=${this._onSelectChange}>
+			<select class="d2l-input-select d2l-truncate d2l-consistent-evaluation-active-scoring-rubric" aria-label=${this.localize('activeGradingRubric')} @change=${this._onActiveScoringRubricChange}>
 				<option label=${this.localize('noActiveGradingRubric')} ?selected=${!this.activeScoringRubric} value=null></option>
 				${scoringRubrics.map(rubric => html`
 						<option value="${rubric.rubricId}" label=${rubric.rubricTitle} class="select-option" ?selected=${rubric.rubricId === this.activeScoringRubric}></option>
@@ -141,7 +139,7 @@ class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(LitElement
 		return html`
 			<d2l-consistent-evaluation-right-panel-block title="${this.header}">
 				${this._getRubrics()}
-				${this._getRubricList()}
+				${this._getActiveScoringRubricSelectDropdown()}
 			</d2l-consistent-evaluation-right-panel-block>
 		`;
 	}
