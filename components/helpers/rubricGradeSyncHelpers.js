@@ -42,4 +42,6 @@ export async function getRubricAssessmentScore(rubricInfo, token) {
 
 		return undefined;
 	}
+
+	return undefined;
 }
