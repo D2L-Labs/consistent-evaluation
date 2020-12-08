@@ -222,9 +222,9 @@ export class ConsistentEvaluationRightPanel extends LocalizeConsistentEvaluation
 
 	_updateRubricOpenState(e) {
 		if (e.detail) {
-			if(e.detail.expanded) {
+			if (e.detail.expanded) {
 				this.rubricsOpen++;
-			} else if(this.rubricsOpen > 0) {
+			} else if (this.rubricsOpen > 0) {
 				this.rubricsOpen--;
 			}
 		}
