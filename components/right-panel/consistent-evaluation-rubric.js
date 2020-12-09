@@ -138,11 +138,21 @@ class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(LitElement
 		`;
 	}
 
+	_getSummaryText() {
+		const numAttached = this.rubricInfo.length;
+		if(numAttached > 1) {
+			return this.localize('rubricsSummary', 'num', numAttached);
+		}
+		return this.localize('rubricSummary');
+	}
+
 	render() {
 		return html`
-			<d2l-consistent-evaluation-right-panel-block title="${this.header}">
-				${this._getRubrics()}
-				${this._getActiveScoringRubricSelectDropdown()}
+			<d2l-consistent-evaluation-right-panel-block
+				title="${this.header}"
+				supportingInfo=${this._getSummaryText()}>
+					${this._getRubrics()}
+					${this._getActiveScoringRubricSelectDropdown()}
 			</d2l-consistent-evaluation-right-panel-block>
 		`;
 	}
