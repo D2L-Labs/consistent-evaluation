@@ -48,9 +48,12 @@ class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(LitElement
 	updated(changedProperties) {
 		super.updated(changedProperties);
 		if (changedProperties.has('activeScoringRubric')) {
-			this.shadowRoot.querySelector('.d2l-consistent-evaluation-active-scoring-rubric').value = this.activeScoringRubric ?
-				this.activeScoringRubric :
-				null;
+			const activeRubricDropdown = this.shadowRoot.querySelector('.d2l-consistent-evaluation-active-scoring-rubric');
+			if (activeRubricDropdown) {
+				activeRubricDropdown.value = this.activeScoringRubric ?
+					this.activeScoringRubric :
+					null;
+			}
 		}
 	}
 
