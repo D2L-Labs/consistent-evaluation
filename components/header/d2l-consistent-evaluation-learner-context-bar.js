@@ -73,9 +73,6 @@ export class ConsistentEvaluationLearnerContextBar extends SkeletonMixin(RtlMixi
 				align-items: center;
 				display: flex;
 			}
-			.d2l-skeleton-learner-context-bar-hidden {
-				display: none;
-			}
 			:host([skeleton]) .d2l-consistent-evaluation-learner-context-bar {
 				display: none;
 			}
@@ -129,23 +126,22 @@ export class ConsistentEvaluationLearnerContextBar extends SkeletonMixin(RtlMixi
 		return this.userHref ? this.userHref : this.groupHref;
 	}
 
-	_getSkeletonClass() {
-		let className = 'd2l-skeleton-learner-context-bar';
-
+	_renderSkeleton() {
 		if (submissionTypesWithNoEvidence.includes(this.submissionInfo.submissionType)) {
-			className = 'd2l-skeleton-learner-context-bar-hidden';
+			return html ``;
 		}
 
-		return className;
+		return html`
+			<div class="d2l-skeleton-learner-context-bar" aria-hidden="${!this.skeleton}" aria-busy="${this.skeleton}">
+				<div class="d2l-skeleton-user-profile-image d2l-skeletize"></div>
+				<div class="d2l-skeleton-user-display-name d2l-skeletize"></div>
+				<div class="d2l-skeleton-submission-select d2l-skeletize"></div>
+			</div>`;
 	}
 
 	render() {
 		return html`
-			<div class="${this._getSkeletonClass()}" aria-hidden="${!this.skeleton}" aria-busy="${this.skeleton}">
-				<div class="d2l-skeleton-user-profile-image d2l-skeletize"></div>
-				<div class="d2l-skeleton-user-display-name d2l-skeletize"></div>
-				<div class="d2l-skeleton-submission-select d2l-skeletize"></div>
-			</div>
+			${this._renderSkeleton()}
 			<div class="d2l-consistent-evaluation-learner-context-bar" aria-hidden="${this.skeleton}">
 				<d2l-consistent-evaluation-lcb-user-context
 					.href=${this._getActorHref()}

@@ -234,6 +234,8 @@ export class ConsistentEvaluationLeftPanel extends SkeletonMixin(LocalizeConsist
 			if (this.submissionInfo.submissionList === undefined) {
 				return this._renderNoSubmissions();
 			}
+
+			return this._renderSubmissionList();
 		}
 
 		if (this.fileEvidenceUrl) {
@@ -247,8 +249,6 @@ export class ConsistentEvaluationLeftPanel extends SkeletonMixin(LocalizeConsist
 		if (this.fileNonViewable) {
 			return this._renderNonViewableFile();
 		}
-
-		return this._renderSubmissionList();
 	}
 }
 
