@@ -4,6 +4,7 @@ import '@brightspace-ui/core/components/colors/colors.js';
 import { css, html, LitElement } from 'lit-element';
 import { RtlMixin } from '@brightspace-ui/core/mixins/rtl-mixin.js';
 import { SkeletonMixin } from '@brightspace-ui/core/components/skeleton/skeleton-mixin.js';
+import { submissionTypesWithNoEvidence } from '../controllers/constants';
 
 export class ConsistentEvaluationLearnerContextBar extends SkeletonMixin(RtlMixin(LitElement)) {
 
@@ -72,6 +73,9 @@ export class ConsistentEvaluationLearnerContextBar extends SkeletonMixin(RtlMixi
 				align-items: center;
 				display: flex;
 			}
+			.d2l-skeleton-learner-context-bar-hidden {
+				display: none;
+			}
 			:host([skeleton]) .d2l-consistent-evaluation-learner-context-bar {
 				display: none;
 			}
@@ -125,9 +129,19 @@ export class ConsistentEvaluationLearnerContextBar extends SkeletonMixin(RtlMixi
 		return this.userHref ? this.userHref : this.groupHref;
 	}
 
+	_getSkeletonClass() {
+		let className = 'd2l-skeleton-learner-context-bar';
+
+		if (submissionTypesWithNoEvidence.includes(this.submissionInfo.submissionType)) {
+			className = 'd2l-skeleton-learner-context-bar-hidden';
+		}
+
+		return className;
+	}
+
 	render() {
 		return html`
-			<div class="d2l-skeleton-learner-context-bar" aria-hidden="${!this.skeleton}" aria-busy="${this.skeleton}">
+			<div class="${this._getSkeletonClass()}" aria-hidden="${!this.skeleton}" aria-busy="${this.skeleton}">
 				<div class="d2l-skeleton-user-profile-image d2l-skeletize"></div>
 				<div class="d2l-skeleton-user-display-name d2l-skeletize"></div>
 				<div class="d2l-skeleton-submission-select d2l-skeletize"></div>
