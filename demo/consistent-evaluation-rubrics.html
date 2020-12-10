@@ -12,12 +12,12 @@
 			const tests = document.getElementsByTagName('d2l-consistent-evaluation-rubric');
 			for (let i = 0; i < tests.length; i++) {
 				if (tests[i].id === 'multiple-rubrics') {
-					tests[i].rubricInfo = [
+					tests[i].rubricInfos = [
 						{rubricHref: 'data/rubric.json', rubricAssessmentHref: 'data/assessment.json', rubricTitle: 'firstRubric'},
 						{rubricHref: 'data/rubric.json', rubricAssessmentHref: 'data/assessment.json', rubricTitle: 'secondRubric'}];
 					continue;
 				}
-				tests[i].rubricInfo = [{rubricHref: 'data/rubric.json', rubricAssessmentHref: 'data/assessment.json'}];
+				tests[i].rubricInfos = [{rubricHref: 'data/rubric.json', rubricAssessmentHref: 'data/assessment.json'}];
 			}
 		</script>
 		<title>d2l-consistent-rubric</title>

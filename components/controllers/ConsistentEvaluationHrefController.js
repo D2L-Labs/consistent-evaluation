@@ -235,13 +235,13 @@ export class ConsistentEvaluationHrefController {
 		return undefined;
 	}
 
-	async getRubricInfo() {
-		let rubricInfo = undefined;
+	async getRubricInfos() {
+		let rubricInfos = undefined;
 		const root = await this._getRootEntity(false);
 		if (root && root.entity) {
 			const rubricHrefs = this._getHrefs(root.entity, assessmentRel);
 			if (rubricHrefs) {
-				rubricInfo = await Promise.all(rubricHrefs.map(async rubricAssessmentHref => {
+				rubricInfos = await Promise.all(rubricHrefs.map(async rubricAssessmentHref => {
 					const assessmentEntity = await this._getEntityFromHref(rubricAssessmentHref, false);
 					if (assessmentEntity && assessmentEntity.entity) {
 						const rubricHref = this._getHref(assessmentEntity.entity, rubricRel);
@@ -264,6 +264,6 @@ export class ConsistentEvaluationHrefController {
 			}
 		}
 
-		return rubricInfo.filter(rubricInfo => rubricInfo !== undefined);
+		return rubricInfos.filter(rubricInfo => rubricInfo !== undefined);
 	}
 }

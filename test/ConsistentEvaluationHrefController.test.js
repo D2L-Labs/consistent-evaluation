@@ -196,7 +196,7 @@ describe('ConsistentEvaluationHrefController', () => {
 		});
 	});
 
-	describe('getRubricInfo gets correct rubric info', () => {
+	describe('getRubricInfos gets correct rubric info', () => {
 
 		it('sets all the rubricinfos correctly', async() => {
 			const expectedAssessmentHrefOne = 'the_assessment_href_to_find_one';
@@ -260,7 +260,7 @@ describe('ConsistentEvaluationHrefController', () => {
 					expectedRubricHrefTwo
 				);
 
-			const rubricInfos = await controller.getRubricInfo();
+			const rubricInfos = await controller.getRubricInfos();
 
 			assert.equal(rubricInfos.length, 2);
 			assert.equal(rubricInfos[0].rubricHref, expectedRubricHrefOne);

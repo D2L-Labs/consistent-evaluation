@@ -51,7 +51,7 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 				attribute: 'special-access-href',
 				type: String
 			},
-			rubricInfo: {
+			rubricInfos: {
 				attribute: false,
 				type: Array
 			},
@@ -773,7 +773,7 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 					<consistent-evaluation-right-panel
 						evaluation-href=${ifDefined(this.evaluationHref)}
 						.feedbackText=${this._feedbackText}
-						.rubricInfo=${this.rubricInfo}
+						.rubricInfos=${this.rubricInfos}
 						active-scoring-rubric=${ifDefined(this._activeScoringRubric)}
 						.feedbackAttachments=${attachments}
 						rubric-assessment-href=${ifDefined(this.rubricAssessmentHref)}
