@@ -144,7 +144,7 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 			},
 			_activeScoringRubric: {
 				attribute: 'active-scoring-rubric',
-				type: Number
+				type: String
 			},
 		};
 	}
@@ -276,7 +276,7 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 			const activeScoringRubricEntity = this.evaluationEntity.getSubEntityByRel('active-scoring-rubric');
 			if (activeScoringRubricEntity) {
 				if (activeScoringRubricEntity.properties.activeScoringRubric) {
-					return parseInt(activeScoringRubricEntity.properties.activeScoringRubric);
+					return activeScoringRubricEntity.properties.activeScoringRubric;
 				}
 			}
 		}

@@ -71,7 +71,7 @@ export class ConsistentEvaluationRightPanel extends LocalizeConsistentEvaluation
 			},
 			activeScoringRubric: {
 				attribute: 'active-scoring-rubric',
-				type: Number
+				type: String
 			},
 			evaluationHref: {
 				attribute: 'evaluation-href',
