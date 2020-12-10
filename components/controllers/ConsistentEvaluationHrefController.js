@@ -264,6 +264,6 @@ export class ConsistentEvaluationHrefController {
 			}
 		}
 
-		return rubricInfo;
+		return rubricInfo.filter(rubricInfo => rubricInfo !== undefined);
 	}
 }
