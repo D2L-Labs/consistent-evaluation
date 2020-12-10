@@ -128,7 +128,11 @@ export class ConsistentEvaluationLearnerContextBar extends SkeletonMixin(RtlMixi
 
 	_renderSkeleton() {
 		if (submissionTypesWithNoEvidence.includes(this.submissionInfo.submissionType)) {
-			return html ``;
+			return html `
+				<div class="d2l-skeleton-learner-context-bar" aria-hidden="${!this.skeleton}" aria-busy="${this.skeleton}">
+					<div class="d2l-skeleton-user-profile-image d2l-skeletize"></div>
+					<div class="d2l-skeleton-user-display-name d2l-skeletize"></div>
+				</div>`;
 		}
 
 		return html`
