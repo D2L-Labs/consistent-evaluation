@@ -69,7 +69,7 @@ class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(LitElement
 		if (this.activeScoringRubric !== targetRubricId) {
 			return;
 		}
-		const currentRubricInfo = this.rubricInfos.find(rubric => rubric.rubricId === parseInt(targetRubricId));
+		const currentRubricInfo = this.rubricInfos.find(rubric => rubric.rubricId === targetRubricId);
 
 		this.dispatchEvent(new CustomEvent('d2l-consistent-eval-rubric-total-score-changed', {
 			composed: true,
@@ -88,7 +88,7 @@ class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(LitElement
 			composed: true,
 			bubbles: true,
 			detail: {
-				rubricId: parseInt(rubricId)
+				rubricId: rubricId
 			}
 		}));
 	}
