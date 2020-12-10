@@ -248,7 +248,9 @@ export class ConsistentEvaluationLeftPanel extends SkeletonMixin(LocalizeConsist
 			return this._renderNonViewableFile();
 		}
 
-		return this._renderSubmissionList();
+		if (this.submissionInfo) {
+			return this._renderSubmissionList();
+		}
 	}
 }
 
