@@ -82,7 +82,7 @@ class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(LitElement
 	}
 
 	_onActiveScoringRubricChange(e) {
-		const rubricId = e.target.value;
+		const rubricId = (e.target.value === 'null') ? null : e.target.value;
 
 		this.dispatchEvent(new CustomEvent('d2l-consistent-eval-active-scoring-rubric-change', {
 			composed: true,
@@ -139,8 +139,8 @@ class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(LitElement
 	}
 
 	_getSummaryText() {
-		const numAttached = this.rubricInfo.length;
-		if(numAttached > 1) {
+		const numAttached = this.rubricInfos.length;
+		if (numAttached > 1) {
 			return this.localize('rubricsSummary', 'num', numAttached);
 		}
 		return this.localize('rubricSummary');
