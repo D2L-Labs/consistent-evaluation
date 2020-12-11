@@ -77,12 +77,10 @@ class ConsistentEvaluationNavBar extends LocalizeConsistentEvaluation(LitElement
 				.d2l-iterator-space {
 					margin-left: 0;
 					margin-right: 0;
+					min-width: 1rem;
 				}
 				.d2l-iterator-text {
 					display: none;
-				}
-				.d2l-iterator-space {
-					min-width: 1rem;
 				}
 				.d2l-short-back {
 					display: inline-block;
