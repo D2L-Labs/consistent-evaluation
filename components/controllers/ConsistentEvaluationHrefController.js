@@ -235,19 +235,19 @@ export class ConsistentEvaluationHrefController {
 		return undefined;
 	}
 
-	async getRubricInfo() {
-		let rubricInfo = undefined;
+	async getRubricInfos() {
+		let rubricInfos = undefined;
 		const root = await this._getRootEntity(false);
 		if (root && root.entity) {
 			const rubricHrefs = this._getHrefs(root.entity, assessmentRel);
 			if (rubricHrefs) {
-				rubricInfo = await Promise.all(rubricHrefs.map(async rubricAssessmentHref => {
+				rubricInfos = await Promise.all(rubricHrefs.map(async rubricAssessmentHref => {
 					const assessmentEntity = await this._getEntityFromHref(rubricAssessmentHref, false);
 					if (assessmentEntity && assessmentEntity.entity) {
 						const rubricHref = this._getHref(assessmentEntity.entity, rubricRel);
 						const rubricEntity = await this._getEntityFromHref(rubricHref, false);
 						const rubricTitle = rubricEntity.entity.properties.name;
-						const rubricId = rubricEntity.entity.properties.rubricId;
+						const rubricId = rubricEntity.entity.properties.rubricId.toString();
 						const rubricOutOf = rubricEntity.entity.properties.outOf;
 						const rubricScoringMethod = rubricEntity.entity.properties.scoringMethod;
 
@@ -264,6 +264,6 @@ export class ConsistentEvaluationHrefController {
 			}
 		}
 
-		return rubricInfo;
+		return rubricInfos.filter(rubricInfo => rubricInfo !== undefined);
 	}
 }

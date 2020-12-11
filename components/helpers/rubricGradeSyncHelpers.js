@@ -35,12 +35,11 @@ export function mapRubricScoreToGrade(rubricInfo, currentGrade, newScore) {
 
 export async function getRubricAssessmentScore(rubricInfo, token) {
 	if (rubricInfo && rubricInfo.rubricAssessmentHref) {
-		const assessment = await window.D2L.Siren.EntityStore.fetch(rubricInfo.rubricAssessmentHref, token, false);
+		const bypassCache = false;
+		const assessment = await window.D2L.Siren.EntityStore.fetch(rubricInfo.rubricAssessmentHref, token, bypassCache);
 		if (assessment && assessment.entity) {
 			return assessment.entity.properties.score;
 		}
-
-		return undefined;
 	}
 
 	return undefined;

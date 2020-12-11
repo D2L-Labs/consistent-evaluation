@@ -65,13 +65,13 @@ export class ConsistentEvaluationRightPanel extends LocalizeConsistentEvaluation
 				attribute: false,
 				type: Object
 			},
-			rubricInfo: {
+			rubricInfos: {
 				attribute: false,
 				type: Array
 			},
 			activeScoringRubric: {
 				attribute: 'active-scoring-rubric',
-				type: Number
+				type: String
 			},
 			evaluationHref: {
 				attribute: 'evaluation-href',
@@ -86,7 +86,17 @@ export class ConsistentEvaluationRightPanel extends LocalizeConsistentEvaluation
 				type: Boolean
 			},
 			token: {
-				type: Object
+				type: Object,
+				converter: {
+					formatAttribute(value) {
+						const retVal = String(value);
+						return retVal;
+					},
+					toAttribute(value) {
+						const retVal = Object(value);
+						return retVal;
+					}
+				}
 			}
 		};
 	}
@@ -122,13 +132,13 @@ export class ConsistentEvaluationRightPanel extends LocalizeConsistentEvaluation
 	}
 
 	_renderRubric() {
-		if (this.rubricInfo && this.rubricInfo.length > 0) {
+		if (this.rubricInfos && this.rubricInfos.length > 0) {
 			const hasOutOf = this.grade.getScoreOutOf();
 
 			return html`
 				<d2l-consistent-evaluation-rubric
 					header=${this.localize('rubrics')}
-					.rubricInfo=${this.rubricInfo}
+					.rubricInfos=${this.rubricInfos}
 					active-scoring-rubric=${this.activeScoringRubric}
 					.token=${this.token}
 					?show-active-scoring-rubric-options=${hasOutOf}
@@ -264,7 +274,7 @@ export class ConsistentEvaluationRightPanel extends LocalizeConsistentEvaluation
 
 	async _updateScoreWithActiveScoringRubric(e) {
 		const newRubricId = e.detail.rubricId;
-		const currentRubricInfo = this.rubricInfo.find(rubric => rubric.rubricId === newRubricId);
+		const currentRubricInfo = this.rubricInfos.find(rubric => rubric.rubricId === newRubricId);
 		if (!currentRubricInfo) {
 			// user selected "no grading rubric"
 			return;

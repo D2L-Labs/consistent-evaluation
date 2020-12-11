@@ -11,13 +11,13 @@ class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(LitElement
 			header: {
 				type: String
 			},
-			rubricInfo: {
+			rubricInfos: {
 				attribute: false,
 				type: Array
 			},
 			activeScoringRubric: {
 				attribute: 'active-scoring-rubric',
-				type: Number
+				type: String
 			},
 			showActiveScoringRubricOptions: {
 				attribute: 'show-active-scoring-rubric-options',
@@ -39,8 +39,9 @@ class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(LitElement
 				margin-top: 0.7rem;
 			}
 			.d2l-label-text {
+				font-size: 0.55rem;
+				font-weight: 600;
 				margin-bottom: 0.4rem;
-				margin-top: 1.4rem;
 			}
 		`];
 	}
@@ -63,13 +64,12 @@ class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(LitElement
 			return;
 		}
 
-		const targetRubricId = parseInt(e.target.getAttribute('rubric-id'));
+		const targetRubricId = e.target.getAttribute('data-rubric-id');
 
 		if (this.activeScoringRubric !== targetRubricId) {
 			return;
 		}
-
-		const currentRubricInfo = this.rubricInfo.find(rubric => rubric.rubricId === targetRubricId);
+		const currentRubricInfo = this.rubricInfos.find(rubric => rubric.rubricId === targetRubricId);
 
 		this.dispatchEvent(new CustomEvent('d2l-consistent-eval-rubric-total-score-changed', {
 			composed: true,
@@ -88,13 +88,13 @@ class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(LitElement
 			composed: true,
 			bubbles: true,
 			detail: {
-				rubricId: parseInt(rubricId)
+				rubricId: rubricId
 			}
 		}));
 	}
 
 	_getRubrics() {
-		const rubrics =	this.rubricInfo.map(rubric => {
+		const rubrics =	this.rubricInfos.map(rubric => {
 			if (!rubric) {
 				return html``;
 			}
@@ -102,7 +102,7 @@ class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(LitElement
 			return html`
 				<div class="d2l-consistent-evaluation-rubric">
 					<d2l-rubric
-						rubric-id=${rubric.rubricId}
+						data-rubric-id=${rubric.rubricId}
 						href=${rubric.rubricHref}
 						assessment-href=${rubric.rubricAssessmentHref}
 						.token=${this.token}
@@ -123,16 +123,16 @@ class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(LitElement
 		if (!this.showActiveScoringRubricOptions) {
 			return html``;
 		}
-		const scoringRubrics = this.rubricInfo.filter(rubric => rubric.rubricScoringMethod !== 0);
+		const scoringRubrics = this.rubricInfos.filter(rubric => rubric.rubricScoringMethod !== 0);
 		if (scoringRubrics.length <= 0) {
 			return html``;
 		}
 		return html`
-			<h3 class="d2l-label-text">${this.localize('gradingRubric')}</h3>
+			<h2 class="d2l-label-text">${this.localize('gradingRubric')}</h2>
 			<select class="d2l-input-select d2l-truncate d2l-consistent-evaluation-active-scoring-rubric" aria-label=${this.localize('activeGradingRubric')} @change=${this._onActiveScoringRubricChange}>
 				<option label=${this.localize('noActiveGradingRubric')} ?selected=${!this.activeScoringRubric} value=null></option>
 				${scoringRubrics.map(rubric => html`
-						<option value="${rubric.rubricId}" label=${rubric.rubricTitle} class="select-option" ?selected=${rubric.rubricId === this.activeScoringRubric}></option>
+						<option value="${rubric.rubricId}" label=${rubric.rubricTitle} class="select-option"></option>
 				`)}
 			</select>
 		`;
