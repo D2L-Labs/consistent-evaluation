@@ -49,8 +49,8 @@ class ConsistentEvaluationNavBar extends LocalizeConsistentEvaluation(LitElement
 				display: none;
 			}
 			.d2l-iterator-text {
-				padding-left: 4rem;
-				padding-right: 4rem;
+				padding-left: 2.5rem;
+				padding-right: 2.5rem;
 			}
 			.d2l-heading-3 {
 				padding-top: 0.25rem;
