@@ -275,7 +275,7 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 		if (this.evaluationEntity) {
 			const activeScoringRubricEntity = this.evaluationEntity.getSubEntityByRel('active-scoring-rubric');
 			if (activeScoringRubricEntity) {
-				if (activeScoringRubricEntity.properties.activeScoringRubric) {
+				if (activeScoringRubricEntity.properties) {
 					return activeScoringRubricEntity.properties.activeScoringRubric;
 				}
 			}
