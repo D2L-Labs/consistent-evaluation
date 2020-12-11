@@ -49,7 +49,6 @@ class ConsistentEvaluationNavBar extends LocalizeConsistentEvaluation(LitElement
 				display: none;
 			}
 			.d2l-iterator-space {
-				display: flex;
 				margin-left: 2.5rem;
 				margin-right: 2.5rem;
 			}
