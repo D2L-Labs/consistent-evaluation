@@ -133,15 +133,14 @@ export class ConsistentEvaluationRightPanel extends LocalizeConsistentEvaluation
 
 	_renderRubric() {
 		if (this.rubricInfos && this.rubricInfos.length > 0) {
-			const hasOutOf = this.grade.getScoreOutOf();
-
+			const showActiveScoringRubric = (this.grade.getScoreOutOf() && this.activeScoringRubric);
 			return html`
 				<d2l-consistent-evaluation-rubric
 					header=${this.localize('rubrics')}
 					.rubricInfos=${this.rubricInfos}
 					active-scoring-rubric=${this.activeScoringRubric}
 					.token=${this.token}
-					?show-active-scoring-rubric-options=${hasOutOf}
+					?show-active-scoring-rubric-options=${showActiveScoringRubric}
 					?read-only=${this.rubricReadOnly}
 					@d2l-consistent-eval-rubric-total-score-changed=${this._syncGradeToRubricScore}
 					@d2l-consistent-eval-active-scoring-rubric-change=${this._updateScoreWithActiveScoringRubric}
