@@ -1,16 +1,11 @@
 
-import { css, html, LitElement } from 'lit-element';
+import { html, LitElement } from 'lit-element';
 
 export class ConsistentEvaluationPopupRubric extends LitElement {
 
 	static get properties() {
 		return {
 		};
-	}
-
-	static get styles() {
-		return css`
-		`;
 	}
 
 	render() {
