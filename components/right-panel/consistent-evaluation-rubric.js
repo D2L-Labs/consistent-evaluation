@@ -66,9 +66,10 @@ class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(LitElement
 
 		const targetRubricId = e.target.getAttribute('data-rubric-id');
 
-		if (this.activeScoringRubric !== targetRubricId) {
+		if (this.showActiveScoringRubricOptions && this.activeScoringRubric !== targetRubricId) {
 			return;
 		}
+
 		const currentRubricInfo = this.rubricInfos.find(rubric => rubric.rubricId === targetRubricId);
 
 		this.dispatchEvent(new CustomEvent('d2l-consistent-eval-rubric-total-score-changed', {
