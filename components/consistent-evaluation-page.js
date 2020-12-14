@@ -142,10 +142,14 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 				type: Boolean,
 				attribute: false
 			},
+			dataTelemetryEndpoint: {
+				attribute: 'data-telemetry-endpoint',
+				type: String
+			},
 			_activeScoringRubric: {
 				attribute: 'active-scoring-rubric',
 				type: String
-			},
+			}
 		};
 	}
 
@@ -767,6 +771,7 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 						user-progress-outcome-href=${ifDefined(this.userProgressOutcomeHref)}
 						.currentFileId=${this.currentFileId}
 						@d2l-consistent-eval-annotations-update=${this._transientSaveAnnotations}
+						data-telemetry-endpoint=${this.dataTelemetryEndpoint}
 					></d2l-consistent-evaluation-left-panel>
 				</div>
 				<div slot="secondary">
