@@ -1,5 +1,6 @@
 import './consistent-evaluation-right-panel-block';
 import 'd2l-rubric/d2l-rubric.js';
+import '@brightspace-ui/core/components/button/button.js';
 import { css, html, LitElement } from 'lit-element';
 import { labelStyles } from '@brightspace-ui/core/components/typography/styles.js';
 import { LocalizeConsistentEvaluation } from '../../lang/localize-consistent-evaluation.js';
@@ -22,6 +23,14 @@ class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(LitElement
 			showActiveScoringRubricOptions: {
 				attribute: 'show-active-scoring-rubric-options',
 				type: Boolean
+			},
+			forceCompact: {
+				attribute: 'force-compact',
+				type: Boolean
+			},
+			rubricPopoutLocation: {
+				attribute: 'rubric-popout-location',
+				type: String
 			},
 			token: {
 				type: String
@@ -108,7 +117,7 @@ class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(LitElement
 						assessment-href=${rubric.rubricAssessmentHref}
 						.token=${this.token}
 						?read-only=${this.readonly}
-						force-compact
+						?force-compact=${this.forceCompact}
 						overall-score-flag
 						selected
 						@d2l-rubric-total-score-changed=${this._syncActiveScoringRubricGrade}
@@ -147,11 +156,17 @@ class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(LitElement
 		return this.localize('rubricSummary');
 	}
 
+	_test(){
+		console.log(this.rubricPopoutLocation);
+		window.open(this.rubricPopoutLocation, "NAME", "width=1000,height=1000,scrollbars=no,toolbar=no,screenx=0,screeny=0,location=no,titlebar=no,directories=no,status=no,menubar=no")
+	}
+
 	render() {
 		return html`
 			<d2l-consistent-evaluation-right-panel-block
 				title="${this.header}"
 				supportingInfo=${this._getSummaryText()}>
+				<d2l-button @click=${this._test}>BUTTON</d2l-button>
 					${this._getRubrics()}
 					${this._getActiveScoringRubricSelectDropdown()}
 			</d2l-consistent-evaluation-right-panel-block>

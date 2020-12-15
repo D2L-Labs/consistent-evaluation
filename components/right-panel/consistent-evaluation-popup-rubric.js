@@ -1,6 +1,7 @@
 import { html, LitElement } from 'lit-element';
-import { ConsistentEvaluationHrefController } from './controllers/ConsistentEvaluationHrefController.js';
+import { ConsistentEvaluationHrefController } from '../controllers/ConsistentEvaluationHrefController.js';
 import { LocalizeConsistentEvaluation } from '../../lang/localize-consistent-evaluation.js';
+import './consistent-evaluation-rubric.js';
 
 export class ConsistentEvaluationPopupRubric extends LocalizeConsistentEvaluation(LitElement) {
 
@@ -22,18 +23,23 @@ export class ConsistentEvaluationPopupRubric extends LocalizeConsistentEvaluatio
 		super.updated();
 
 		if (changedProperties.has('href')) {
+			console.log('HELLO!');
 			const controller = new ConsistentEvaluationHrefController(this.href, this.token);
 			this._rubricInfos = await controller.getRubricInfos();
 		}
 	}
 
 	render() {
+		if(!this._rubricInfos){
+			return html ``;
+		}
 		return html`
 		    <d2l-consistent-evaluation-rubric
 				header=${this.localize('rubrics')}
-				.rubricInfos=${this.rubricInfos}
+				.rubricInfos=${this._rubricInfos}
 				active-scoring-rubric=${undefined}
 				.token=${this.token}
+				?force-complact=false
 				?show-active-scoring-rubric-options=false
 				?read-only=false
 			></d2l-consistent-evaluation-rubric>

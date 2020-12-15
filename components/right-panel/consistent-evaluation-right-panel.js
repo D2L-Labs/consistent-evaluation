@@ -85,6 +85,10 @@ export class ConsistentEvaluationRightPanel extends LocalizeConsistentEvaluation
 				attribute: 'rubric-read-only',
 				type: Boolean
 			},
+			rubricPopoutLocation: {
+				attribute: 'rubric-popout-location',
+				type: String
+			},
 			token: {
 				type: Object,
 				converter: {
@@ -138,9 +142,11 @@ export class ConsistentEvaluationRightPanel extends LocalizeConsistentEvaluation
 					header=${this.localize('rubrics')}
 					.rubricInfos=${this.rubricInfos}
 					active-scoring-rubric=${this.activeScoringRubric}
+					rubric-popout-location=${this.rubricPopoutLocation}
 					.token=${this.token}
 					?show-active-scoring-rubric-options=${showActiveScoringRubric}
 					?read-only=${this.rubricReadOnly}
+					force-compact=true
 					@d2l-consistent-eval-rubric-total-score-changed=${this._syncGradeToRubricScore}
 					@d2l-consistent-eval-active-scoring-rubric-change=${this._updateScoreWithActiveScoringRubric}
 					@d2l-rubric-compact-expanded-changed=${this._updateRubricOpenState}

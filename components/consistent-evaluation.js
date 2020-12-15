@@ -13,6 +13,10 @@ export class ConsistentEvaluation extends LitElement {
 			},
 			href: { type: String },
 			token: { type: Object },
+			rubricPopoutLocation: {
+				attribute: 'rubric-popout-location',
+				type: String
+			},
 			returnHref: {
 				attribute: 'return-href',
 				type: String
@@ -163,6 +167,7 @@ export class ConsistentEvaluation extends LitElement {
 				return-href=${ifDefined(this.returnHref)}
 				return-href-text=${ifDefined(this.returnHrefText)}
 				current-file-id=${ifDefined(this.currentFileId)}
+				rubric-popout-location=${ifDefined(this.rubricPopoutLocation)}
 				.rubricInfos=${this._rubricInfos}
 				.submissionInfo=${this._submissionInfo}
 				.gradeItemInfo=${this._gradeItemInfo}
