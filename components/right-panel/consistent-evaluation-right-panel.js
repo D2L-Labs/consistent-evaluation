@@ -119,7 +119,6 @@ export class ConsistentEvaluationRightPanel extends LocalizeConsistentEvaluation
 		super();
 
 		this._token = undefined;
-		this.hideRubric = false;
 		this.hideGrade = false;
 		this.hideFeedback = false;
 		this.hideOutcomes = false;
@@ -234,7 +233,7 @@ export class ConsistentEvaluationRightPanel extends LocalizeConsistentEvaluation
 	}
 
 	_closeRubric() {
-		if (this.hideRubric) {
+		if (!this.rubricInfos || this.rubricInfos.length === 0) {
 			return;
 		}
 		try {
