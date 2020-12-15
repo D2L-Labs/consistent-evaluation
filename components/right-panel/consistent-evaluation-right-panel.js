@@ -233,7 +233,7 @@ export class ConsistentEvaluationRightPanel extends LocalizeConsistentEvaluation
 	}
 
 	_closeRubric() {
-		if (this.rubricInfos.length === 0) {
+		if (!this.rubricInfos || this.rubricInfos.length === 0) {
 			return;
 		}
 		try {
