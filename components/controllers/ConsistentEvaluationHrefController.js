@@ -236,7 +236,7 @@ export class ConsistentEvaluationHrefController {
 	}
 
 	async getRubricInfos() {
-		let rubricInfos = undefined;
+		let rubricInfos = [];
 		const root = await this._getRootEntity(false);
 		if (root && root.entity) {
 			const rubricHrefs = this._getHrefs(root.entity, assessmentRel);
