@@ -24,8 +24,8 @@ class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(LitElement
 				attribute: 'show-active-scoring-rubric-options',
 				type: Boolean
 			},
-			forceCompact: {
-				attribute: 'force-compact',
+			isPopout: {
+				attribute: 'is-popout',
 				type: Boolean
 			},
 			rubricPopoutLocation: {
@@ -55,6 +55,11 @@ class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(LitElement
 		`];
 	}
 
+	constructor() {
+		super();
+		this.isPopout = false;
+	}
+
 	updated(changedProperties) {
 		super.updated(changedProperties);
 		if (changedProperties.has('activeScoringRubric')) {
@@ -67,7 +72,8 @@ class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(LitElement
 		}
 	}
 
-	_syncActiveScoringRubricGrade(e) {
+	_syncActiveScoringRubricGradeHandler(e) {
+
 		const score = e.detail.score;
 		if (score === null) {
 			return;
@@ -75,6 +81,16 @@ class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(LitElement
 
 		const targetRubricId = e.target.getAttribute('data-rubric-id');
 
+		if (this.isPopout) {
+			window.postMessage({message:'total-score-changed', rubricData: {score: score, targetRubricId: targetRubricId}});
+		}
+		else {
+			this._syncActiveRubricGrade(score, targetRubricId, false);
+		}
+
+	}
+
+	_syncActiveRubricGrade(score, targetRubricId, ignoreRubricState) {
 		if (this.showActiveScoringRubricOptions && this.activeScoringRubric !== targetRubricId) {
 			return;
 		}
@@ -86,7 +102,8 @@ class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(LitElement
 			bubbles: true,
 			detail: {
 				score: score,
-				rubricInfo: currentRubricInfo
+				rubricInfo: currentRubricInfo,
+				ignoreRubricState: ignoreRubricState
 			}
 		}));
 	}
@@ -104,11 +121,12 @@ class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(LitElement
 	}
 
 	_getRubrics() {
+		console.log('getting rubrics again');
+		// NOTE: WHY IS POPOUT UNDEFINED
 		const rubrics =	this.rubricInfos.map(rubric => {
 			if (!rubric) {
 				return html``;
 			}
-
 			return html`
 				<div class="d2l-consistent-evaluation-rubric">
 					<d2l-rubric
@@ -117,10 +135,10 @@ class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(LitElement
 						assessment-href=${rubric.rubricAssessmentHref}
 						.token=${this.token}
 						?read-only=${this.readonly}
-						?force-compact=${this.forceCompact}
+						?force-compact=${!this.isPopout}
 						overall-score-flag
 						selected
-						@d2l-rubric-total-score-changed=${this._syncActiveScoringRubricGrade}
+						@d2l-rubric-total-score-changed=${this._syncActiveScoringRubricGradeHandler}
 					></d2l-rubric>
 				</div>
 			`;
@@ -156,12 +174,34 @@ class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(LitElement
 		return this.localize('rubricSummary');
 	}
 
-	_test(){
-		console.log(this.rubricPopoutLocation);
-		window.open(this.rubricPopoutLocation, "NAME", "width=1000,height=1000,scrollbars=no,toolbar=no,screenx=0,screeny=0,location=no,titlebar=no,directories=no,status=no,menubar=no")
+	_test() {
+		//NOTE: implement a check! need to close window if one is already opened
+		const rubricWindowPopout = window.open(
+			this.rubricPopoutLocation,
+			'NAME',
+			'width=1000,height=1000,scrollbars=no,toolbar=no,screenx=0,screeny=0,location=no,titlebar=no,directories=no,status=no,menubar=no'
+		);
+
+		rubricWindowPopout.addEventListener('message', (e) => {
+			if (e.data.message === 'total-score-changed') {
+				const ignoreRubricState = true;
+
+				this._syncActiveRubricGrade(e.data.rubricData.score, e.data.rubricData.targetRubricId, ignoreRubricState);
+			}
+		}, false);
+
+		rubricWindowPopout.onbeforeunload =  () => {
+			this.rubricInfos = [];
+
+			this.dispatchEvent(new CustomEvent('d2l-consistent-eval-rubric-popout-closed', {
+				composed: true,
+				bubbles: true,
+			}));
+		};
 	}
 
 	render() {
+		console.log('rendering the rubric component');
 		return html`
 			<d2l-consistent-evaluation-right-panel-block
 				title="${this.header}"

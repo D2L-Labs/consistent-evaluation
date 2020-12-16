@@ -309,6 +309,13 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 		return this.evaluationEntity.properties.state === publishedState;
 	}
 
+	_updateRubricInfos() {
+		this.dispatchEvent(new CustomEvent('d2l-consistent-eval-rubric-popout-closed', {
+			composed: true,
+			bubbles: true,
+		}));
+	}
+
 	async _onNextStudentClick() {
 		this.shadowRoot.querySelector('consistent-evaluation-right-panel')._closeRubric();
 		this._resetFocusToUser();
@@ -803,6 +810,7 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 						@on-d2l-consistent-eval-grade-changed=${this._transientSaveGrade}
 						@d2l-outcomes-coa-eval-override-change=${this._transientSaveCoaEvalOverride}
 						@d2l-consistent-eval-active-scoring-rubric-change=${this._transientSaveActiveScoringRubric}
+						@d2l-consistent-eval-rubric-popout-closed=${this._updateRubricInfos}
 					></consistent-evaluation-right-panel>
 				</div>
 				<div slot="footer">

@@ -146,15 +146,22 @@ export class ConsistentEvaluationRightPanel extends LocalizeConsistentEvaluation
 					.token=${this.token}
 					?show-active-scoring-rubric-options=${showActiveScoringRubric}
 					?read-only=${this.rubricReadOnly}
-					force-compact=true
 					@d2l-consistent-eval-rubric-total-score-changed=${this._syncGradeToRubricScore}
 					@d2l-consistent-eval-active-scoring-rubric-change=${this._updateScoreWithActiveScoringRubric}
 					@d2l-rubric-compact-expanded-changed=${this._updateRubricOpenState}
+					@d2l-consistent-eval-rubric-popout-closed=${this._updateRubricInfos}
 				></d2l-consistent-evaluation-rubric>
 			`;
 		}
 
 		return html``;
+	}
+
+	_updateRubricInfos() {
+		this.dispatchEvent(new CustomEvent('d2l-consistent-eval-rubric-popout-closed', {
+			composed: true,
+			bubbles: true,
+		}));
 	}
 
 	_renderGrade() {
@@ -266,7 +273,7 @@ export class ConsistentEvaluationRightPanel extends LocalizeConsistentEvaluation
 			return;
 		}
 
-		if (this.rubricsOpen === 0) {
+		if (!e.detail.ignoreRubricState && this.rubricsOpen === 0) {
 			return;
 		}
 
