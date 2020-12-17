@@ -43,6 +43,9 @@ class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(LitElement
 				font-weight: 600;
 				margin-bottom: 0.4rem;
 			}
+			.d2l-consistent-evaluation-active-scoring-rubric {
+				max-width: 100%
+			}
 		`];
 	}
 
@@ -53,7 +56,7 @@ class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(LitElement
 			if (activeRubricDropdown) {
 				activeRubricDropdown.value = this.activeScoringRubric ?
 					this.activeScoringRubric :
-					"-1";
+					'-1';
 			}
 		}
 	}
