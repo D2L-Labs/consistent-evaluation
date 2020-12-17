@@ -131,7 +131,7 @@ class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(LitElement
 		return html`
 			<h2 class="d2l-label-text">${this.localize('gradingRubric')}</h2>
 			<select class="d2l-input-select d2l-truncate d2l-consistent-evaluation-active-scoring-rubric" aria-label=${this.localize('activeGradingRubric')} @change=${this._onActiveScoringRubricChange}>
-				<option label=${this.localize('noActiveGradingRubric')} ?selected=${!this.activeScoringRubric} value=null></option>
+				<option label=${this.localize('noActiveGradingRubric')} ?selected=${!this.activeScoringRubric} value="-1"></option>
 				${scoringRubrics.map(rubric => html`
 						<option value="${rubric.rubricId}" label=${rubric.rubricTitle} class="select-option"></option>
 				`)}
