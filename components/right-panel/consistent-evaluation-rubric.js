@@ -53,7 +53,7 @@ class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(LitElement
 			if (activeRubricDropdown) {
 				activeRubricDropdown.value = this.activeScoringRubric ?
 					this.activeScoringRubric :
-					null;
+					"-1";
 			}
 		}
 	}
