@@ -43,6 +43,13 @@ class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(LitElement
 				font-weight: 600;
 				margin-bottom: 0.4rem;
 			}
+			.d2l-input-select {
+				max-width: 12rem;
+				overflow: hidden;
+				overflow-wrap: break-word;
+				text-overflow: ellipsis;
+				white-space: nowrap;
+			}
 		`];
 	}
 
@@ -130,13 +137,21 @@ class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(LitElement
 		}
 		return html`
 			<h2 class="d2l-label-text">${this.localize('gradingRubric')}</h2>
-			<select class="d2l-input-select d2l-truncate d2l-consistent-evaluation-active-scoring-rubric" aria-label=${this.localize('activeGradingRubric')} @change=${this._onActiveScoringRubricChange}>
+			<select class="d2l-input-select d2l-consistent-evaluation-active-scoring-rubric" aria-label=${this.localize('activeGradingRubric')} @change=${this._onActiveScoringRubricChange}>
 				<option label=${this.localize('noActiveGradingRubric')} ?selected=${!this.activeScoringRubric} value=null></option>
 				${scoringRubrics.map(rubric => html`
-						<option value="${rubric.rubricId}" label=${rubric.rubricTitle} class="select-option"></option>
+						<option value="${rubric.rubricId}" label=${this._truncateRubricTitle(rubric.rubricTitle)} class="select-option"></option>
 				`)}
 			</select>
 		`;
+	}
+
+	_truncateRubricTitle(rubricTitle) {
+		const maxTitleLength = 50;
+		if (rubricTitle.length <= maxTitleLength) {
+			return rubricTitle;
+		}
+		return  `${rubricTitle.substring(0, maxTitleLength)}…`;
 	}
 
 	_getSummaryText() {
