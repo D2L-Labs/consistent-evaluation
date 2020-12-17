@@ -43,8 +43,8 @@ class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(LitElement
 				font-weight: 600;
 				margin-bottom: 0.4rem;
 			}
-			.d2l-input-select {
-				max-width: 12rem;
+			.d2l-consistent-evaluation-active-scoring-rubric {
+				max-width: 100%;
 				overflow: hidden;
 				overflow-wrap: break-word;
 				text-overflow: ellipsis;
@@ -147,7 +147,7 @@ class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(LitElement
 	}
 
 	_truncateRubricTitle(rubricTitle) {
-		const maxTitleLength = 50;
+		const maxTitleLength = 60;
 		return (rubricTitle.length <= maxTitleLength) ? rubricTitle : `${rubricTitle.substring(0, maxTitleLength)}…`;
 	}
 
