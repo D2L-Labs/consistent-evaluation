@@ -190,7 +190,8 @@ class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(LitElement
 			}
 		}, false);
 
-		rubricWindowPopout.onbeforeunload =  () => {
+		rubricWindowPopout.onbeforeunload = async() => {
+			await window.D2L.Siren.EntityStore.clear();
 			this.rubricInfos = [];
 
 			this.dispatchEvent(new CustomEvent('d2l-consistent-eval-rubric-popout-closed', {
