@@ -148,10 +148,7 @@ class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(LitElement
 
 	_truncateRubricTitle(rubricTitle) {
 		const maxTitleLength = 50;
-		if (rubricTitle.length <= maxTitleLength) {
-			return rubricTitle;
-		}
-		return  `${rubricTitle.substring(0, maxTitleLength)}…`;
+		return (rubricTitle.length <= maxTitleLength) ? rubricTitle : `${rubricTitle.substring(0, maxTitleLength)}…`;
 	}
 
 	_getSummaryText() {
