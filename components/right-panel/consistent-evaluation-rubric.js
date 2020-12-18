@@ -1,6 +1,7 @@
 import './consistent-evaluation-right-panel-block';
 import 'd2l-rubric/d2l-rubric.js';
 import '@brightspace-ui/core/components/button/button.js';
+import '@brightspace-ui/core/components/icons/icon.js';
 import { css, html, LitElement } from 'lit-element';
 import { labelStyles } from '@brightspace-ui/core/components/typography/styles.js';
 import { LocalizeConsistentEvaluation } from '../../lang/localize-consistent-evaluation.js';
@@ -52,12 +53,19 @@ class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(LitElement
 				font-weight: 600;
 				margin-bottom: 0.4rem;
 			}
+			d2l-icon {
+				cursor: pointer;
+				display: flex;
+				margin-left: auto;
+				margin-right: 0;
+			}
 		`];
 	}
 
 	constructor() {
 		super();
 		this.isPopout = false;
+		this.rubricWindowPopout = undefined;
 	}
 
 	updated(changedProperties) {
@@ -90,7 +98,7 @@ class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(LitElement
 
 	}
 
-	_syncActiveRubricGrade(score, targetRubricId, ignoreRubricState) {
+	_syncActiveRubricGrade(score, targetRubricId, bypassRubricState) {
 		if (this.showActiveScoringRubricOptions && this.activeScoringRubric !== targetRubricId) {
 			return;
 		}
@@ -103,7 +111,7 @@ class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(LitElement
 			detail: {
 				score: score,
 				rubricInfo: currentRubricInfo,
-				ignoreRubricState: ignoreRubricState
+				bypassRubricState: bypassRubricState
 			}
 		}));
 	}
@@ -121,8 +129,6 @@ class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(LitElement
 	}
 
 	_getRubrics() {
-		console.log('getting rubrics again');
-		// NOTE: WHY IS POPOUT UNDEFINED
 		const rubrics =	this.rubricInfos.map(rubric => {
 			if (!rubric) {
 				return html``;
@@ -174,40 +180,37 @@ class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(LitElement
 		return this.localize('rubricSummary');
 	}
 
-	_test() {
-		//NOTE: implement a check! need to close window if one is already opened
-		const rubricWindowPopout = window.open(
+	_openRubricPopout() {
+		this.rubricWindowPopout = window.open(
 			this.rubricPopoutLocation,
-			'NAME',
+			'rubricPopout',
 			'width=1000,height=1000,scrollbars=no,toolbar=no,screenx=0,screeny=0,location=no,titlebar=no,directories=no,status=no,menubar=no'
 		);
 
-		rubricWindowPopout.addEventListener('message', (e) => {
+		this.rubricWindowPopout.addEventListener('message', (e) => {
 			if (e.data.message === 'total-score-changed') {
-				const ignoreRubricState = true;
-
-				this._syncActiveRubricGrade(e.data.rubricData.score, e.data.rubricData.targetRubricId, ignoreRubricState);
+				const bypassRubricState = true;
+				this._syncActiveRubricGrade(e.data.rubricData.score, e.data.rubricData.targetRubricId, bypassRubricState);
 			}
 		}, false);
 
-		rubricWindowPopout.onbeforeunload = async() => {
-			await window.D2L.Siren.EntityStore.clear();
-			this.rubricInfos = [];
-
-			this.dispatchEvent(new CustomEvent('d2l-consistent-eval-rubric-popout-closed', {
-				composed: true,
-				bubbles: true,
-			}));
+		this.rubricWindowPopout.onbeforeunload = async() => {
+			// Refetch the rubrics here (on window close)
 		};
 	}
 
+	_renderPopoutIcon() {
+		return this.isPopout ?
+			html`` :
+			html` <d2l-icon icon="tier1:new-window" @click=${this._openRubricPopout}></d2l-icon>`;
+	}
+
 	render() {
-		console.log('rendering the rubric component');
 		return html`
 			<d2l-consistent-evaluation-right-panel-block
 				title="${this.header}"
 				supportingInfo=${this._getSummaryText()}>
-				<d2l-button @click=${this._test}>BUTTON</d2l-button>
+					${this._renderPopoutIcon()}
 					${this._getRubrics()}
 					${this._getActiveScoringRubricSelectDropdown()}
 			</d2l-consistent-evaluation-right-panel-block>

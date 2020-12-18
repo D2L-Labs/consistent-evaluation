@@ -248,8 +248,7 @@ export class ConsistentEvaluationHrefController {
 			const rubricHrefs = this._getHrefs(root.entity, assessmentRel);
 			if (rubricHrefs) {
 				rubricInfos = await Promise.all(rubricHrefs.map(async rubricAssessmentHref => {
-					const assessmentEntity = await this._getEntityFromHref(rubricAssessmentHref, true);
-					//await window.D2L.Siren.EntityStore.update(rubricAssessmentHref, this.token, assessmentEntity.entity);
+					const assessmentEntity = await this._getEntityFromHref(rubricAssessmentHref, false);
 					if (assessmentEntity && assessmentEntity.entity) {
 						const rubricHref = this._getHref(assessmentEntity.entity, rubricRel);
 						const rubricEntity = await this._getEntityFromHref(rubricHref, false);

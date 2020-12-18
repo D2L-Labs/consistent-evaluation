@@ -54,7 +54,6 @@ export class ConsistentEvaluation extends LitElement {
 
 		this.href = undefined;
 		this.token = undefined;
-		this.controller = undefined;
 		this._rubricReadOnly = false;
 		this._richTextEditorDisabled = false;
 		this._childHrefs = undefined;
@@ -74,16 +73,16 @@ export class ConsistentEvaluation extends LitElement {
 		super.updated();
 
 		if (changedProperties.has('href')) {
-			this.controller = new ConsistentEvaluationHrefController(this.href, this.token);
-			this._childHrefs = await this.controller.getHrefs();
-			this._rubricInfos = await this.controller.getRubricInfos();
-			this._submissionInfo = await this.controller.getSubmissionInfo();
-			this._gradeItemInfo = await this.controller.getGradeItemInfo();
-			this._assignmentName = await this.controller.getAssignmentOrganizationName('assignment');
-			this._organizationName = await this.controller.getAssignmentOrganizationName('organization');
-			this._userName = await this.controller.getUserName();
-			this._iteratorTotal = await this.controller.getIteratorInfo('total');
-			this._iteratorIndex = await this.controller.getIteratorInfo('index');
+			const controller = new ConsistentEvaluationHrefController(this.href, this.token);
+			this._childHrefs = await controller.getHrefs();
+			this._rubricInfos = await controller.getRubricInfos();
+			this._submissionInfo = await controller.getSubmissionInfo();
+			this._gradeItemInfo = await controller.getGradeItemInfo();
+			this._assignmentName = await controller.getAssignmentOrganizationName('assignment');
+			this._organizationName = await controller.getAssignmentOrganizationName('organization');
+			this._userName = await controller.getUserName();
+			this._iteratorTotal = await controller.getIteratorInfo('total');
+			this._iteratorIndex = await controller.getIteratorInfo('index');
 			const stripped = this._stripFileIdFromUrl();
 			if (!stripped) {
 				this.shadowRoot.querySelector('d2l-consistent-evaluation-page')._setSubmissionsView();
@@ -149,10 +148,6 @@ export class ConsistentEvaluation extends LitElement {
 		this._loading = true;
 	}
 
-	async _updateRubricInfos() {
-		this._rubricInfos = await this.controller.getRubricInfos();
-	}
-
 	render() {
 		return html`
 			<d2l-consistent-evaluation-page
@@ -183,7 +178,6 @@ export class ConsistentEvaluation extends LitElement {
 				@d2l-consistent-evaluation-previous-student-click=${this._onPreviousStudentClick}
 				@d2l-consistent-evaluation-next-student-click=${this._onNextStudentClick}
 				@d2l-consistent-evaluation-loading-finished=${this._finishedLoading}
-				@d2l-consistent-eval-rubric-popout-closed=${this._updateRubricInfos}
 			></d2l-consistent-evaluation-page>
 		`;
 	}
