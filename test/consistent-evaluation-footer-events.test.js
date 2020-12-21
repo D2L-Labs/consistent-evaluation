@@ -14,6 +14,8 @@ const getUpdateButton = (el) => getButton(el, 'consistent-evaluation-footer-upda
 
 const getNextStudentButton = (el) => getButton(el, 'consistent-evaluation-footer-next-student');
 
+const getPreviousStudentButton = (el) => getButton(el, 'consistent-evaluation-footer-previous-student');
+
 const defaultComponent = html`
 	<d2l-consistent-evaluation-footer-presentational
 		allow-evaluation-write
@@ -39,6 +41,10 @@ const noPermissionPublishedComponent = html`
 
 const nextStudentComponent = html`
 	<d2l-consistent-evaluation-footer-presentational show-next-student></d2l-consistent-evaluation-footer-presentational>
+`;
+
+const previousStudentComponent = html`
+	<d2l-consistent-evaluation-footer-presentational show-previous-student></d2l-consistent-evaluation-footer-presentational>
 `;
 
 const eventTimeoutMS = 1000;
@@ -94,14 +100,24 @@ describe('d2l-consistent-evaluation-footer event tests', () => {
 	});
 
 	it('should emit a d2l-consistent-evaluation-navigate event', function() {
-		return new Promise((resolve, reject) => {
-			fixture(nextStudentComponent).then(el => {
-				const event = 'd2l-consistent-evaluation-navigate';
-				el.addEventListener(event, resolve);
-				getNextStudentButton(el).click();
-				setTimeout(() => reject(`timeout waiting for ${event} event`), eventTimeoutMS);
-			});
-		});
+		return Promise.all([
+			new Promise((resolve, reject) => {
+				fixture(nextStudentComponent).then(el => {
+					const event = 'd2l-consistent-evaluation-navigate';
+					el.addEventListener(event, resolve);
+					getNextStudentButton(el).click();
+					setTimeout(() => reject(`timeout waiting for ${event} event`), eventTimeoutMS);
+				});
+			}),
+			new Promise((resolve, reject) => {
+				fixture(previousStudentComponent).then(el => {
+					const event = 'd2l-consistent-evaluation-navigate';
+					el.addEventListener(event, resolve);
+					getPreviousStudentButton(el).click();
+					setTimeout(() => reject(`timeout waiting for ${event} event`), eventTimeoutMS);
+				});
+			})
+		]);
 	});
 
 	it('should not show publish or save button', function() {
