@@ -155,6 +155,7 @@ export class ConsistentEvaluation extends LitElement {
 				outcomes-href=${ifDefined(this._childHrefs && this._childHrefs.alignmentsHref)}
 				evaluation-href=${ifDefined(this._childHrefs && this._childHrefs.evaluationHref)}
 				next-student-href=${ifDefined(this._childHrefs && this._childHrefs.nextHref)}
+				previous-student-href=${ifDefined(this._childHrefs && this._childHrefs.previousHref)}
 				user-href=${ifDefined(this._childHrefs && this._childHrefs.userHref)}
 				group-href=${ifDefined(this._childHrefs && this._childHrefs.groupHref)}
 				user-progress-outcome-href=${ifDefined(this._childHrefs && this._childHrefs.userProgressOutcomeHref)}

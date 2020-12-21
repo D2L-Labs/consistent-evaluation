@@ -35,6 +35,10 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 				attribute: 'next-student-href',
 				type: String
 			},
+			previousStudentHref: {
+				attribute: 'previous-student-href',
+				type: String
+			},
 			returnHref: {
 				attribute: 'return-href',
 				type: String
@@ -804,6 +808,7 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 					${this._renderToast()}
 					<d2l-consistent-evaluation-footer-presentational
 						?show-next-student=${this.nextStudentHref}
+						?show-previous-student=${this.previousStudentHref}
 						?published=${this._isEvaluationPublished()}
 						?allow-evaluation-write=${this._allowEvaluationWrite()}
 						?allow-evaluation-delete=${this._allowEvaluationDelete()}

@@ -20,6 +20,10 @@ export class ConsistentEvaluationFooterPresentational extends LocalizeConsistent
 			showNextStudent: {
 				attribute: 'show-next-student',
 				type: Boolean
+			},
+			showPreviousStudent: {
+				attribute: 'show-previous-student',
+				type: Boolean
 			}
 		};
 	}
@@ -41,6 +45,7 @@ export class ConsistentEvaluationFooterPresentational extends LocalizeConsistent
 		super();
 		this.published = false;
 		this.showNextStudent = false;
+		this.showPreviousStudent = false;
 		this.allowEvaluationWrite = false;
 		this.allowEvaluationDelete = false;
 	}
@@ -60,11 +65,12 @@ export class ConsistentEvaluationFooterPresentational extends LocalizeConsistent
 		}));
 	}
 
-	_emitPublishEvent()     { this._dispatchButtonClickEvent('d2l-consistent-evaluation-on-publish'); }
-	_emitRetractEvent()     { this._dispatchButtonClickEvent('d2l-consistent-evaluation-on-retract'); }
-	_emitUpdateEvent()      { this._dispatchButtonClickEvent('d2l-consistent-evaluation-on-update'); }
-	_emitSaveDraftEvent()   { this._dispatchButtonClickEvent('d2l-consistent-evaluation-on-save-draft'); }
-	_emitNextStudentEvent() { this._dispatchButtonClickNavigationEvent('next'); }
+	_emitPublishEvent()         { this._dispatchButtonClickEvent('d2l-consistent-evaluation-on-publish'); }
+	_emitRetractEvent()         { this._dispatchButtonClickEvent('d2l-consistent-evaluation-on-retract'); }
+	_emitUpdateEvent()          { this._dispatchButtonClickEvent('d2l-consistent-evaluation-on-update'); }
+	_emitSaveDraftEvent()       { this._dispatchButtonClickEvent('d2l-consistent-evaluation-on-save-draft'); }
+	_emitPreviousStudentEvent() { this._dispatchButtonClickNavigationEvent('previous');}
+	_emitNextStudentEvent()     { this._dispatchButtonClickNavigationEvent('next'); }
 
 	_getPublishOrUpdateButton() {
 		const text = this.published ? this.localize('update') : this.localize('publish');
@@ -113,9 +119,27 @@ export class ConsistentEvaluationFooterPresentational extends LocalizeConsistent
 			: null;
 	}
 
+	_getPreviousStudentButton() {
+		return this.showPreviousStudent ? html`
+			<d2l-navigation-button
+				id="consistent-evaluation-footer-previous-student"
+				hide-highlight
+				text="${this.localize('previousStudent')}"
+				@click="${this._emitPreviousStudentEvent}"
+				ariaDescribedbyText="${this.localize('previousStudent')}">
+				<div>
+					<d2l-icon icon="d2l-tier3:chevron-left-circle"></d2l-icon>
+				</div>
+			</d2l-navigation-button>`
+			: null;
+	}
+
 	render() {
 		return html`
 			<div id="footer-container">
+				<div class="d2l-button-container">
+					${this._getPreviousStudentButton()}
+				</div>
 				<div class="d2l-button-container">
 					${this._getPublishOrUpdateButton()}
 				</div>
