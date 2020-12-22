@@ -212,7 +212,6 @@ class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(LitElement
 			}
 		}, false);
 
-
 		this.rubricWindowPopout.onunload = async() => {
 			this.dispatchEvent(new CustomEvent('d2l-consistent-eval-rubric-popup-closed', {
 				composed: true,

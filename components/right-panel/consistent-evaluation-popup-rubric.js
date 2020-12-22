@@ -36,11 +36,8 @@ export class ConsistentEvaluationPopupRubric extends LocalizeConsistentEvaluatio
 		    <d2l-consistent-evaluation-rubric
 				header=${this.localize('rubrics')}
 				.rubricInfos=${this._rubricInfos}
-				active-scoring-rubric=${undefined}
 				.token=${this.token}
 				is-popout
-				?show-active-scoring-rubric-options=false
-				?read-only=false
 			></d2l-consistent-evaluation-rubric>
 		`;
 	}
