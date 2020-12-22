@@ -59,9 +59,18 @@ class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(LitElement
 				margin-left: auto;
 				margin-right: 0;
 			}
+
 			.d2l-consistent-evaluation-open-rubrics {
 				float: right;
 				margin-top: -1.5rem;
+			}
+
+			.d2l-consistent-evaluation-active-scoring-rubric {
+				max-width: 100%;
+				overflow: hidden;
+				overflow-wrap: break-word;
+				text-overflow: ellipsis;
+				white-space: nowrap;
 			}
 		`];
 	}
@@ -79,7 +88,7 @@ class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(LitElement
 			if (activeRubricDropdown) {
 				activeRubricDropdown.value = this.activeScoringRubric ?
 					this.activeScoringRubric :
-					null;
+					'-1';
 			}
 		}
 	}
@@ -167,13 +176,18 @@ class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(LitElement
 		}
 		return html`
 			<h2 class="d2l-label-text">${this.localize('gradingRubric')}</h2>
-			<select class="d2l-input-select d2l-truncate d2l-consistent-evaluation-active-scoring-rubric" aria-label=${this.localize('activeGradingRubric')} @change=${this._onActiveScoringRubricChange}>
-				<option label=${this.localize('noActiveGradingRubric')} ?selected=${!this.activeScoringRubric} value=null></option>
+			<select class="d2l-input-select d2l-consistent-evaluation-active-scoring-rubric" aria-label=${this.localize('activeGradingRubric')} @change=${this._onActiveScoringRubricChange}>
+				<option label=${this.localize('noActiveGradingRubric')} ?selected=${!this.activeScoringRubric} value='-1'></option>
 				${scoringRubrics.map(rubric => html`
-						<option value="${rubric.rubricId}" label=${rubric.rubricTitle} class="select-option"></option>
+					<option value="${rubric.rubricId}" label=${this._truncateRubricTitle(rubric.rubricTitle)} class="select-option"></option>
 				`)}
 			</select>
 		`;
+	}
+
+	_truncateRubricTitle(rubricTitle) {
+		const maxTitleLength = 60;
+		return (rubricTitle.length <= maxTitleLength) ? rubricTitle : `${rubricTitle.substring(0, maxTitleLength)}…`;
 	}
 
 	_getSummaryText() {
