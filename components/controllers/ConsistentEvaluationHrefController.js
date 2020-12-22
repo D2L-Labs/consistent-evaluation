@@ -241,14 +241,17 @@ export class ConsistentEvaluationHrefController {
 		return undefined;
 	}
 
-	async getRubricInfos() {
+	async getRubricInfos(refreshRubric) {
 		let rubricInfos = [];
 		const root = await this._getRootEntity(false);
 		if (root && root.entity) {
 			const rubricHrefs = this._getHrefs(root.entity, assessmentRel);
 			if (rubricHrefs) {
 				rubricInfos = await Promise.all(rubricHrefs.map(async rubricAssessmentHref => {
-					const assessmentEntity = await this._getEntityFromHref(rubricAssessmentHref, false);
+					const assessmentEntity = await this._getEntityFromHref(rubricAssessmentHref, refreshRubric);
+					if(refreshRubric){
+						await this._refreshRubricAssessment(assessmentEntity)
+					}
 					if (assessmentEntity && assessmentEntity.entity) {
 						const rubricHref = this._getHref(assessmentEntity.entity, rubricRel);
 						const rubricEntity = await this._getEntityFromHref(rubricHref, false);
@@ -271,5 +274,17 @@ export class ConsistentEvaluationHrefController {
 		}
 
 		return rubricInfos.filter(rubricInfo => rubricInfo !== undefined);
+	}
+
+	async _refreshRubricAssessment(assessmentEntity) {
+		if(assessmentEntity && assessmentEntity.entity){
+			const criterion = assessmentEntity.entity.getSubEntitiesByClass('criterion-assessment-links')
+			criterion.map( async x => {
+				const criterionAssessmentHref = x.getLinkByRel('https://assessments.api.brightspace.com/rels/assessment-criterion');
+				if(criterionAssessmentHref) {
+					await this._getEntityFromHref(criterionAssessmentHref, true);
+				}
+			})
+		}
 	}
 }
