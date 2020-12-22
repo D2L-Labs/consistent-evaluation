@@ -10,6 +10,9 @@ export class ConsistentEvaluationTiiSimilarity extends LocalizeConsistentEvaluat
 			colour: {
 				type: String
 			},
+			error: {
+				type: Boolean
+			},
 			score: {
 				type: String
 			},
@@ -36,7 +39,6 @@ export class ConsistentEvaluationTiiSimilarity extends LocalizeConsistentEvaluat
 				width: 3.75rem;
 			}
 			.d2l-consistent-evaluation-tii-similarity-colour {
-				background-color: yellow;
 				border: 0.05rem solid;
 				height: 1.45rem;
 				width: 1.25rem;
@@ -44,23 +46,46 @@ export class ConsistentEvaluationTiiSimilarity extends LocalizeConsistentEvaluat
 		`];
 	}
 
+	_renderBar() {
+		if (this.score && this.colour) {
+			return html`
+				<div class="d2l-consistent-evaluation-tii-similarity-bar">
+					<div class="d2l-consistent-evaluation-tii-similarity-score">${this.score}</div>
+					<div class="d2l-consistent-evaluation-tii-similarity-colour" style="background-color:${this.colour};"></div>
+				</div>
+			`;
+		}
+	}
+
+	_renderError() {
+		if (this.error) {
+			return html`
+				<d2l-button-icon
+					text="${this.localize('turnitinFileNotRetrieved')}"
+					icon="tier1:alert"
+				></d2l-button-icon>
+			`;
+		}
+	}
+
+	_renderSubmitFile() {
+		if (this.submitFileUrl) {
+			return html`
+				<d2l-button-icon
+					text="${this.localize('turnitinSubmitFile')}"
+					icon="tier2:upload"
+				></d2l-button-icon>
+			`;
+		}
+	}
+
 	render() {
 		return html`
 			<div class="d2l-label-text d2l-consistent-evaluation-tii-similarity-title">${this.localize('turnitinSimilarity')}</div>
 
-			<div class="d2l-consistent-evaluation-tii-similarity-bar">
-				<div class="d2l-consistent-evaluation-tii-similarity-score">${this.score}</div>
-				<div class="d2l-consistent-evaluation-tii-similarity-colour"></div>
-			</div>
-
-			<d2l-button-icon
-				text="${this.localize('turnitinFileNotRetrieved')}"
-				icon="tier1:alert"
-			></d2l-button-icon>
-			<d2l-button-icon
-				text="${this.localize('turnitinSubmitFile')}"
-				icon="tier2:upload"
-			></d2l-button-icon>
+			${this._renderBar()}
+			${this._renderError()}
+			${this._renderSubmitFile()}
 		`;
 	}
 }

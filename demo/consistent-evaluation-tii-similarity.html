@@ -17,10 +17,26 @@
 	<body class="d2l-typography">
 		<d2l-demo-page page-title="consistent-evaluation-tii-similarity">
 
-			<h2>Standard</h2>
+			<h2>Report Exists</h2>
 			<d2l-demo-snippet>
 				<d2l-consistent-evaluation-tii-similarity
+					colour="yellow"
 					score="75%"
+				></d2l-consistent-evaluation-tii-similarity>
+			</d2l-demo-snippet>
+
+			<h2>File to be submitted</h2>
+			<d2l-demo-snippet>
+				<d2l-consistent-evaluation-tii-similarity
+					submit-file-url="www.google.com"
+				></d2l-consistent-evaluation-tii-similarity>
+			</d2l-demo-snippet>
+
+			<h2>Error</h2>
+			<d2l-demo-snippet>
+				<d2l-consistent-evaluation-tii-similarity
+					submit-file-url="www.google.com"
+					error
 				></d2l-consistent-evaluation-tii-similarity>
 			</d2l-demo-snippet>
 
