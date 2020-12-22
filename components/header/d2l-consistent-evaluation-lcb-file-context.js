@@ -38,6 +38,8 @@ export class ConsistentEvaluationLcbFileContext extends RtlMixin(LocalizeConsist
 		return [selectStyles,
 			css`
 				:host {
+					align-items: center;
+					display: flex;
 					margin-left: 0.7rem;
 				}
 				.d2l-input-select {
