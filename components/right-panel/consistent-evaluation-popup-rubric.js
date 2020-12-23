@@ -8,7 +8,19 @@ export class ConsistentEvaluationPopupRubric extends LocalizeConsistentEvaluatio
 	static get properties() {
 		return {
 			href: { type: String },
-			token: { type: Object },
+			token: {
+				type: Object,
+				converter: {
+					fromAttribute(value) {
+						const retVal = String(value);
+						return retVal;
+					},
+					toAttribute(value) {
+						const retVal = Object(value);
+						return retVal;
+					}
+				}
+			},
 			_rubricInfos: { type: Array },
 		};
 	}
