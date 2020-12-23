@@ -1,5 +1,7 @@
 import './consistent-evaluation-right-panel-block';
 import 'd2l-rubric/d2l-rubric.js';
+import '@brightspace-ui/core/components/button/button.js';
+import '@brightspace-ui/core/components/icons/icon.js';
 import { css, html, LitElement } from 'lit-element';
 import { labelStyles } from '@brightspace-ui/core/components/typography/styles.js';
 import { LocalizeConsistentEvaluation } from '../../lang/localize-consistent-evaluation.js';
@@ -23,6 +25,14 @@ class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(LitElement
 				attribute: 'show-active-scoring-rubric-options',
 				type: Boolean
 			},
+			isPopout: {
+				attribute: 'is-popout',
+				type: Boolean
+			},
+			rubricPopoutLocation: {
+				attribute: 'rubric-popout-location',
+				type: String
+			},
 			token: {
 				type: String
 			},
@@ -43,6 +53,18 @@ class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(LitElement
 				font-weight: 600;
 				margin-bottom: 0.4rem;
 			}
+			d2l-icon {
+				cursor: pointer;
+				display: flex;
+				margin-left: auto;
+				margin-right: 0;
+			}
+
+			.d2l-consistent-evaluation-open-rubrics {
+				float: right;
+				margin-top: -1.5rem;
+			}
+
 			.d2l-consistent-evaluation-active-scoring-rubric {
 				max-width: 100%;
 				overflow: hidden;
@@ -51,6 +73,12 @@ class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(LitElement
 				white-space: nowrap;
 			}
 		`];
+	}
+
+	constructor() {
+		super();
+		this.isPopout = false;
+		this.rubricWindowPopout = undefined;
 	}
 
 	updated(changedProperties) {
@@ -65,7 +93,8 @@ class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(LitElement
 		}
 	}
 
-	_syncActiveScoringRubricGrade(e) {
+	_syncActiveScoringRubricGradeHandler(e) {
+
 		const score = e.detail.score;
 		if (score === null) {
 			return;
@@ -73,6 +102,16 @@ class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(LitElement
 
 		const targetRubricId = e.target.getAttribute('data-rubric-id');
 
+		if (this.isPopout) {
+			window.postMessage({message:'total-score-changed', rubricData: {score: score, targetRubricId: targetRubricId}});
+		}
+		else {
+			this._syncActiveRubricGrade(score, targetRubricId, false);
+		}
+
+	}
+
+	_syncActiveRubricGrade(score, targetRubricId, bypassRubricState) {
 		if (this.showActiveScoringRubricOptions && this.activeScoringRubric !== targetRubricId) {
 			return;
 		}
@@ -84,7 +123,8 @@ class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(LitElement
 			bubbles: true,
 			detail: {
 				score: score,
-				rubricInfo: currentRubricInfo
+				rubricInfo: currentRubricInfo,
+				bypassRubricState: bypassRubricState
 			}
 		}));
 	}
@@ -106,7 +146,6 @@ class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(LitElement
 			if (!rubric) {
 				return html``;
 			}
-
 			return html`
 				<div class="d2l-consistent-evaluation-rubric">
 					<d2l-rubric
@@ -115,10 +154,10 @@ class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(LitElement
 						assessment-href=${rubric.rubricAssessmentHref}
 						.token=${this.token}
 						?read-only=${this.readonly}
-						force-compact
+						?force-compact=${!this.isPopout}
 						overall-score-flag
 						selected
-						@d2l-rubric-total-score-changed=${this._syncActiveScoringRubricGrade}
+						@d2l-rubric-total-score-changed=${this._syncActiveScoringRubricGradeHandler}
 					></d2l-rubric>
 				</div>
 			`;
@@ -159,11 +198,40 @@ class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(LitElement
 		return this.localize('rubricSummary');
 	}
 
+	_openRubricPopout() {
+		this.rubricWindowPopout = window.open(
+			this.rubricPopoutLocation,
+			'rubricPopout',
+			'width=1000,height=1000,scrollbars=no,toolbar=no,screenx=0,screeny=0,location=no,titlebar=no,directories=no,status=no,menubar=no'
+		);
+
+		this.rubricWindowPopout.addEventListener('message', (e) => {
+			if (e.data.message === 'total-score-changed') {
+				const bypassRubricState = true;
+				this._syncActiveRubricGrade(e.data.rubricData.score, e.data.rubricData.targetRubricId, bypassRubricState);
+			}
+		}, false);
+
+		this.rubricWindowPopout.onunload = async() => {
+			this.dispatchEvent(new CustomEvent('d2l-consistent-eval-rubric-popup-closed', {
+				composed: true,
+				bubbles: true
+			}));
+		};
+	}
+
+	_renderPopoutIcon() {
+		return this.isPopout ?
+			html`` :
+			html` <d2l-icon class='d2l-consistent-evaluation-open-rubrics' icon="tier1:new-window" @click=${this._openRubricPopout}></d2l-icon>`;
+	}
+
 	render() {
 		return html`
 			<d2l-consistent-evaluation-right-panel-block
 				title="${this.header}"
 				supportingInfo=${this._getSummaryText()}>
+					${this._renderPopoutIcon()}
 					${this._getRubrics()}
 					${this._getActiveScoringRubricSelectDropdown()}
 			</d2l-consistent-evaluation-right-panel-block>

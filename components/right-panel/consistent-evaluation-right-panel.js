@@ -85,6 +85,10 @@ export class ConsistentEvaluationRightPanel extends LocalizeConsistentEvaluation
 				attribute: 'rubric-read-only',
 				type: Boolean
 			},
+			rubricPopoutLocation: {
+				attribute: 'rubric-popout-location',
+				type: String
+			},
 			token: {
 				type: Object,
 				converter: {
@@ -138,6 +142,7 @@ export class ConsistentEvaluationRightPanel extends LocalizeConsistentEvaluation
 					header=${this.localize('rubrics')}
 					.rubricInfos=${this.rubricInfos}
 					active-scoring-rubric=${this.activeScoringRubric}
+					rubric-popout-location=${this.rubricPopoutLocation}
 					.token=${this.token}
 					?show-active-scoring-rubric-options=${showActiveScoringRubric}
 					?read-only=${this.rubricReadOnly}
@@ -260,7 +265,7 @@ export class ConsistentEvaluationRightPanel extends LocalizeConsistentEvaluation
 			return;
 		}
 
-		if (this.rubricsOpen === 0) {
+		if (!e.detail.bypassRubricState && this.rubricsOpen === 0) {
 			return;
 		}
 
