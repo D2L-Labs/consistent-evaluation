@@ -24,7 +24,7 @@ describe('d2l-consistent-evaluation-popup-rubric', () => {
 		await visualDiff.screenshotAndCompare(page, this.test.fullTitle(), { clip: rect });
 	});
 
-	it('renders rubric popout', async function() {
+	it('renders rubric popout multiple rubrics', async function() {
 		const rect = await visualDiff.getRect(page, '#multiple-rubrics');
 		await visualDiff.screenshotAndCompare(page, this.test.fullTitle(), { clip: rect });
 	});
