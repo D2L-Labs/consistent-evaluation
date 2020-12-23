@@ -44,7 +44,6 @@ export class ConsistentEvaluationPopupRubric extends LocalizeConsistentEvaluatio
 		if (!this._rubricInfos) {
 			return html ``;
 		}
-		console.log(this._rubricInfos);
 		return html`
 		    <d2l-consistent-evaluation-rubric
 				header=${this.localize('rubrics')}
