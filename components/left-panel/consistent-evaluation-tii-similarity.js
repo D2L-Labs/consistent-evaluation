@@ -13,11 +13,15 @@ export class ConsistentEvaluationTiiSimilarity extends LocalizeConsistentEvaluat
 			error: {
 				type: Boolean
 			},
-			score: {
+			originalityReportHref : {
+				attribute: 'originality-report-href',
 				type: String
 			},
-			submitFileUrl : {
-				attribute: 'submit-file-url',
+			score: {
+				type: Number
+			},
+			submitFileHref : {
+				attribute: 'submit-file-href',
 				type: String
 			}
 		};
@@ -29,7 +33,12 @@ export class ConsistentEvaluationTiiSimilarity extends LocalizeConsistentEvaluat
 				padding-bottom: 0.5rem;
 			}
 			.d2l-consistent-evaluation-tii-similarity-bar {
+				cursor: pointer;
 				display: flex;
+				width: 5.25rem;
+			}
+			.d2l-consistent-evaluation-tii-similarity-bar:hover {
+				background-color: #e1f3fd;
 			}
 			.d2l-consistent-evaluation-tii-similarity-score {
 				border: 0.05rem solid;
@@ -46,11 +55,22 @@ export class ConsistentEvaluationTiiSimilarity extends LocalizeConsistentEvaluat
 		`];
 	}
 
+	_onErrorClick() {
+		// open dialog
+	}
+
+	_onSimilarityBarClick() {
+		window.open(this.originalityReportHref);
+	}
+
 	_renderBar() {
 		if (this.score && this.colour) {
+
+			const renderScore = Math.round(this.score*100);
+
 			return html`
-				<div class="d2l-consistent-evaluation-tii-similarity-bar">
-					<div class="d2l-consistent-evaluation-tii-similarity-score">${this.score}</div>
+				<div class="d2l-consistent-evaluation-tii-similarity-bar" @click=${this._onSimilarityBarClick}>
+					<div class="d2l-consistent-evaluation-tii-similarity-score">${renderScore}%</div>
 					<div class="d2l-consistent-evaluation-tii-similarity-colour" style="background-color:${this.colour};"></div>
 				</div>
 			`;
@@ -63,13 +83,14 @@ export class ConsistentEvaluationTiiSimilarity extends LocalizeConsistentEvaluat
 				<d2l-button-icon
 					text="${this.localize('turnitinFileNotRetrieved')}"
 					icon="tier1:alert"
+					@click=${this._onErrorClick}
 				></d2l-button-icon>
 			`;
 		}
 	}
 
 	_renderSubmitFile() {
-		if (this.submitFileUrl) {
+		if (false) {
 			return html`
 				<d2l-button-icon
 					text="${this.localize('turnitinSubmitFile')}"

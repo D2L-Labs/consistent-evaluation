@@ -10,6 +10,7 @@ import '@brightspace-ui/core/components/menu/menu-item.js';
 import '@brightspace-ui/core/components/menu/menu-item-link.js';
 import '@brightspace-ui/core/components/more-less/more-less.js';
 import '@brightspace-ui/core/components/status-indicator/status-indicator.js';
+import './consistent-evaluation-tii-similarity.js';
 import { bodySmallStyles, heading3Styles, labelStyles } from '@brightspace-ui/core/components/typography/styles.js';
 import { css, html, LitElement } from 'lit-element/lit-element.js';
 import { fileSubmission, textSubmission } from '../controllers/constants';
@@ -102,6 +103,13 @@ export class ConsistentEvaluationSubmissionItem extends RtlMixin(LocalizeConsist
 		}
 		.d2l-submission-attachment-list-item-content:hover {
 			cursor: pointer;
+		}
+		.d2l-submission-attachment-list-item-tii-flexbox {
+			display: flex;
+			flex-direction: column;
+		}
+		.d2l-submission-attachment-list-item-tii {
+			padding-top: 0.5rem;
 		}
 		.d2l-attachment-read-status {
 			color: var(--d2l-color-carnelian);
@@ -367,6 +375,8 @@ export class ConsistentEvaluationSubmissionItem extends RtlMixin(LocalizeConsist
 	_renderAttachments() {
 		return html`${this.attachments.map((file) => {
 			const {id, name, size, extension, flagged, read, href} = file.properties;
+			const tii = file.entities[0].properties;
+
 			return html`
 			<d2l-list-item>
 				<div slot="illustration" class="d2l-submission-attachment-icon-container">
@@ -375,22 +385,31 @@ export class ConsistentEvaluationSubmissionItem extends RtlMixin(LocalizeConsist
 						aria-label="${getFileIconTypeFromExtension(extension)}"></d2l-icon>
 					${this._renderReadStatus(read)}
 				</div>
-				<d2l-list-item-content
-					class="d2l-submission-attachment-list-item-content"
-					file-id="${id}"
-					tabindex=0
-					@keydown=${this._dispatchFileSelectedKeyboardEvent}
-					@click="${
-	// eslint-disable-next-line lit/no-template-arrow
-	() => this._dispatchFileSelectedEvent(id)}">
-					<div class="truncate" aria-label="heading">${this._getFileTitle(name)}</div>
-					<div slot="supporting-info">
-						${this._renderFlaggedStatus(flagged)}
-						${extension.toUpperCase()}
-						<d2l-icon class="d2l-separator-icon" aria-hidden="true" icon="tier1:dot"></d2l-icon>
-						${this._getReadableFileSizeString(size)}
+				<div class="d2l-submission-attachment-list-item-tii-flexbox">
+					<d2l-list-item-content
+						class="d2l-submission-attachment-list-item-content"
+						file-id="${id}"
+						tabindex=0
+						@keydown=${this._dispatchFileSelectedKeyboardEvent}
+						@click="${
+		// eslint-disable-next-line lit/no-template-arrow
+		() => this._dispatchFileSelectedEvent(id)}">
+						<div class="truncate" aria-label="heading">${this._getFileTitle(name)}</div>
+						<div slot="supporting-info">
+							${this._renderFlaggedStatus(flagged)}
+							${extension.toUpperCase()}
+							<d2l-icon class="d2l-separator-icon" aria-hidden="true" icon="tier1:dot"></d2l-icon>
+							${this._getReadableFileSizeString(size)}
+						</div>
+					</d2l-list-item-content>
+					<div class="d2l-submission-attachment-list-item-tii">
+						<d2l-consistent-evaluation-tii-similarity
+							colour="${tii.originalityReportScoreColour}"
+							score="${tii.originalityReportScore}"
+							originality-report-href="${tii.originalityReportHref}"
+						></d2l-consistent-evaluation-tii-similarity>
 					</div>
-				</d2l-list-item-content>
+				</div>
 				${this._addMenuOptions(read, flagged, href, id)}
 			</d2l-list-item>`;
 		})}`;
