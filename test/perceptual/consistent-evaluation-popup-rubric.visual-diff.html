@@ -13,12 +13,12 @@
 			const tests = document.getElementsByTagName('d2l-consistent-evaluation-popup-rubric');
 			for (let i = 0; i < tests.length; i++) {
 				if (tests[i].id === 'multiple-rubrics') {
-					tests[i].rubricInfos = [
-						{rubricHref: 'data/rubric.json', rubricAssessmentHref: 'data/assessment.json', rubricTitle: 'firstRubric'},
-						{rubricHref: 'data/rubric.json', rubricAssessmentHref: 'data/assessment.json', rubricTitle: 'secondRubric'}];
+					tests[i]._rubricInfos = [
+						{rubricHref: 'data/rubric.json', rubricAssessmentHref: 'data/assessment.json'},
+						{rubricHref: 'data/rubric.json', rubricAssessmentHref: 'data/assessment.json'}];
 					continue;
 				}
-				tests[i].rubricInfos = [{rubricHref: 'data/rubric.json', rubricAssessmentHref: 'data/assessment.json'}];
+				tests[i]._rubricInfos = [{rubricHref: 'data/rubric.json', rubricAssessmentHref: 'data/assessment.json'}];
 			}
 		</script>
 		<style>
@@ -36,7 +36,6 @@
 
 		<div id="default">
 			<d2l-consistent-evaluation-popup-rubric
-				header="Rubrics"
 				token="token"
 			></d2l-consistent-evaluation-popup-rubric>
 		</div>

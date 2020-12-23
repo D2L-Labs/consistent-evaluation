@@ -8,7 +8,19 @@ export class ConsistentEvaluationPopupRubric extends LocalizeConsistentEvaluatio
 	static get properties() {
 		return {
 			href: { type: String },
-			token: { type: Object },
+			token: {
+				type: Object,
+				converter: {
+					fromAttribute(value) {
+						const retVal = String(value);
+						return retVal;
+					},
+					toAttribute(value) {
+						const retVal = Object(value);
+						return retVal;
+					}
+				}
+			},
 			_rubricInfos: { type: Array },
 		};
 	}
@@ -32,6 +44,7 @@ export class ConsistentEvaluationPopupRubric extends LocalizeConsistentEvaluatio
 		if (!this._rubricInfos) {
 			return html ``;
 		}
+		console.log(this._rubricInfos);
 		return html`
 		    <d2l-consistent-evaluation-rubric
 				header=${this.localize('rubrics')}
