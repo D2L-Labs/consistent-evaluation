@@ -12,7 +12,7 @@ describe('d2l-consistent-evaluation-popup-rubric', () => {
 			headless: true,
 			args: ['--no-sandbox', '--disable-setuid-sandbox', '--lang=en-GB']
 		});
-		page = await visualDiff.createPage(browser, { viewport: { width: 1000, height: 1000 } });
+		page = await visualDiff.createPage(browser, { viewport: { width: 1000, height: 2000 } });
 		await page.goto(`${visualDiff.getBaseUrl()}/test/perceptual/consistent-evaluation-popup-rubric.visual-diff.html`, { waitUntil: ['networkidle0', 'load'] });
 		await page.bringToFront();
 	});
