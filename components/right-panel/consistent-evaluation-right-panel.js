@@ -298,6 +298,10 @@ export class ConsistentEvaluationRightPanel extends LocalizeConsistentEvaluation
 			newScore
 		);
 
+		if (newGrade.score === this.grade.score) {
+			return;
+		}
+
 		this.dispatchEvent(new CustomEvent('on-d2l-consistent-eval-grade-changed', {
 			composed: true,
 			bubbles: true,
