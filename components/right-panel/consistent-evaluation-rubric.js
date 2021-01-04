@@ -72,6 +72,14 @@ class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(LitElement
 				text-overflow: ellipsis;
 				white-space: nowrap;
 			}
+
+			.d2l-consistent-evaluation-rubric-title {
+				margin-bottom: -0.5rem;
+			}
+
+			.d2l-consistent-evaluation-rubric.d2l-consistent-evaluation-popout {
+				margin: 1rem;
+			}
 		`];
 	}
 
@@ -90,6 +98,10 @@ class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(LitElement
 					this.activeScoringRubric :
 					'-1';
 			}
+		}
+
+		if (changedProperties.get('rubricPopoutLocation') && this.rubricWindowPopout) {
+			this.rubricWindowPopout.close();
 		}
 	}
 
@@ -147,7 +159,8 @@ class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(LitElement
 				return html``;
 			}
 			return html`
-				<div class="d2l-consistent-evaluation-rubric">
+				<div class="d2l-consistent-evaluation-rubric ${this.isPopout ? 'd2l-consistent-evaluation-popout' : ''}">
+					${this._renderRubricTitle(rubric.rubricTitle)}
 					<d2l-rubric
 						data-rubric-id=${rubric.rubricId}
 						href=${rubric.rubricHref}
@@ -224,6 +237,12 @@ class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(LitElement
 		return this.isPopout ?
 			html`` :
 			html` <d2l-icon class='d2l-consistent-evaluation-open-rubrics' icon="tier1:new-window" @click=${this._openRubricPopout}></d2l-icon>`;
+	}
+
+	_renderRubricTitle(rubricTitle) {
+		return !this.isPopout ?
+			html`` :
+			html`<h2 aria-label=${this.localize('rubricTitle')} class='d2l-consistent-evaluation-rubric-title'>${rubricTitle}</h2>`;
 	}
 
 	render() {
