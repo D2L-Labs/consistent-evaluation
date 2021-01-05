@@ -29,12 +29,10 @@ export class ConsistentEvaluationTiiSimilarity extends LocalizeConsistentEvaluat
 
 	static get styles() {
 		return [labelStyles, css`
-			.d2l-consistent-evaluation-tii-similarity-title {
-				padding-bottom: 0.5rem;
-			}
 			.d2l-consistent-evaluation-tii-similarity-bar {
 				cursor: pointer;
 				display: flex;
+				margin-top: 0.5rem;
 				width: 5.25rem;
 			}
 			.d2l-consistent-evaluation-tii-similarity-bar:hover {
@@ -90,7 +88,7 @@ export class ConsistentEvaluationTiiSimilarity extends LocalizeConsistentEvaluat
 	}
 
 	_renderSubmitFile() {
-		if (false) {
+		if (!this.score) {
 			return html`
 				<d2l-button-icon
 					text="${this.localize('turnitinSubmitFile')}"
@@ -102,7 +100,7 @@ export class ConsistentEvaluationTiiSimilarity extends LocalizeConsistentEvaluat
 
 	render() {
 		return html`
-			<div class="d2l-label-text d2l-consistent-evaluation-tii-similarity-title">${this.localize('turnitinSimilarity')}</div>
+			<div class="d2l-label-text">${this.localize('turnitinSimilarity')}</div>
 
 			${this._renderBar()}
 			${this._renderError()}
