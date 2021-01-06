@@ -78,7 +78,11 @@ class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(LitElement
 			}
 
 			.d2l-consistent-evaluation-rubric.d2l-consistent-evaluation-popout {
-				margin: 1rem;
+				margin: 0.5rem 1rem 1rem 1rem;
+			}
+
+			.d2l-consistent-evaluation-rubric.d2l-consistent-evaluation-popout:nth-child(n+2) {
+				margin-top: 2rem;
 			}
 		`];
 	}
@@ -248,7 +252,7 @@ class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(LitElement
 	render() {
 		return html`
 			<d2l-consistent-evaluation-right-panel-block
-				title="${this.header}"
+				title=${this.isPopout ? '' : this.header}
 				supportingInfo=${this._getSummaryText()}>
 					${this._renderPopoutIcon()}
 					${this._getRubrics()}
