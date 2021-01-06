@@ -406,6 +406,7 @@ export class ConsistentEvaluationSubmissionItem extends RtlMixin(LocalizeConsist
 						<d2l-consistent-evaluation-tii-similarity
 							colour="${tii.originalityReportScoreColour}"
 							file-id="${id}"
+							file-name="${name}"
 							originality-report-href="${tii.originalityReportHref}"
 							report-status="${tii.reportStatus}"
 							score="${tii.originalityReportScore}"

@@ -1,7 +1,7 @@
 import '@brightspace-ui/core/components/button/button-icon.js';
 import { css, html, LitElement } from 'lit-element';
 import { tiiPendingReportStatus, tiiReportCompleteStatus } from '../controllers/constants.js';
-import { labelStyles } from '@brightspace-ui/core/components/typography/styles.js';
+import { bodyCompactStyles, labelStyles } from '@brightspace-ui/core/components/typography/styles.js';
 import { LocalizeConsistentEvaluation } from '../../lang/localize-consistent-evaluation.js';
 
 export class ConsistentEvaluationTiiSimilarity extends LocalizeConsistentEvaluation(LitElement) {
@@ -16,6 +16,10 @@ export class ConsistentEvaluationTiiSimilarity extends LocalizeConsistentEvaluat
 			},
 			fileId: {
 				attribute: 'file-id',
+				type: String
+			},
+			fileName: {
+				attribute: 'file-name',
 				type: String
 			},
 			originalityReportHref : {
@@ -37,7 +41,7 @@ export class ConsistentEvaluationTiiSimilarity extends LocalizeConsistentEvaluat
 	}
 
 	static get styles() {
-		return [labelStyles, css`
+		return [bodyCompactStyles, labelStyles, css`
 			.d2l-consistent-evaluation-tii-similarity-bar {
 				cursor: pointer;
 				display: flex;
@@ -81,14 +85,22 @@ export class ConsistentEvaluationTiiSimilarity extends LocalizeConsistentEvaluat
 		this.dispatchEvent(event);
 	}
 
-	_renderBar() {
-		if (this.reportStatus != tiiReportCompleteStatus || isNaN(parseFloat(this.score))) {
+	_renderSimilarityStatus() {
+		if (this.reportStatus != tiiReportCompleteStatus) {
 			return html``;
+		} else if (isNaN(parseFloat(this.score))) {
+			return html`
+				<div class="d2l-body-compact" title="${this.localize('turnitinNoReportDescription')}">${this.localize('turnitinNoReport')}</div>
+			`;
 		}
 		const renderScore = Math.round(this.score*100);
 
 		return html`
-			<div class="d2l-consistent-evaluation-tii-similarity-bar" @click=${this._onSimilarityBarClick}>
+			<div
+				class="d2l-consistent-evaluation-tii-similarity-bar"
+				@click=${this._onSimilarityBarClick}
+				title="${this.localize('turnitinViewReport', 'file', this.fileName)}"
+			>
 				<div class="d2l-consistent-evaluation-tii-similarity-score">${renderScore}%</div>
 				<div class="d2l-consistent-evaluation-tii-similarity-colour" style="background-color:${this.colour};"></div>
 			</div>
@@ -111,7 +123,9 @@ export class ConsistentEvaluationTiiSimilarity extends LocalizeConsistentEvaluat
 		if (this.reportStatus == tiiReportCompleteStatus) {
 			return html``;
 		} else if (this.reportStatus == tiiPendingReportStatus) {
-			return html`${this.localize('inProgress')}`;
+			return html`
+				<div class="d2l-body-compact">${this.localize('inProgress')}</div>
+			`;
 		} else {
 			return html`
 				<d2l-button-icon
@@ -127,7 +141,7 @@ export class ConsistentEvaluationTiiSimilarity extends LocalizeConsistentEvaluat
 		return html`
 			<div class="d2l-label-text">${this.localize('turnitinSimilarity')}</div>
 
-			${this._renderBar()}
+			${this._renderSimilarityStatus()}
 			${this._renderError()}
 			${this._renderSubmitFile()}
 		`;
