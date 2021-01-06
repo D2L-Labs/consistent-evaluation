@@ -1,5 +1,6 @@
 import '@brightspace-ui/core/components/button/button-icon.js';
 import { css, html, LitElement } from 'lit-element';
+import { tiiPendingReportStatus, tiiReportCompleteStatus } from '../controllers/constants.js';
 import { labelStyles } from '@brightspace-ui/core/components/typography/styles.js';
 import { LocalizeConsistentEvaluation } from '../../lang/localize-consistent-evaluation.js';
 
@@ -13,8 +14,16 @@ export class ConsistentEvaluationTiiSimilarity extends LocalizeConsistentEvaluat
 			error: {
 				type: Boolean
 			},
+			fileId: {
+				attribute: 'file-id',
+				type: String
+			},
 			originalityReportHref : {
 				attribute: 'originality-report-href',
+				type: String
+			},
+			reportStatus: {
+				attribute: 'report-status',
 				type: String
 			},
 			score: {
@@ -61,18 +70,29 @@ export class ConsistentEvaluationTiiSimilarity extends LocalizeConsistentEvaluat
 		window.open(this.originalityReportHref);
 	}
 
+	_onSubmitFileClick() {
+		const event = new CustomEvent('d2l-consistent-evaluation-evidence-tii-submit-file-action', {
+			detail: {
+				fileId: this.fileId,
+			},
+			composed: true,
+			bubbles: true
+		});
+		this.dispatchEvent(event);
+	}
+
 	_renderBar() {
-		if (this.score && this.colour) {
-
-			const renderScore = Math.round(this.score*100);
-
-			return html`
-				<div class="d2l-consistent-evaluation-tii-similarity-bar" @click=${this._onSimilarityBarClick}>
-					<div class="d2l-consistent-evaluation-tii-similarity-score">${renderScore}%</div>
-					<div class="d2l-consistent-evaluation-tii-similarity-colour" style="background-color:${this.colour};"></div>
-				</div>
-			`;
+		if (this.reportStatus != tiiReportCompleteStatus || isNaN(parseFloat(this.score))) {
+			return html``;
 		}
+		const renderScore = Math.round(this.score*100);
+
+		return html`
+			<div class="d2l-consistent-evaluation-tii-similarity-bar" @click=${this._onSimilarityBarClick}>
+				<div class="d2l-consistent-evaluation-tii-similarity-score">${renderScore}%</div>
+				<div class="d2l-consistent-evaluation-tii-similarity-colour" style="background-color:${this.colour};"></div>
+			</div>
+		`;
 	}
 
 	_renderError() {
@@ -88,11 +108,16 @@ export class ConsistentEvaluationTiiSimilarity extends LocalizeConsistentEvaluat
 	}
 
 	_renderSubmitFile() {
-		if (!this.score) {
+		if (this.reportStatus == tiiReportCompleteStatus) {
+			return html``;
+		} else if (this.reportStatus == tiiPendingReportStatus) {
+			return html`${this.localize('inProgress')}`;
+		} else {
 			return html`
 				<d2l-button-icon
 					text="${this.localize('turnitinSubmitFile')}"
 					icon="tier2:upload"
+					@click=${this._onSubmitFileClick}
 				></d2l-button-icon>
 			`;
 		}

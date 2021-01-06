@@ -4,7 +4,7 @@ import '@brightspace-ui/core/components/list/list.js';
 import '@brightspace-ui/core/components/colors/colors.js';
 import './consistent-evaluation-submission-item.js';
 import { css, html, LitElement } from 'lit-element/lit-element.js';
-import { toggleFlagActionName, toggleIsReadActionName } from '../controllers/constants.js';
+import { tiiRel, tiiSubmitActionName, toggleFlagActionName, toggleIsReadActionName } from '../controllers/constants.js';
 import { Classes } from 'd2l-hypermedia-constants';
 import { findFile } from '../helpers/submissionsAndFilesHelpers.js';
 import { performSirenAction } from 'siren-sdk/src/es6/SirenAction.js';
@@ -281,6 +281,16 @@ export class ConsistentEvaluationSubmissionsPage extends SkeletonMixin(RtlMixin(
 		}
 	}
 
+	async _submitFileTiiAction(e) {
+		const fileId = e.detail.fileId;
+
+		const attachmentEntity = this._getAttachmentEntity(fileId);
+		const tiiEntity = attachmentEntity.getSubEntityByRel(tiiRel);
+		const submitAction = tiiEntity.getActionByName(tiiSubmitActionName);
+
+		await this._doSirenActionAndRefreshFileStatus(submitAction);
+	}
+
 	async _doSirenActionAndRefreshFileStatus(action) {
 		const newSubmissionEntity = await performSirenAction(this.token, action, undefined, true);
 		const submissionSelfLink = newSubmissionEntity.getLinkByRel('self');
@@ -311,6 +321,7 @@ export class ConsistentEvaluationSubmissionsPage extends SkeletonMixin(RtlMixin(
 							?late=${latenessTimespan !== undefined}
 							@d2l-consistent-evaluation-evidence-toggle-action=${this._toggleAction}
 							@d2l-consistent-evaluation-evidence-file-download=${this._downloadAction}
+							@d2l-consistent-evaluation-evidence-tii-submit-file-action=${this._submitFileTiiAction}
 						></d2l-consistent-evaluation-submission-item>`);
 				} else {
 					console.warn('Consistent Evaluation submission date property not found');

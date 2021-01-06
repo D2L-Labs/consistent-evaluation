@@ -24,6 +24,7 @@ export default {
 	"gradeSummary": "{grade} out of {outOf}",
 	"gradingRubric": "Grading Rubric",
 	"groupIteratorText": "Group {num} of {total}",
+	"inProgress": "In progress",
 	"kB": " KB",
 	"late": "late",
 	"leaveBtn": "Leave",
