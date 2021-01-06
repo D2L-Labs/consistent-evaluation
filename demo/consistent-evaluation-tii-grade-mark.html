@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<link rel="stylesheet" href="/node_modules/@brightspace-ui/core/components/demo/styles.css" type="text/css">
+		<script src="/node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+		<script type="module">
+			import '@brightspace-ui/core/components/demo/demo-page.js';
+			import '@brightspace-ui/core/components/typography/styles.js';
+			import '@brightspace-ui/core/components/typography/typography.js';
+			import '../components/left-panel/consistent-evaluation-tii-grade-mark.js';
+		</script>
+		<title>d2l-consistent-rubric</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta http-equiv="X-UA-Compatible" content="ie=edge">
+		<meta charset="UTF-8">
+	</head>
+	<body class="d2l-typography">
+		<d2l-demo-page page-title="consistent-evaluation-tii-grade-mark">
+
+			<h2>Grade mark component</h2>
+			<d2l-demo-snippet>
+				<d2l-consistent-evaluation-tii-grade-mark
+					grade-mark-file-name="Assignment-01.png"
+					grade-mark-href="href"
+					grade-mark-score=79
+					grade-mark-out-of=100>
+				></d2l-consistent-evaluation-tii-grade-mark>
+			</d2l-demo-snippet>
+
+		</d2l-demo-page>
+	</body>
+</html>
