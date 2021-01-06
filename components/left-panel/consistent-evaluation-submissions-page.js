@@ -6,6 +6,7 @@ import './consistent-evaluation-submission-item.js';
 import { css, html, LitElement } from 'lit-element/lit-element.js';
 import { toggleFlagActionName, toggleIsReadActionName } from '../controllers/constants.js';
 import { Classes } from 'd2l-hypermedia-constants';
+import { ConsistentEvalTelemetry } from '../helpers/consistent-eval-telemetry.js';
 import { findFile } from '../helpers/submissionsAndFilesHelpers.js';
 import { performSirenAction } from 'siren-sdk/src/es6/SirenAction.js';
 import { RtlMixin } from '@brightspace-ui/core/mixins/rtl-mixin.js';
@@ -34,6 +35,10 @@ export class ConsistentEvaluationSubmissionsPage extends SkeletonMixin(RtlMixin(
 						return retVal;
 					}
 				}
+			},
+			dataTelemetryEndpoint: {
+				attribute: 'data-telemetry-endpoint',
+				type: String
 			}
 		};
 	}
@@ -134,6 +139,7 @@ export class ConsistentEvaluationSubmissionsPage extends SkeletonMixin(RtlMixin(
 		this._submissionList = [];
 		this._token = undefined;
 		this._submissionEntities = [];
+		this._perfRenderEventName = 'submissionsComponentRender';
 	}
 
 	get submissionList() {
@@ -160,6 +166,13 @@ export class ConsistentEvaluationSubmissionsPage extends SkeletonMixin(RtlMixin(
 			if (this._submissionList && this._token) {
 				this._initializeSubmissionEntities().then(() => this.requestUpdate());
 			}
+		}
+	}
+
+	updated(changedProperties) {
+		if (changedProperties.has('dataTelemetryEndpoint')) {
+			this._telemetry = new ConsistentEvalTelemetry(this.dataTelemetryEndpoint);
+			this._telemetry.markEventStart(this._perfRenderEventName);
 		}
 	}
 
@@ -210,6 +223,9 @@ export class ConsistentEvaluationSubmissionsPage extends SkeletonMixin(RtlMixin(
 	}
 
 	_finishedLoading() {
+		if (this._telemetry) {
+			this._telemetry.markEventEndAndLog(this._perfRenderEventName, this._submissionList.length);
+		}
 		this.dispatchEvent(new CustomEvent('d2l-consistent-evaluation-loading-finished', {
 			composed: true,
 			bubbles: true,
