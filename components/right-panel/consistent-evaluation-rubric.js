@@ -253,7 +253,7 @@ class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(LitElement
 		if (!this.isPopout) {
 			return this.header;
 		}
-		return "";
+		return '';
 	}
 
 	render() {
