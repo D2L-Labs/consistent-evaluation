@@ -252,7 +252,7 @@ class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(LitElement
 	render() {
 		return html`
 			<d2l-consistent-evaluation-right-panel-block
-				title=${this.isPopout ? '': this.header}
+				title=${this.isPopout ? '' : this.header}
 				supportingInfo=${this._getSummaryText()}>
 					${this._renderPopoutIcon()}
 					${this._getRubrics()}
