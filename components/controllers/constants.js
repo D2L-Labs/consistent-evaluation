@@ -41,5 +41,6 @@ export const submissionTypesWithNoEvidence = [onPaperSubmission, observedInPerso
 export const toggleIsReadActionName = 'ToggleRead';
 export const toggleFlagActionName = 'ToggleFlagged';
 export const tiiPendingReportStatus ='PendingReport';
+export const tiiPendingRetrievalStatus = 'PendingRetrieval';
 export const tiiReportCompleteStatus = 'ReportComplete';
 export const tiiSubmitActionName = 'TurnitinSubmit';

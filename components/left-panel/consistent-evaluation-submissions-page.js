@@ -285,6 +285,10 @@ export class ConsistentEvaluationSubmissionsPage extends SkeletonMixin(RtlMixin(
 		const fileId = e.detail.fileId;
 
 		const attachmentEntity = this._getAttachmentEntity(fileId);
+		if (!attachmentEntity) {
+			throw new Error('Invalid entity provided for attachment');
+		}
+
 		const tiiEntity = attachmentEntity.getSubEntityByRel(tiiRel);
 		const submitAction = tiiEntity.getActionByName(tiiSubmitActionName);
 

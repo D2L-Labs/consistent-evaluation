@@ -1,6 +1,6 @@
 import '@brightspace-ui/core/components/button/button-icon.js';
 import { css, html, LitElement } from 'lit-element';
-import { tiiPendingReportStatus, tiiReportCompleteStatus } from '../controllers/constants.js';
+import { tiiPendingReportStatus, tiiPendingRetrievalStatus, tiiReportCompleteStatus } from '../controllers/constants.js';
 import { bodyCompactStyles, labelStyles } from '@brightspace-ui/core/components/typography/styles.js';
 import { LocalizeConsistentEvaluation } from '../../lang/localize-consistent-evaluation.js';
 
@@ -74,7 +74,7 @@ export class ConsistentEvaluationTiiSimilarity extends LocalizeConsistentEvaluat
 		window.open(this.originalityReportHref);
 	}
 
-	_onSubmitFileClick() {
+	async _onSubmitFileClick() {
 		const event = new CustomEvent('d2l-consistent-evaluation-evidence-tii-submit-file-action', {
 			detail: {
 				fileId: this.fileId,
@@ -83,6 +83,9 @@ export class ConsistentEvaluationTiiSimilarity extends LocalizeConsistentEvaluat
 			bubbles: true
 		});
 		this.dispatchEvent(event);
+
+		this.reportStatus = tiiPendingReportStatus;
+		await this.requestUpdate();
 	}
 
 	_renderSimilarityStatus() {
@@ -122,7 +125,7 @@ export class ConsistentEvaluationTiiSimilarity extends LocalizeConsistentEvaluat
 	_renderSubmitFile() {
 		if (this.reportStatus == tiiReportCompleteStatus) {
 			return html``;
-		} else if (this.reportStatus == tiiPendingReportStatus) {
+		} else if (this.reportStatus == tiiPendingReportStatus || this.reportStatus == tiiPendingRetrievalStatus) {
 			return html`
 				<div class="d2l-body-compact">${this.localize('inProgress')}</div>
 			`;
