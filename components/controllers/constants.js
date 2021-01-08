@@ -40,6 +40,7 @@ export const submissions = 'Submissions';
 export const submissionTypesWithNoEvidence = [onPaperSubmission, observedInPerson];
 export const toggleIsReadActionName = 'ToggleRead';
 export const toggleFlagActionName = 'ToggleFlagged';
+export const tiiErrorStatus = 'Error';
 export const tiiPendingReportStatus ='PendingReport';
 export const tiiPendingRetrievalStatus = 'PendingRetrieval';
 export const tiiReportCompleteStatus = 'ReportComplete';

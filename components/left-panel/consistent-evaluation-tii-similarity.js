@@ -1,7 +1,9 @@
 import '@brightspace-ui/core/components/button/button-icon.js';
+import '@brightspace-ui/core/components/dialog/dialog.js';
+import '@brightspace-ui/core/components/icons/icon.js';
 import { css, html, LitElement } from 'lit-element';
-import { tiiPendingReportStatus, tiiPendingRetrievalStatus, tiiReportCompleteStatus, tiiReportNotSubmitted } from '../controllers/constants.js';
-import { bodyCompactStyles, labelStyles } from '@brightspace-ui/core/components/typography/styles.js';
+import { tiiErrorStatus, tiiPendingReportStatus, tiiPendingRetrievalStatus, tiiReportCompleteStatus, tiiReportNotSubmitted } from '../controllers/constants.js';
+import { bodyCompactStyles, heading4Styles, labelStyles } from '@brightspace-ui/core/components/typography/styles.js';
 import { LocalizeConsistentEvaluation } from '../../lang/localize-consistent-evaluation.js';
 
 export class ConsistentEvaluationTiiSimilarity extends LocalizeConsistentEvaluation(LitElement) {
@@ -11,8 +13,9 @@ export class ConsistentEvaluationTiiSimilarity extends LocalizeConsistentEvaluat
 			colour: {
 				type: String
 			},
-			error: {
-				type: Boolean
+			errorMessage: {
+				attribute: 'error-message',
+				type: String
 			},
 			fileId: {
 				attribute: 'file-id',
@@ -41,7 +44,7 @@ export class ConsistentEvaluationTiiSimilarity extends LocalizeConsistentEvaluat
 	}
 
 	static get styles() {
-		return [bodyCompactStyles, labelStyles, css`
+		return [bodyCompactStyles, heading4Styles, labelStyles, css`
 			.d2l-consistent-evaluation-tii-similarity-bar {
 				cursor: pointer;
 				display: flex;
@@ -67,7 +70,10 @@ export class ConsistentEvaluationTiiSimilarity extends LocalizeConsistentEvaluat
 	}
 
 	_onErrorClick() {
-		// open dialog
+		const dialog = this.shadowRoot.querySelector('d2l-dialog');
+		if (dialog) {
+			dialog.opened = true;
+		}
 	}
 
 	_onSimilarityBarClick() {
@@ -111,13 +117,26 @@ export class ConsistentEvaluationTiiSimilarity extends LocalizeConsistentEvaluat
 	}
 
 	_renderError() {
-		if (this.error) {
+		if (this.reportStatus == tiiErrorStatus) {
+
+			let errorMessage = this.errorMessage;
+			if (!errorMessage) {
+				errorMessage = this.localize('turnitinFileNotRetrieved');
+			}
+
 			return html`
 				<d2l-button-icon
-					text="${this.localize('turnitinFileNotRetrieved')}"
+					text="${errorMessage}"
 					icon="tier1:alert"
 					@click=${this._onErrorClick}
 				></d2l-button-icon>
+
+				<d2l-dialog title-text="${this.localize('warning')}">
+					<d2l-icon icon="tier3:alert" style="color: red;"></d2l-icon>
+					<div class="d2l-heading-4">${this.localize('turnitinReportNotGenerated')}</div>
+					<div class="d2l-body-compact">${this.localize('turnitinErrorMessage')} ${errorMessage}</div>
+					<d2l-button slot="footer" primary data-dialog-action="done">${this.localize('ok')}</d2l-button>
+				</d2l-dialog>
 			`;
 		}
 	}

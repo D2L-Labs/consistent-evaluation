@@ -39,6 +39,7 @@ export default {
 	"noSubmissions": "No submissions made for this assignment",
 	"observedInPerson": "Observed In Person",
 	"onPaperSubmission": "On Paper Submission",
+	"ok": "OK",
 	"outcomes": "Outcomes",
 	"outcomesSummary" : "Outcomes aligned",
 	"overallAchievement": "Overall Achievement",
@@ -63,9 +64,11 @@ export default {
 	"submitted": "Submitted",
 	"textSubmission": "Text Submission",
 	"tryDonwloadFile": "Try downloading the file instead",
+	"turnitinErrorMessage": "Message from Turnitin®:",
 	"turnitinFileNotRetrieved": "Your file could not be retrieved from its host url",
 	"turnitinNoReport": "No Report",
 	"turnitinNoReportDescription": "Originality Report isn't applicable for this submission and won't be generated.",
+	"turnitinReportNotGenerated": "An originality report could not be generated.",
 	"turnitinSimilarity": "Turnitin® Similarity",
 	"turnitinSubmitFile": "Submit file to Turnitin®",
 	"turnitinViewReport": "View originality report for {file}",
@@ -80,5 +83,6 @@ export default {
 	"updated":  "Evaluation updated",
 	"userIteratorText": "User {num} of {total}",
 	"userSubmissions": "User Submissions",
-	"viewFullSubmission": "View Full Submission"
+	"viewFullSubmission": "View Full Submission",
+	"warning": "Warning"
 };

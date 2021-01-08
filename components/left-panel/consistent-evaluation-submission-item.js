@@ -372,10 +372,31 @@ export class ConsistentEvaluationSubmissionItem extends RtlMixin(LocalizeConsist
 		}
 	}
 
+	_renderTii(id, name, file) {
+		if (!file.entities) {
+			return html``;
+		}
+
+		const tii = file.entities[0].properties;
+
+		return html`
+			<div class="d2l-submission-attachment-list-item-tii">
+				<d2l-consistent-evaluation-tii-similarity
+					colour="${tii.originalityReportScoreColour}"
+					error-message="${tii.errorMessage}"
+					file-id="${id}"
+					file-name="${name}"
+					originality-report-href="${tii.originalityReportHref}"
+					report-status="${tii.reportStatus}"
+					score="${tii.originalityReportScore}"
+				></d2l-consistent-evaluation-tii-similarity>
+			</div>
+		`;
+	}
+
 	_renderAttachments() {
 		return html`${this.attachments.map((file) => {
 			const {id, name, size, extension, flagged, read, href} = file.properties;
-			const tii = file.entities[0].properties;
 
 			return html`
 			<d2l-list-item>
@@ -402,16 +423,7 @@ export class ConsistentEvaluationSubmissionItem extends RtlMixin(LocalizeConsist
 							${this._getReadableFileSizeString(size)}
 						</div>
 					</d2l-list-item-content>
-					<div class="d2l-submission-attachment-list-item-tii">
-						<d2l-consistent-evaluation-tii-similarity
-							colour="${tii.originalityReportScoreColour}"
-							file-id="${id}"
-							file-name="${name}"
-							originality-report-href="${tii.originalityReportHref}"
-							report-status="${tii.reportStatus}"
-							score="${tii.originalityReportScore}"
-						></d2l-consistent-evaluation-tii-similarity>
-					</div>
+					${this._renderTii(id, name, file)}
 				</div>
 				${this._addMenuOptions(read, flagged, href, id)}
 			</d2l-list-item>`;
