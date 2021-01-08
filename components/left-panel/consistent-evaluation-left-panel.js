@@ -55,6 +55,10 @@ export class ConsistentEvaluationLeftPanel extends SkeletonMixin(LocalizeConsist
 			currentFileId: {
 				attribute: 'current-file-id',
 				type: String
+			},
+			hideUseGrade: {
+				attribute: 'hide-use-grade',
+				type: Boolean
 			}
 		};
 	}
@@ -200,6 +204,7 @@ export class ConsistentEvaluationLeftPanel extends SkeletonMixin(LocalizeConsist
 			.submissionList=${this.submissionInfo && this.submissionInfo.submissionList}
 			.token=${this.token}
 			?skeleton=${this.skeleton}
+			?hide-use-grade=${this.hideUseGrade}
 		></d2l-consistent-evaluation-submissions-page>`;
 	}
 

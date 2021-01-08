@@ -1,6 +1,7 @@
 import '@brightspace-ui/core/components/button/button-subtle.js';
 import '@brightspace-ui/core/components/button/button-icon.js';
 import { css, html, LitElement } from 'lit-element';
+import { Grade, GradeType } from '@brightspace-ui-labs/grade-result/src/controller/Grade';
 import { labelStyles } from '@brightspace-ui/core/components/typography/styles.js';
 import { LocalizeConsistentEvaluation } from '../../lang/localize-consistent-evaluation.js';
 
@@ -16,6 +17,10 @@ export class ConsistentEvaluationTiiGradeMark extends LocalizeConsistentEvaluati
 				attribute: 'grade-mark-file-name',
 				type: String
 			},
+			fileId: {
+				attribute: 'file-id',
+				type: String
+			},
 			outOf: {
 				attribute: 'grade-mark-out-of',
 				type: Number
@@ -23,6 +28,10 @@ export class ConsistentEvaluationTiiGradeMark extends LocalizeConsistentEvaluati
 			score: {
 				attribute: 'grade-mark-score',
 				type: Number
+			},
+			hideUseGrade: {
+				attribute: 'hide-use-grade',
+				type: Boolean
 			},
 		};
 	}
@@ -33,23 +42,43 @@ export class ConsistentEvaluationTiiGradeMark extends LocalizeConsistentEvaluati
 	}
 
 	_onEditButtonClick() {
-		console.log('edit');
-		console.log(this.gradeMarkHref);
 		window.open(this.gradeMarkHref);
 	}
 
 	_onRefreshButtonClick() {
+		// only show if action is there
 		console.log('refresh');
+		this.dispatchEvent(new CustomEvent('d2l-consistent-evaluation-evidence-refresh-grade-mark', {
+			detail: {
+				fileId: this.fileId,
+			},
+			composed: true,
+			bubbles: true
+		}));
 	}
 
-	_renderGradeButton() {
+	_dispatchUseGradeEvent() {
+		const grade = new Grade(GradeType.Number, this.score, this.outOf, null, null, null);
+		this.dispatchEvent(new CustomEvent('d2l-consistent-evaluation-use-tii-grade', {
+			detail: {
+				grade: grade
+			},
+			composed: true,
+			bubbles: true
+		}));
+	}
+
+	_renderUseGradeButton() {
 		// @click should trigger an event to page -> right panel -> grade result with the grade from TII
-		return html`
-			<d2l-button-subtle
-				icon="tier1:grade"
-				text="${this.localize('turnitinUseGrade')}"
-			></d2l-button-subtle>
-		`;
+		return (this.score && !this.hideUseGrade) ?
+			html`
+				<d2l-button-subtle
+					icon="tier1:grade"
+					text="${this.localize('turnitinUseGrade')}"
+					@click=${this._dispatchUseGradeEvent}
+				></d2l-button-subtle>
+			` :
+			html ``;
 	}
 
 	_renderEditButton() {
@@ -86,7 +115,7 @@ export class ConsistentEvaluationTiiGradeMark extends LocalizeConsistentEvaluati
 				${this._renderGradeMark()}
 				${this._renderEditButton()}
 				${this._renderRefreshButton()}
-				${this._renderGradeButton()}
+				${this._renderUseGradeButton()}
 			</div>
 		`;
 	}

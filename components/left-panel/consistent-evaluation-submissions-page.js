@@ -34,6 +34,10 @@ export class ConsistentEvaluationSubmissionsPage extends SkeletonMixin(RtlMixin(
 						return retVal;
 					}
 				}
+			},
+			hideUseGrade: {
+				attribute: 'hide-use-grade',
+				type: Boolean
 			}
 		};
 	}
@@ -281,6 +285,21 @@ export class ConsistentEvaluationSubmissionsPage extends SkeletonMixin(RtlMixin(
 		}
 	}
 
+	async _RefreshGradeMarkTiiAction(e) {
+		const fileId = e.detail.fileId;
+		console.log('doingstuff');
+
+		const attachmentEntity = this._getAttachmentEntity(fileId);
+		if (!attachmentEntity) {
+			throw new Error('Invalid entity provided for attachment');
+		}
+
+		const tiiEntity = attachmentEntity.getSubEntityByRel('https://assignments.api.brightspace.com/rels/turnitin');
+		const submitAction = tiiEntity.getActionByName('TurnitinRefresh');
+
+		await this._doSirenActionAndRefreshFileStatus(submitAction);
+	}
+
 	async _doSirenActionAndRefreshFileStatus(action) {
 		const newSubmissionEntity = await performSirenAction(this.token, action, undefined, true);
 		const submissionSelfLink = newSubmissionEntity.getLinkByRel('self');
@@ -311,6 +330,8 @@ export class ConsistentEvaluationSubmissionsPage extends SkeletonMixin(RtlMixin(
 							?late=${latenessTimespan !== undefined}
 							@d2l-consistent-evaluation-evidence-toggle-action=${this._toggleAction}
 							@d2l-consistent-evaluation-evidence-file-download=${this._downloadAction}
+							@d2l-consistent-evaluation-evidence-refresh-grade-mark=${this._RefreshGradeMarkTiiAction}
+							?hide-use-grade=${this.hideUseGrade}
 						></d2l-consistent-evaluation-submission-item>`);
 				} else {
 					console.warn('Consistent Evaluation submission date property not found');

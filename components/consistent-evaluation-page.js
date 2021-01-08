@@ -771,6 +771,8 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 						user-progress-outcome-href=${ifDefined(this.userProgressOutcomeHref)}
 						.currentFileId=${this.currentFileId}
 						@d2l-consistent-eval-annotations-update=${this._transientSaveAnnotations}
+						@d2l-consistent-evaluation-use-tii-grade=${this._transientSaveGrade}
+						?hide-use-grade=${this._noGradeComponent()}
 					></d2l-consistent-evaluation-left-panel>
 				</div>
 				<div slot="secondary">

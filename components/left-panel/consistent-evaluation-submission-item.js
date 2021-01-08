@@ -10,6 +10,7 @@ import '@brightspace-ui/core/components/menu/menu-item.js';
 import '@brightspace-ui/core/components/menu/menu-item-link.js';
 import '@brightspace-ui/core/components/more-less/more-less.js';
 import '@brightspace-ui/core/components/status-indicator/status-indicator.js';
+import './consistent-evaluation-tii-grade-mark.js';
 import { bodySmallStyles, heading3Styles, labelStyles } from '@brightspace-ui/core/components/typography/styles.js';
 import { css, html, LitElement } from 'lit-element/lit-element.js';
 import { fileSubmission, textSubmission } from '../controllers/constants';
@@ -51,6 +52,10 @@ export class ConsistentEvaluationSubmissionItem extends RtlMixin(LocalizeConsist
 			submissionType: {
 				attribute: 'submission-type',
 				type: String
+			},
+			hideUseGrade: {
+				attribute: 'hide-use-grade',
+				type: Boolean
 			}
 		};
 	}
@@ -367,6 +372,7 @@ export class ConsistentEvaluationSubmissionItem extends RtlMixin(LocalizeConsist
 	_renderAttachments() {
 		return html`${this.attachments.map((file) => {
 			const {id, name, size, extension, flagged, read, href} = file.properties;
+			const tiiInfo = file.entities[0].properties;
 			return html`
 			<d2l-list-item>
 				<div slot="illustration" class="d2l-submission-attachment-icon-container">
@@ -392,7 +398,16 @@ export class ConsistentEvaluationSubmissionItem extends RtlMixin(LocalizeConsist
 					</div>
 				</d2l-list-item-content>
 				${this._addMenuOptions(read, flagged, href, id)}
-			</d2l-list-item>`;
+			</d2l-list-item>
+			<d2l-consistent-evaluation-tii-grade-mark
+				file-id=${id}
+			    grade-mark-file-name=${file.properties.name}
+				grade-mark-href=${tiiInfo.gradeMarkHref}
+				grade-mark-out-of=${tiiInfo.gradeMarkOutOf}
+				grade-mark-score=${tiiInfo.gradeMarkScore}
+				?hide-use-grade=${this.hideUseGrade}
+			></d2l-consistent-evaluation-tii-grade-mark>
+			`;
 		})}`;
 	}
 
