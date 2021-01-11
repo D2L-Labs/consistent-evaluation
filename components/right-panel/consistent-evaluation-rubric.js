@@ -113,7 +113,7 @@ class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(LitElement
 		if (changedProperties.has('activeScoringRubric')) {
 			const activeRubricDropdown = this.shadowRoot.querySelector('.d2l-consistent-evaluation-active-scoring-rubric');
 			if (activeRubricDropdown) {
-				activeRubricDropdown.value = this.activeScoringRubric && this.activeScoringRubric != 'null' ?
+				activeRubricDropdown.value = this.activeScoringRubric && this.activeScoringRubric !== 'null' ?
 					this.activeScoringRubric :
 					'-1';
 			}
@@ -261,7 +261,7 @@ class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(LitElement
 	_openRubricPopout() {
 		this._closeRubric();
 
-		if(this.rubricWindowPopout) {
+		if (this.rubricWindowPopout) {
 			if (!this.rubricWindowPopout.closed) {
 				this.rubricWindowPopout.focus();
 				return;
