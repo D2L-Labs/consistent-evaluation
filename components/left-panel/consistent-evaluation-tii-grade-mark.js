@@ -32,7 +32,7 @@ export class ConsistentEvaluationTiiGradeMark extends LocalizeConsistentEvaluati
 			hideUseGrade: {
 				attribute: 'hide-use-grade',
 				type: Boolean
-			},
+			}
 		};
 	}
 
@@ -45,9 +45,9 @@ export class ConsistentEvaluationTiiGradeMark extends LocalizeConsistentEvaluati
 		window.open(this.gradeMarkHref);
 	}
 
-	_onRefreshButtonClick() {
-		// only show if action is there
-		console.log('refresh');
+	_dispatchRefreshButtonClick() {
+		// TODO: only show if action is there
+		console.log('refreshing');
 		this.dispatchEvent(new CustomEvent('d2l-consistent-evaluation-evidence-refresh-grade-mark', {
 			detail: {
 				fileId: this.fileId,
@@ -69,7 +69,6 @@ export class ConsistentEvaluationTiiGradeMark extends LocalizeConsistentEvaluati
 	}
 
 	_renderUseGradeButton() {
-		// @click should trigger an event to page -> right panel -> grade result with the grade from TII
 		return (this.score && !this.hideUseGrade) ?
 			html`
 				<d2l-button-subtle
@@ -99,7 +98,7 @@ export class ConsistentEvaluationTiiGradeMark extends LocalizeConsistentEvaluati
 				text="${this.localize('turnitinGradeMarkRefresh', { file: this.fileName })}"
 				icon="tier1:refresh"
 				href=${this.href}
-				@click=${this._onRefreshButtonClick}
+				@click=${this._dispatchRefreshButtonClick}
 			></d2l-button-icon>
 		`;
 	}
@@ -109,6 +108,7 @@ export class ConsistentEvaluationTiiGradeMark extends LocalizeConsistentEvaluati
 	}
 
 	render() {
+		console.log('rerendering');
 		return html`
 			<div class="d2l-label-text">${this.localize('turnitinGradeMark')}</div>
 			<div>

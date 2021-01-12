@@ -285,9 +285,8 @@ export class ConsistentEvaluationSubmissionsPage extends SkeletonMixin(RtlMixin(
 		}
 	}
 
-	async _RefreshGradeMarkTiiAction(e) {
+	async _refreshGradeMarkTiiAction(e) {
 		const fileId = e.detail.fileId;
-		console.log('doingstuff');
 
 		const attachmentEntity = this._getAttachmentEntity(fileId);
 		if (!attachmentEntity) {
@@ -330,7 +329,7 @@ export class ConsistentEvaluationSubmissionsPage extends SkeletonMixin(RtlMixin(
 							?late=${latenessTimespan !== undefined}
 							@d2l-consistent-evaluation-evidence-toggle-action=${this._toggleAction}
 							@d2l-consistent-evaluation-evidence-file-download=${this._downloadAction}
-							@d2l-consistent-evaluation-evidence-refresh-grade-mark=${this._RefreshGradeMarkTiiAction}
+							@d2l-consistent-evaluation-evidence-refresh-grade-mark=${this._refreshGradeMarkTiiAction}
 							?hide-use-grade=${this.hideUseGrade}
 						></d2l-consistent-evaluation-submission-item>`);
 				} else {
