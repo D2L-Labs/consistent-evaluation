@@ -109,8 +109,8 @@ export class ConsistentEvaluationSubmissionItem extends RtlMixin(LocalizeConsist
 			flex-direction: column;
 		}
 		.d2l-submission-attachment-list-item-tii {
-			padding-top: 0.5rem;
 			padding-bottom: 0.3rem;
+			padding-top: 0.5rem;
 		}
 		.d2l-attachment-read-status {
 			color: var(--d2l-color-carnelian);
@@ -414,8 +414,8 @@ export class ConsistentEvaluationSubmissionItem extends RtlMixin(LocalizeConsist
 						tabindex=0
 						@keydown=${this._dispatchFileSelectedKeyboardEvent}
 						@click="${
-		// eslint-disable-next-line lit/no-template-arrow
-		() => this._dispatchFileSelectedEvent(id)}">
+	// eslint-disable-next-line lit/no-template-arrow
+	() => this._dispatchFileSelectedEvent(id)}">
 						<div class="truncate" aria-label="heading">${this._getFileTitle(name)}</div>
 						<div slot="supporting-info">
 							${this._renderFlaggedStatus(flagged)}

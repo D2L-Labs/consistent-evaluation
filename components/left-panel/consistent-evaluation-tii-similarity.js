@@ -1,8 +1,8 @@
 import '@brightspace-ui/core/components/button/button-icon.js';
 import '@brightspace-ui/core/components/dialog/dialog.js';
+import { bodyCompactStyles, heading4Styles, labelStyles } from '@brightspace-ui/core/components/typography/styles.js';
 import { css, html, LitElement } from 'lit-element';
 import { tiiErrorStatus, tiiPendingReportStatus, tiiPendingRetrievalStatus, tiiReportCompleteStatus, tiiReportNotSubmitted } from '../controllers/constants.js';
-import { bodyCompactStyles, heading4Styles, labelStyles } from '@brightspace-ui/core/components/typography/styles.js';
 import { LocalizeConsistentEvaluation } from '../../lang/localize-consistent-evaluation.js';
 
 export class ConsistentEvaluationTiiSimilarity extends LocalizeConsistentEvaluation(LitElement) {
@@ -94,14 +94,14 @@ export class ConsistentEvaluationTiiSimilarity extends LocalizeConsistentEvaluat
 	}
 
 	_renderSimilarityStatus() {
-		if (this.reportStatus != tiiReportCompleteStatus) {
+		if (this.reportStatus !== tiiReportCompleteStatus) {
 			return html``;
 		} else if (isNaN(parseFloat(this.score))) {
 			return html`
 				<div class="d2l-body-compact" title="${this.localize('turnitinNoReportDescription')}">${this.localize('turnitinNoReport')}</div>
 			`;
 		}
-		const renderScore = Math.round(this.score*100);
+		const renderScore = Math.round(this.score * 100);
 
 		return html`
 			<div
@@ -116,7 +116,7 @@ export class ConsistentEvaluationTiiSimilarity extends LocalizeConsistentEvaluat
 	}
 
 	_renderError() {
-		if (this.reportStatus == tiiErrorStatus) {
+		if (this.reportStatus === tiiErrorStatus) {
 
 			let errorMessage = this.errorMessage;
 			if (!errorMessage) {
@@ -140,7 +140,7 @@ export class ConsistentEvaluationTiiSimilarity extends LocalizeConsistentEvaluat
 	}
 
 	_renderSubmitFile() {
-		if (this.reportStatus == tiiReportNotSubmitted || this.reportStatus == tiiErrorStatus) {
+		if (this.reportStatus === tiiReportNotSubmitted || this.reportStatus === tiiErrorStatus) {
 			return html`
 				<d2l-button-icon
 					text="${this.localize('turnitinSubmitFile')}"
@@ -148,7 +148,7 @@ export class ConsistentEvaluationTiiSimilarity extends LocalizeConsistentEvaluat
 					@click=${this._onSubmitFileClick}
 				></d2l-button-icon>
 			`;
-		} else if (this.reportStatus == tiiPendingReportStatus || this.reportStatus == tiiPendingRetrievalStatus) {
+		} else if (this.reportStatus === tiiPendingReportStatus || this.reportStatus === tiiPendingRetrievalStatus) {
 			return html`
 				<div class="d2l-body-compact">${this.localize('inProgress')}</div>
 			`;
