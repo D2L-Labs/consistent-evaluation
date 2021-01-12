@@ -1,6 +1,5 @@
 import '@brightspace-ui/core/components/button/button-icon.js';
 import '@brightspace-ui/core/components/dialog/dialog.js';
-import '@brightspace-ui/core/components/icons/icon.js';
 import { css, html, LitElement } from 'lit-element';
 import { tiiErrorStatus, tiiPendingReportStatus, tiiPendingRetrievalStatus, tiiReportCompleteStatus, tiiReportNotSubmitted } from '../controllers/constants.js';
 import { bodyCompactStyles, heading4Styles, labelStyles } from '@brightspace-ui/core/components/typography/styles.js';
@@ -121,7 +120,7 @@ export class ConsistentEvaluationTiiSimilarity extends LocalizeConsistentEvaluat
 
 			let errorMessage = this.errorMessage;
 			if (!errorMessage) {
-				errorMessage = this.localize('turnitinFileNotRetrieved');
+				errorMessage = this.localize('turnitinDefaultErrorMessage');
 			}
 
 			return html`
@@ -132,9 +131,8 @@ export class ConsistentEvaluationTiiSimilarity extends LocalizeConsistentEvaluat
 				></d2l-button-icon>
 
 				<d2l-dialog title-text="${this.localize('warning')}">
-					<d2l-icon icon="tier3:alert" style="color: red;"></d2l-icon>
 					<div class="d2l-heading-4">${this.localize('turnitinReportNotGenerated')}</div>
-					<div class="d2l-body-compact">${this.localize('turnitinErrorMessage')} ${errorMessage}</div>
+					<div class="d2l-body-compact">${this.localize('turnitinErrorMessagePrefix')} ${errorMessage}</div>
 					<d2l-button slot="footer" primary data-dialog-action="done">${this.localize('ok')}</d2l-button>
 				</d2l-dialog>
 			`;
