@@ -104,12 +104,13 @@ export class ConsistentEvaluationSubmissionItem extends RtlMixin(LocalizeConsist
 		.d2l-submission-attachment-list-item-content:hover {
 			cursor: pointer;
 		}
-		.d2l-submission-attachment-list-item-tii-flexbox {
+		.d2l-submission-attachment-list-item-flexbox {
 			display: flex;
 			flex-direction: column;
 		}
 		.d2l-submission-attachment-list-item-tii {
 			padding-top: 0.5rem;
+			padding-bottom: 0.3rem;
 		}
 		.d2l-attachment-read-status {
 			color: var(--d2l-color-carnelian);
@@ -406,7 +407,7 @@ export class ConsistentEvaluationSubmissionItem extends RtlMixin(LocalizeConsist
 						aria-label="${getFileIconTypeFromExtension(extension)}"></d2l-icon>
 					${this._renderReadStatus(read)}
 				</div>
-				<div class="d2l-submission-attachment-list-item-tii-flexbox">
+				<div class="d2l-submission-attachment-list-item-flexbox">
 					<d2l-list-item-content
 						class="d2l-submission-attachment-list-item-content"
 						file-id="${id}"

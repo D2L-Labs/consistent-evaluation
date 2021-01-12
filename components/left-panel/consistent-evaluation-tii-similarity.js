@@ -140,7 +140,7 @@ export class ConsistentEvaluationTiiSimilarity extends LocalizeConsistentEvaluat
 	}
 
 	_renderSubmitFile() {
-		if (this.reportStatus == tiiReportNotSubmitted) {
+		if (this.reportStatus == tiiReportNotSubmitted || this.reportStatus == tiiErrorStatus) {
 			return html`
 				<d2l-button-icon
 					text="${this.localize('turnitinSubmitFile')}"
