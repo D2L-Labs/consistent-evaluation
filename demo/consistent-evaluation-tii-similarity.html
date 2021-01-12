@@ -21,6 +21,7 @@
 			<d2l-demo-snippet>
 				<d2l-consistent-evaluation-tii-similarity
 					colour="yellow"
+					report-status="ReportComplete"
 					score=0.75
 				></d2l-consistent-evaluation-tii-similarity>
 			</d2l-demo-snippet>
@@ -28,15 +29,32 @@
 			<h2>File to be submitted</h2>
 			<d2l-demo-snippet>
 				<d2l-consistent-evaluation-tii-similarity
-					submit-file-url="https://www.google.com"
+					report-status="NotSubmitted"
+					submit-file-url="https://www.d2l.com"
+				></d2l-consistent-evaluation-tii-similarity>
+			</d2l-demo-snippet>
+
+			<h2>File in process of being submitted</h2>
+			<d2l-demo-snippet>
+				<d2l-consistent-evaluation-tii-similarity
+					report-status="PendingReport"
+					submit-file-url="https://www.d2l.com"
+				></d2l-consistent-evaluation-tii-similarity>
+			</d2l-demo-snippet>
+
+			<h2>No Report</h2>
+			<d2l-demo-snippet>
+				<d2l-consistent-evaluation-tii-similarity
+					colour="yellow"
+					report-status="ReportComplete"
 				></d2l-consistent-evaluation-tii-similarity>
 			</d2l-demo-snippet>
 
 			<h2>Error</h2>
 			<d2l-demo-snippet>
 				<d2l-consistent-evaluation-tii-similarity
-					submit-file-url="https://www.google.com"
-					error
+					submit-file-url="https://www.d2l.com"
+					report-status="Error"
 				></d2l-consistent-evaluation-tii-similarity>
 			</d2l-demo-snippet>
 
