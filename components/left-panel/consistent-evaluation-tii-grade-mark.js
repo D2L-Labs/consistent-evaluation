@@ -32,6 +32,10 @@ export class ConsistentEvaluationTiiGradeMark extends LocalizeConsistentEvaluati
 			hideUseGrade: {
 				attribute: 'hide-use-grade',
 				type: Boolean
+			},
+			_overallScore: {
+				attribute: true,
+				type: String
 			}
 		};
 	}
@@ -41,13 +45,23 @@ export class ConsistentEvaluationTiiGradeMark extends LocalizeConsistentEvaluati
 		`];
 	}
 
+	updated(changedProperties) {
+		super.updated(changedProperties);
+		if (changedProperties.has('score')) {
+			this._setOverallScore();
+		}
+	}
+
 	_onEditButtonClick() {
 		window.open(this.gradeMarkHref);
 	}
 
 	_dispatchRefreshButtonClick() {
 		// TODO: only show if action is there
-		console.log('refreshing');
+		// TODO: Localization
+
+		this._overallScore = 'Refreshing...';
+
 		this.dispatchEvent(new CustomEvent('d2l-consistent-evaluation-evidence-refresh-grade-mark', {
 			detail: {
 				fileId: this.fileId,
@@ -103,16 +117,16 @@ export class ConsistentEvaluationTiiGradeMark extends LocalizeConsistentEvaluati
 		`;
 	}
 
-	_renderGradeMark() {
-		return this.score ? html`${this.score} / ${this.outOf}` : this.localize('turnitinNoScore');
+	_setOverallScore() {
+		this._overallScore = this.score ? html`${this.score} / ${this.outOf}` : this.localize('turnitinNoScore');
+
 	}
 
 	render() {
-		console.log('rerendering');
 		return html`
 			<div class="d2l-label-text">${this.localize('turnitinGradeMark')}</div>
 			<div>
-				${this._renderGradeMark()}
+				${this._overallScore}
 				${this._renderEditButton()}
 				${this._renderRefreshButton()}
 				${this._renderUseGradeButton()}
