@@ -297,6 +297,13 @@ export class ConsistentEvaluationSubmissionsPage extends SkeletonMixin(RtlMixin(
 		const submitAction = tiiEntity.getActionByName('TurnitinRefresh');
 
 		await this._doSirenActionAndRefreshFileStatus(submitAction);
+
+		if(e.detail.gradeMarkAutoTransfer) {
+			this.dispatchEvent(new CustomEvent('d2l-consistent-evaluation-refresh-grade-item', {
+				composed: true,
+				bubbles: true
+			}));
+		}
 	}
 
 	async _doSirenActionAndRefreshFileStatus(action) {
