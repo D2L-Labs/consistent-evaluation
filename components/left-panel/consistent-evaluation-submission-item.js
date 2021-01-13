@@ -405,6 +405,7 @@ export class ConsistentEvaluationSubmissionItem extends RtlMixin(LocalizeConsist
 				grade-mark-href=${tiiInfo.gradeMarkHref}
 				grade-mark-out-of=${tiiInfo.gradeMarkOutOf}
 				grade-mark-score=${tiiInfo.gradeMarkScore}
+				?grade-mark-auto-transfer=${tiiInfo.gradeMarkAutoTransfer}
 				?hide-use-grade=${this.hideUseGrade}
 			></d2l-consistent-evaluation-tii-grade-mark>
 			`;

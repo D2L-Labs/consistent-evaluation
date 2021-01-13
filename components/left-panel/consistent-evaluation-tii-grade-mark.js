@@ -13,6 +13,10 @@ export class ConsistentEvaluationTiiGradeMark extends LocalizeConsistentEvaluati
 				attribute: 'grade-mark-href',
 				type: String
 			},
+			gradeMarkAutoTransfer: {
+				attribute: 'grade-mark-auto-transfer',
+				type: Boolean
+			},
 			fileName: {
 				attribute: 'grade-mark-file-name',
 				type: String
@@ -59,12 +63,12 @@ export class ConsistentEvaluationTiiGradeMark extends LocalizeConsistentEvaluati
 	_dispatchRefreshButtonClick() {
 		// TODO: only show if action is there
 		// TODO: Localization
-
 		this._overallScore = 'Refreshing...';
 
 		this.dispatchEvent(new CustomEvent('d2l-consistent-evaluation-evidence-refresh-grade-mark', {
 			detail: {
 				fileId: this.fileId,
+				gradeMarkAutoTransfer: this.gradeMarkAutoTransfer
 			},
 			composed: true,
 			bubbles: true

@@ -294,6 +294,10 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 		this._attachmentsInfo = await this._controller.fetchAttachments(this.evaluationEntity);
 	}
 
+	async _refreshEvaluationEntity() {
+		this.evaluationEntity = await this._controller.fetchEvaluationEntity(true);
+	}
+
 	_noFeedbackComponent() {
 		return this.evaluationEntity && this.evaluationEntity.getSubEntityByRel('feedback') === undefined;
 	}
@@ -773,6 +777,7 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 						@d2l-consistent-eval-annotations-update=${this._transientSaveAnnotations}
 						@d2l-consistent-evaluation-use-tii-grade=${this._transientSaveGrade}
 						?hide-use-grade=${this._noGradeComponent()}
+						@d2l-consistent-evaluation-refresh-grade-item=${this._refreshEvaluationEntity}
 					></d2l-consistent-evaluation-left-panel>
 				</div>
 				<div slot="secondary">
