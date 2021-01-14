@@ -298,7 +298,7 @@ export class ConsistentEvaluationSubmissionsPage extends SkeletonMixin(RtlMixin(
 
 		await this._doSirenActionAndRefreshFileStatus(submitAction);
 
-		if(e.detail.gradeMarkAutoTransfer) {
+		if (e.detail.gradeMarkAutoTransfer) {
 			this.dispatchEvent(new CustomEvent('d2l-consistent-evaluation-refresh-grade-item', {
 				composed: true,
 				bubbles: true

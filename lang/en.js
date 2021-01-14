@@ -66,6 +66,7 @@ export default {
 	"turnitinGradeMark": "Turnitin® GradeMark®",
 	"turnitinGradeMarkEdit": "Edit or View Turnitin® GradeMark® information for {file}",
 	"turnitinGradeMarkRefresh": "Refresh Turnitin® GradeMark® information for {file}",
+	"turnitinRefreshing": "Refreshing...",
 	"turnitinUseGrade": "Use this Grade",
 	"turnitinNoScore": "No Score",
 	"unevaluated": "Unevaluated",

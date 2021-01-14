@@ -61,9 +61,10 @@ export class ConsistentEvaluationTiiGradeMark extends LocalizeConsistentEvaluati
 	}
 
 	_dispatchRefreshButtonClick() {
-		// TODO: only show if action is there
-		// TODO: Localization
-		this._overallScore = 'Refreshing...';
+		this._overallScore = this.localize('turnitinRefreshing');
+
+		// This timeout is here for when the user refreshes and there is no change in the API(thus no re-render)
+		setTimeout(() => { this._setOverallScore(); }, 3500);
 
 		this.dispatchEvent(new CustomEvent('d2l-consistent-evaluation-evidence-refresh-grade-mark', {
 			detail: {
@@ -111,14 +112,16 @@ export class ConsistentEvaluationTiiGradeMark extends LocalizeConsistentEvaluati
 	}
 
 	_renderRefreshButton() {
-		return html`
+
+		return this.href ? html`
 			<d2l-button-icon
 				text="${this.localize('turnitinGradeMarkRefresh', { file: this.fileName })}"
 				icon="tier1:refresh"
 				href=${this.href}
 				@click=${this._dispatchRefreshButtonClick}
 			></d2l-button-icon>
-		`;
+			` :
+			html``;
 	}
 
 	_setOverallScore() {
