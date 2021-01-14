@@ -106,14 +106,14 @@ export class ConsistentEvaluationTiiGradeMark extends LocalizeConsistentEvaluati
 
 	_renderEditButton() {
 		// @click should make another api call and re-render to update the grade value
-		return html`
+		return this.gradeMarkHref ? html`
 			<d2l-button-icon
 				text="${this.localize('turnitinGradeMarkEdit', { file: this.fileName })}"
 				icon="tier1:edit"
 				href=${this.gradeMarkHref}
 				@click=${this._onEditButtonClick}
-			></d2l-button-icon>
-		`;
+			></d2l-button-icon>` :
+			html``;
 	}
 
 	_renderRefreshButton() {
@@ -121,7 +121,6 @@ export class ConsistentEvaluationTiiGradeMark extends LocalizeConsistentEvaluati
 			<d2l-button-icon
 				text="${this.localize('turnitinGradeMarkRefresh', { file: this.fileName })}"
 				icon="tier1:refresh"
-				href=${this.href}
 				@click=${this._dispatchRefreshButtonClick}
 			></d2l-button-icon>` :
 			html``;
