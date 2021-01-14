@@ -40,7 +40,7 @@ export class ConsistentEvaluationPopupRubric extends LocalizeConsistentEvaluatio
 			this._rubricInfos = await controller.getRubricInfos();
 
 			this._userName = await controller.getUserName();
-			if(!this._userName) {
+			if (!this._userName) {
 				this._userName = await controller.getGroupName();
 			}
 			this.setTitle();
