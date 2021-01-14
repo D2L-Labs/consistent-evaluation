@@ -416,6 +416,7 @@ export class ConsistentEvaluationSubmissionItem extends RtlMixin(LocalizeConsist
 	_renderAttachments() {
 		return html`${this.attachments.map((file) => {
 			const {id, name, size, extension, flagged, read, href} = file.properties;
+
 			return html`
 			<d2l-list-item>
 				<div slot="illustration" class="d2l-submission-attachment-icon-container">
@@ -444,8 +445,7 @@ export class ConsistentEvaluationSubmissionItem extends RtlMixin(LocalizeConsist
 					${this._renderTii(id, name, file)}
 				</div>
 				${this._addMenuOptions(read, flagged, href, id)}
-			</d2l-list-item>
-			`;
+			</d2l-list-item>`;
 		})}`;
 	}
 
