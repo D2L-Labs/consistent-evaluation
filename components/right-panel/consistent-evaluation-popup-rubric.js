@@ -21,7 +21,7 @@ export class ConsistentEvaluationPopupRubric extends LocalizeConsistentEvaluatio
 					}
 				}
 			},
-			_userName: {type: String},
+			_pageTitle: { type: String },
 			_rubricInfos: { type: Array },
 		};
 	}
@@ -38,16 +38,20 @@ export class ConsistentEvaluationPopupRubric extends LocalizeConsistentEvaluatio
 		if (changedProperties.has('href')) {
 			const controller = new ConsistentEvaluationHrefController(this.href, this.token);
 			this._rubricInfos = await controller.getRubricInfos();
-			this._userName = await controller.getUserName();
+
+			this._pageTitle = await controller.getUserName();
+			if (!this._pageTitle) {
+				this._pageTitle = await controller.getGroupName();
+			}
 			this.setTitle();
 		}
 
 	}
 
 	setTitle() {
-		if (this._userName) {
+		if (this._pageTitle) {
 			const title = document.createElement('title');
-			title.textContent = `${this.localize('rubricsAssess', 'username', this._userName)}`;
+			title.textContent = `${this.localize('rubricsAssess', 'username', this._pageTitle)}`;
 			document.head.insertBefore(title, document.head.firstChild);
 		}
 	}
