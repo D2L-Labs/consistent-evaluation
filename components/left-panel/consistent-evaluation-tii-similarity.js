@@ -96,7 +96,7 @@ export class ConsistentEvaluationTiiSimilarity extends LocalizeConsistentEvaluat
 	_renderSimilarityStatus() {
 		if (this.reportStatus !== tiiReportCompleteStatus) {
 			return html``;
-		} else if (isNaN(parseFloat(this.score))) {
+		} else if (isNaN(this.score)) {
 			return html`
 				<div class="d2l-body-compact" title="${this.localize('turnitinNoReportDescription')}">${this.localize('turnitinNoReport')}</div>
 			`;

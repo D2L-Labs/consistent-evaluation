@@ -306,7 +306,14 @@ export class ConsistentEvaluationSubmissionsPage extends SkeletonMixin(RtlMixin(
 		}
 
 		const tiiEntity = attachmentEntity.getSubEntityByRel(tiiRel);
+		if (!tiiEntity) {
+			throw new Error('Turnitin entity not present on attachment');
+		}
+
 		const submitAction = tiiEntity.getActionByName(tiiSubmitActionName);
+		if (!submitAction) {
+			throw new Error('Submit action not present on Turnitin entity');
+		}
 
 		await this._doSirenActionAndRefreshFileStatus(submitAction);
 	}
