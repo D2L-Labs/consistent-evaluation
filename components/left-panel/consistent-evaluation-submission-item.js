@@ -114,6 +114,7 @@ export class ConsistentEvaluationSubmissionItem extends RtlMixin(LocalizeConsist
 			flex-direction: column;
 		}
 		.d2l-submission-attachment-list-item-tii {
+			display: flex;
 			padding-bottom: 0.3rem;
 			padding-top: 0.5rem;
 		}
@@ -139,6 +140,9 @@ export class ConsistentEvaluationSubmissionItem extends RtlMixin(LocalizeConsist
 		d2l-status-indicator {
 			margin-right: 0.5rem;
 			text-transform: none;
+		}
+		d2l-consistent-evaluation-tii-similarity {
+			margin-right: 2.5rem;
 		}
 		:host([dir="rtl"]) d2l-status-indicator {
 			margin-left: 0.5rem;
@@ -396,7 +400,6 @@ export class ConsistentEvaluationSubmissionItem extends RtlMixin(LocalizeConsist
 					report-status="${tii.reportStatus}"
 					score="${tii.originalityReportScore}"
 				></d2l-consistent-evaluation-tii-similarity>
-
 				<d2l-consistent-evaluation-tii-grade-mark
 					file-id=${id}
 					grade-mark-file-name=${name}

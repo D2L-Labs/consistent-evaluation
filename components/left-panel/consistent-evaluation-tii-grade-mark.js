@@ -1,8 +1,8 @@
 import '@brightspace-ui/core/components/button/button-subtle.js';
 import '@brightspace-ui/core/components/button/button-icon.js';
+import { bodyCompactStyles, labelStyles } from '@brightspace-ui/core/components/typography/styles.js';
 import { css, html, LitElement } from 'lit-element';
 import { Grade, GradeType } from '@brightspace-ui-labs/grade-result/src/controller/Grade';
-import { labelStyles } from '@brightspace-ui/core/components/typography/styles.js';
 import { LocalizeConsistentEvaluation } from '../../lang/localize-consistent-evaluation.js';
 
 export class ConsistentEvaluationTiiGradeMark extends LocalizeConsistentEvaluation(LitElement) {
@@ -45,7 +45,12 @@ export class ConsistentEvaluationTiiGradeMark extends LocalizeConsistentEvaluati
 	}
 
 	static get styles() {
-		return [labelStyles, css`
+		return [bodyCompactStyles, labelStyles, css`
+			@media (max-width: 767px) {
+				d2l-button-subtle {
+					display: flex;
+				}
+			}
 		`];
 	}
 
@@ -112,27 +117,27 @@ export class ConsistentEvaluationTiiGradeMark extends LocalizeConsistentEvaluati
 	}
 
 	_renderRefreshButton() {
-
-		return this.href ? html`
+		return this.gradeMarkHref ? html`
 			<d2l-button-icon
 				text="${this.localize('turnitinGradeMarkRefresh', { file: this.fileName })}"
 				icon="tier1:refresh"
 				href=${this.href}
 				@click=${this._dispatchRefreshButtonClick}
-			></d2l-button-icon>
-			` :
+			></d2l-button-icon>` :
 			html``;
 	}
 
 	_setOverallScore() {
-		this._overallScore = this.score ? html`${this.score} / ${this.outOf}` : this.localize('turnitinNoScore');
+		this._overallScore = this.score ?
+			html`${this.score} / ${this.outOf}` :
+			this.localize('turnitinNoScore');
 
 	}
 
 	render() {
 		return html`
 			<div class="d2l-label-text">${this.localize('turnitinGradeMark')}</div>
-			<div>
+			<div class="d2l-body-compact">
 				${this._overallScore}
 				${this._renderEditButton()}
 				${this._renderRefreshButton()}
