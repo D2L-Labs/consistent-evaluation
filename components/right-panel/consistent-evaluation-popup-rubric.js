@@ -21,7 +21,7 @@ export class ConsistentEvaluationPopupRubric extends LocalizeConsistentEvaluatio
 					}
 				}
 			},
-			_userName: {type: String},
+			_userName: { type: String },
 			_rubricInfos: { type: Array },
 		};
 	}
@@ -38,7 +38,11 @@ export class ConsistentEvaluationPopupRubric extends LocalizeConsistentEvaluatio
 		if (changedProperties.has('href')) {
 			const controller = new ConsistentEvaluationHrefController(this.href, this.token);
 			this._rubricInfos = await controller.getRubricInfos();
+
 			this._userName = await controller.getUserName();
+			if(!this._userName) {
+				this._userName = await controller.getGroupName();
+			}
 			this.setTitle();
 		}
 
