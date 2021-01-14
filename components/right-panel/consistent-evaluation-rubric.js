@@ -78,7 +78,16 @@ class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(LitElement
 			}
 
 			.d2l-consistent-evaluation-rubric.d2l-consistent-evaluation-popout {
-				margin: 1rem;
+				margin: 0.5rem 1rem 1rem 1rem;
+			}
+
+			.d2l-consistent-evaluation-rubric.d2l-consistent-evaluation-popout:nth-child(n+2) {
+				margin-top: 2rem;
+			}
+
+			.d2l-consistent-evaluation-close-rubrics {
+				float: right;
+				margin: 0 0.5rem 0.5rem 0.5rem;
 			}
 		`];
 	}
@@ -89,18 +98,34 @@ class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(LitElement
 		this.rubricWindowPopout = undefined;
 	}
 
+	connectedCallback() {
+		super.connectedCallback();
+		window.addEventListener('beforeunload', this._closePopout);
+	}
+
+	disconnectedCallback() {
+		window.removeEventListener('beforeunload', this._closePopout);
+		super.disconnectedCallback();
+	}
+
 	updated(changedProperties) {
 		super.updated(changedProperties);
 		if (changedProperties.has('activeScoringRubric')) {
 			const activeRubricDropdown = this.shadowRoot.querySelector('.d2l-consistent-evaluation-active-scoring-rubric');
 			if (activeRubricDropdown) {
-				activeRubricDropdown.value = this.activeScoringRubric ?
+				activeRubricDropdown.value = this.activeScoringRubric && this.activeScoringRubric !== 'null' ?
 					this.activeScoringRubric :
 					'-1';
 			}
 		}
 
 		if (changedProperties.get('rubricPopoutLocation') && this.rubricWindowPopout) {
+			this.rubricWindowPopout.close();
+		}
+	}
+
+	_closePopout() {
+		if (this.rubricWindowPopout) {
 			this.rubricWindowPopout.close();
 		}
 	}
@@ -179,6 +204,28 @@ class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(LitElement
 		return html`${rubrics}`;
 	}
 
+	_closeRubric() {
+		if (!this.rubricInfos || this.rubricInfos.length === 0) {
+			return;
+		}
+		try {
+			const rubrics = this.shadowRoot.querySelectorAll('d2l-consistent-evaluation-right-panel-block d2l-rubric');
+
+			[...rubrics].map(rubric => {
+				const accordionCollapse = rubric
+					.shadowRoot.querySelector('d2l-rubric-adapter')
+					.shadowRoot.querySelector('div d2l-labs-accordion d2l-labs-accordion-collapse');
+				const rubricCollapse = accordionCollapse
+					.shadowRoot.querySelector('div.content iron-collapse');
+				accordionCollapse.removeAttribute('opened');
+				rubricCollapse.opened = false;
+			});
+
+		} catch (err) {
+			console.log('Unable to close rubrics');
+		}
+	}
+
 	_getActiveScoringRubricSelectDropdown() {
 		if (!this.showActiveScoringRubricOptions) {
 			return html``;
@@ -212,6 +259,15 @@ class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(LitElement
 	}
 
 	_openRubricPopout() {
+		this._closeRubric();
+
+		if (this.rubricWindowPopout) {
+			if (!this.rubricWindowPopout.closed) {
+				this.rubricWindowPopout.focus();
+				return;
+			}
+		}
+
 		this.rubricWindowPopout = window.open(
 			this.rubricPopoutLocation,
 			'rubricPopout',
@@ -233,6 +289,10 @@ class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(LitElement
 		};
 	}
 
+	_closeRubricPopout() {
+		window.close();
+	}
+
 	_renderPopoutIcon() {
 		return this.isPopout ?
 			html`` :
@@ -245,14 +305,21 @@ class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(LitElement
 			html`<h2 aria-label=${this.localize('rubricTitle')} class='d2l-consistent-evaluation-rubric-title'>${rubricTitle}</h2>`;
 	}
 
+	_renderCloseButton() {
+		return !this.isPopout ?
+			html`` :
+			html` <d2l-button primary class='d2l-consistent-evaluation-close-rubrics'  @click=${this._closeRubricPopout}>${this.localize('closeBtn')}</d2l-button>`;
+	}
+
 	render() {
 		return html`
 			<d2l-consistent-evaluation-right-panel-block
-				title="${this.header}"
+				title=${this.isPopout ? '' : this.header}
 				supportingInfo=${this._getSummaryText()}>
 					${this._renderPopoutIcon()}
 					${this._getRubrics()}
 					${this._getActiveScoringRubricSelectDropdown()}
+					${this._renderCloseButton()}
 			</d2l-consistent-evaluation-right-panel-block>
 		`;
 	}
