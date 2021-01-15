@@ -24,6 +24,7 @@ export default {
 	"gradeSummary": "{grade} out of {outOf}",
 	"gradingRubric": "Grading Rubric",
 	"groupIteratorText": "Group {num} of {total}",
+	"inProgress": "In progress",
 	"kB": " KB",
 	"late": "late",
 	"leaveBtn": "Leave",
@@ -38,6 +39,7 @@ export default {
 	"noSubmissions": "No submissions made for this assignment",
 	"observedInPerson": "Observed In Person",
 	"onPaperSubmission": "On Paper Submission",
+	"ok": "OK",
 	"outcomes": "Outcomes",
 	"outcomesSummary" : "Outcomes aligned",
 	"overallAchievement": "Overall Achievement",
@@ -64,6 +66,14 @@ export default {
 	"submitted": "Submitted",
 	"textSubmission": "Text Submission",
 	"tryDonwloadFile": "Try downloading the file instead",
+	"turnitinDefaultErrorMessage": "Something went wrong. Try refreshing or contact your administrator.",
+	"turnitinErrorMessagePrefix": "Message from Turnitin®:",
+	"turnitinNoReport": "No Report",
+	"turnitinNoReportDescription": "Originality Report isn't applicable for this submission and won't be generated.",
+	"turnitinReportNotGenerated": "An originality report could not be generated.",
+	"turnitinSimilarity": "Turnitin® Similarity",
+	"turnitinSubmitFile": "Submit file to Turnitin®",
+	"turnitinViewReport": "View originality report for {file}",
 	"unevaluated": "Unevaluated",
 	"unflag": "Unflag",
 	"unsavedAnnotationsBody": "Are you sure you want to leave without saving your annotation changes?",
@@ -75,5 +85,6 @@ export default {
 	"updated":  "Evaluation updated",
 	"userIteratorText": "User {num} of {total}",
 	"userSubmissions": "User Submissions",
-	"viewFullSubmission": "View Full Submission"
+	"viewFullSubmission": "View Full Submission",
+	"warning": "Warning"
 };
