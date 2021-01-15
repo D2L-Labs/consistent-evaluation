@@ -47,3 +47,4 @@ export const tiiPendingRetrievalStatus = 'PendingRetrieval';
 export const tiiReportCompleteStatus = 'ReportComplete';
 export const tiiReportNotSubmitted = 'NotSubmitted';
 export const tiiSubmitActionName = 'TurnitinSubmit';
+export const tiiRefreshAction = 'TurnitinRefresh';

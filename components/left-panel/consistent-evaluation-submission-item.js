@@ -10,6 +10,7 @@ import '@brightspace-ui/core/components/menu/menu-item.js';
 import '@brightspace-ui/core/components/menu/menu-item-link.js';
 import '@brightspace-ui/core/components/more-less/more-less.js';
 import '@brightspace-ui/core/components/status-indicator/status-indicator.js';
+import './consistent-evaluation-tii-grade-mark.js';
 import './consistent-evaluation-tii-similarity.js';
 import { bodySmallStyles, heading3Styles, labelStyles } from '@brightspace-ui/core/components/typography/styles.js';
 import { css, html, LitElement } from 'lit-element/lit-element.js';
@@ -52,6 +53,10 @@ export class ConsistentEvaluationSubmissionItem extends RtlMixin(LocalizeConsist
 			submissionType: {
 				attribute: 'submission-type',
 				type: String
+			},
+			hideUseGrade: {
+				attribute: 'hide-use-grade',
+				type: Boolean
 			}
 		};
 	}
@@ -109,6 +114,7 @@ export class ConsistentEvaluationSubmissionItem extends RtlMixin(LocalizeConsist
 			flex-direction: column;
 		}
 		.d2l-submission-attachment-list-item-tii {
+			display: flex;
 			padding-bottom: 0.3rem;
 			padding-top: 0.5rem;
 		}
@@ -134,6 +140,13 @@ export class ConsistentEvaluationSubmissionItem extends RtlMixin(LocalizeConsist
 		d2l-status-indicator {
 			margin-right: 0.5rem;
 			text-transform: none;
+		}
+		d2l-consistent-evaluation-tii-similarity {
+			margin-right: 2.5rem;
+		}
+		:host([dir="rtl"]) d2l-consistent-evaluation-tii-similarity {
+			margin-left: 2.5rem;
+			margin-right: 0;
 		}
 		:host([dir="rtl"]) d2l-status-indicator {
 			margin-left: 0.5rem;
@@ -353,7 +366,7 @@ export class ConsistentEvaluationSubmissionItem extends RtlMixin(LocalizeConsist
 			<d2l-status-indicator bold
 				state="alert"
 				text="${this.lateness} ${this.localize('late')}">
-				</d2l-status-indicator>`;
+			</d2l-status-indicator>`;
 		} else {
 			return html ``;
 		}
@@ -391,6 +404,15 @@ export class ConsistentEvaluationSubmissionItem extends RtlMixin(LocalizeConsist
 					report-status="${tii.reportStatus}"
 					score="${tii.originalityReportScore}"
 				></d2l-consistent-evaluation-tii-similarity>
+				<d2l-consistent-evaluation-tii-grade-mark
+					file-id=${id}
+					grade-mark-file-name=${name}
+					grade-mark-href=${tii.gradeMarkHref}
+					grade-mark-out-of=${tii.gradeMarkOutOf}
+					grade-mark-score=${tii.gradeMarkScore}
+					?grade-mark-auto-transfer=${tii.gradeMarkAutoTransfer}
+					?hide-use-grade=${this.hideUseGrade}
+				></d2l-consistent-evaluation-tii-grade-mark>
 			</div>
 		`;
 	}

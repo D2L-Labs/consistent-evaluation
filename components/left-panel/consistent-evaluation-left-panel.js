@@ -56,6 +56,10 @@ export class ConsistentEvaluationLeftPanel extends SkeletonMixin(LocalizeConsist
 				attribute: 'current-file-id',
 				type: String
 			},
+			hideUseGrade: {
+				attribute: 'hide-use-grade',
+				type: Boolean
+			},
 			dataTelemetryEndpoint: {
 				attribute: 'data-telemetry-endpoint',
 				type: String
@@ -205,6 +209,7 @@ export class ConsistentEvaluationLeftPanel extends SkeletonMixin(LocalizeConsist
 			.token=${this.token}
 			data-telemetry-endpoint=${this.dataTelemetryEndpoint}
 			?skeleton=${this.skeleton}
+			?hide-use-grade=${this.hideUseGrade}
 		></d2l-consistent-evaluation-submissions-page>`;
 	}
 

@@ -298,6 +298,10 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 		this._attachmentsInfo = await this._controller.fetchAttachments(this.evaluationEntity);
 	}
 
+	async _refreshEvaluationEntity() {
+		this.evaluationEntity = await this._controller.fetchEvaluationEntity(true);
+	}
+
 	_noFeedbackComponent() {
 		return this.evaluationEntity && this.evaluationEntity.getSubEntityByRel('feedback') === undefined;
 	}
@@ -786,7 +790,10 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 						.token=${this.token}
 						user-progress-outcome-href=${ifDefined(this.userProgressOutcomeHref)}
 						.currentFileId=${this.currentFileId}
+						?hide-use-grade=${this._noGradeComponent()}
 						@d2l-consistent-eval-annotations-update=${this._transientSaveAnnotations}
+						@d2l-consistent-evaluation-use-tii-grade=${this._transientSaveGrade}
+						@d2l-consistent-evaluation-refresh-grade-item=${this._refreshEvaluationEntity}
 						data-telemetry-endpoint=${this.dataTelemetryEndpoint}
 					></d2l-consistent-evaluation-left-panel>
 				</div>

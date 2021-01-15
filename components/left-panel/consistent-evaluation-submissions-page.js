@@ -4,7 +4,7 @@ import '@brightspace-ui/core/components/list/list.js';
 import '@brightspace-ui/core/components/colors/colors.js';
 import './consistent-evaluation-submission-item.js';
 import { css, html, LitElement } from 'lit-element/lit-element.js';
-import { tiiRel, tiiSubmitActionName, toggleFlagActionName, toggleIsReadActionName } from '../controllers/constants.js';
+import { tiiRefreshAction, tiiRel, tiiSubmitActionName, toggleFlagActionName, toggleIsReadActionName } from '../controllers/constants.js';
 import { Classes } from 'd2l-hypermedia-constants';
 import { ConsistentEvalTelemetry } from '../helpers/consistent-eval-telemetry.js';
 import { findFile } from '../helpers/submissionsAndFilesHelpers.js';
@@ -35,6 +35,10 @@ export class ConsistentEvaluationSubmissionsPage extends SkeletonMixin(RtlMixin(
 						return retVal;
 					}
 				}
+			},
+			hideUseGrade: {
+				attribute: 'hide-use-grade',
+				type: Boolean
 			},
 			dataTelemetryEndpoint: {
 				attribute: 'data-telemetry-endpoint',
@@ -297,6 +301,34 @@ export class ConsistentEvaluationSubmissionsPage extends SkeletonMixin(RtlMixin(
 		}
 	}
 
+	async _refreshGradeMarkTiiAction(e) {
+		const fileId = e.detail.fileId;
+
+		const attachmentEntity = this._getAttachmentEntity(fileId);
+		if (!attachmentEntity) {
+			throw new Error('Invalid entity provided for attachment');
+		}
+
+		const tiiEntity = attachmentEntity.getSubEntityByRel(tiiRel);
+		if (!tiiEntity) {
+			throw new Error('Turnitin entity not present on attachment');
+		}
+
+		const refreshAction = tiiEntity.getActionByName(tiiRefreshAction);
+		if (!refreshAction) {
+			throw new Error('Refresh action not present on Turnitin entity');
+		}
+
+		await this._doSirenActionAndRefreshFileStatus(refreshAction);
+
+		if (e.detail.gradeMarkAutoTransfer) {
+			this.dispatchEvent(new CustomEvent('d2l-consistent-evaluation-refresh-grade-item', {
+				composed: true,
+				bubbles: true
+			}));
+		}
+	}
+
 	async _submitFileTiiAction(e) {
 		const fileId = e.detail.fileId;
 
@@ -346,8 +378,10 @@ export class ConsistentEvaluationSubmissionsPage extends SkeletonMixin(RtlMixin(
 							comment=${this._getComment(submissionEntity)}
 							.attachments=${this._getAttachments(submissionEntity)}
 							?late=${latenessTimespan !== undefined}
+							?hide-use-grade=${this.hideUseGrade}
 							@d2l-consistent-evaluation-evidence-toggle-action=${this._toggleAction}
 							@d2l-consistent-evaluation-evidence-file-download=${this._downloadAction}
+							@d2l-consistent-evaluation-evidence-refresh-grade-mark=${this._refreshGradeMarkTiiAction}
 							@d2l-consistent-evaluation-evidence-tii-submit-file-action=${this._submitFileTiiAction}
 						></d2l-consistent-evaluation-submission-item>`);
 				} else {
