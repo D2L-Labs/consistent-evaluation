@@ -105,7 +105,6 @@ export class ConsistentEvaluationTiiGradeMark extends LocalizeConsistentEvaluati
 	}
 
 	_renderEditButton() {
-		// @click should make another api call and re-render to update the grade value
 		return this.gradeMarkHref ? html`
 			<d2l-button-icon
 				text="${this.localize('turnitinGradeMarkEdit', { file: this.fileName })}"

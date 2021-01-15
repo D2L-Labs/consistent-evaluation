@@ -144,6 +144,9 @@ export class ConsistentEvaluationSubmissionItem extends RtlMixin(LocalizeConsist
 		d2l-consistent-evaluation-tii-similarity {
 			margin-right: 2.5rem;
 		}
+		:host([dir="rtl"]) d2l-consistent-evaluation-tii-similarity {
+			margin-left: 2.5rem;
+		}
 		:host([dir="rtl"]) d2l-status-indicator {
 			margin-left: 0.5rem;
 			margin-right: 0;
