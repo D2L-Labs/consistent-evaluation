@@ -5,6 +5,7 @@ import './consistent-evaluation-grade-result.js';
 import './consistent-evaluation-coa-eval-override.js';
 import { css, html, LitElement } from 'lit-element';
 import { getRubricAssessmentScore, mapRubricScoreToGrade} from '../helpers/rubricGradeSyncHelpers.js';
+import { GradeType } from '@brightspace-ui-labs/grade-result/src/controller/Grade';
 import { LocalizeConsistentEvaluation } from '../../lang/localize-consistent-evaluation.js';
 
 export class ConsistentEvaluationRightPanel extends LocalizeConsistentEvaluation(LitElement) {
@@ -276,7 +277,11 @@ export class ConsistentEvaluationRightPanel extends LocalizeConsistentEvaluation
 			newScore
 		);
 
-		if (newGrade.score === this.grade.score) {
+		if (newGrade.score === this.grade.score && newGrade.scoreType === GradeType.Number) {
+			return;
+		}
+
+		if (newGrade.letterGrade === this.grade.letterGrade && newGrade.scoreType === GradeType.Letter) {
 			return;
 		}
 
