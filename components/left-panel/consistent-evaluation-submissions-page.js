@@ -4,8 +4,9 @@ import '@brightspace-ui/core/components/list/list.js';
 import '@brightspace-ui/core/components/colors/colors.js';
 import './consistent-evaluation-submission-item.js';
 import { css, html, LitElement } from 'lit-element/lit-element.js';
-import { toggleFlagActionName, toggleIsReadActionName } from '../controllers/constants.js';
+import { tiiRefreshAction, tiiRel, tiiSubmitActionName, toggleFlagActionName, toggleIsReadActionName } from '../controllers/constants.js';
 import { Classes } from 'd2l-hypermedia-constants';
+import { ConsistentEvalTelemetry } from '../helpers/consistent-eval-telemetry.js';
 import { findFile } from '../helpers/submissionsAndFilesHelpers.js';
 import { performSirenAction } from 'siren-sdk/src/es6/SirenAction.js';
 import { RtlMixin } from '@brightspace-ui/core/mixins/rtl-mixin.js';
@@ -34,6 +35,14 @@ export class ConsistentEvaluationSubmissionsPage extends SkeletonMixin(RtlMixin(
 						return retVal;
 					}
 				}
+			},
+			hideUseGrade: {
+				attribute: 'hide-use-grade',
+				type: Boolean
+			},
+			dataTelemetryEndpoint: {
+				attribute: 'data-telemetry-endpoint',
+				type: String
 			}
 		};
 	}
@@ -134,6 +143,7 @@ export class ConsistentEvaluationSubmissionsPage extends SkeletonMixin(RtlMixin(
 		this._submissionList = [];
 		this._token = undefined;
 		this._submissionEntities = [];
+		this._perfRenderEventName = 'submissionsComponentRender';
 	}
 
 	get submissionList() {
@@ -160,6 +170,13 @@ export class ConsistentEvaluationSubmissionsPage extends SkeletonMixin(RtlMixin(
 			if (this._submissionList && this._token) {
 				this._initializeSubmissionEntities().then(() => this.requestUpdate());
 			}
+		}
+	}
+
+	updated(changedProperties) {
+		if (changedProperties.has('dataTelemetryEndpoint')) {
+			this._telemetry = new ConsistentEvalTelemetry(this.dataTelemetryEndpoint);
+			this._telemetry.markEventStart(this._perfRenderEventName);
 		}
 	}
 
@@ -210,6 +227,9 @@ export class ConsistentEvaluationSubmissionsPage extends SkeletonMixin(RtlMixin(
 	}
 
 	_finishedLoading() {
+		if (this._telemetry) {
+			this._telemetry.markEventEndAndLog(this._perfRenderEventName, this._submissionList.length);
+		}
 		this.dispatchEvent(new CustomEvent('d2l-consistent-evaluation-loading-finished', {
 			composed: true,
 			bubbles: true,
@@ -281,6 +301,55 @@ export class ConsistentEvaluationSubmissionsPage extends SkeletonMixin(RtlMixin(
 		}
 	}
 
+	async _refreshGradeMarkTiiAction(e) {
+		const fileId = e.detail.fileId;
+
+		const attachmentEntity = this._getAttachmentEntity(fileId);
+		if (!attachmentEntity) {
+			throw new Error('Invalid entity provided for attachment');
+		}
+
+		const tiiEntity = attachmentEntity.getSubEntityByRel(tiiRel);
+		if (!tiiEntity) {
+			throw new Error('Turnitin entity not present on attachment');
+		}
+
+		const refreshAction = tiiEntity.getActionByName(tiiRefreshAction);
+		if (!refreshAction) {
+			throw new Error('Refresh action not present on Turnitin entity');
+		}
+
+		await this._doSirenActionAndRefreshFileStatus(refreshAction);
+
+		if (e.detail.gradeMarkAutoTransfer) {
+			this.dispatchEvent(new CustomEvent('d2l-consistent-evaluation-refresh-grade-item', {
+				composed: true,
+				bubbles: true
+			}));
+		}
+	}
+
+	async _submitFileTiiAction(e) {
+		const fileId = e.detail.fileId;
+
+		const attachmentEntity = this._getAttachmentEntity(fileId);
+		if (!attachmentEntity) {
+			throw new Error('Invalid entity provided for attachment');
+		}
+
+		const tiiEntity = attachmentEntity.getSubEntityByRel(tiiRel);
+		if (!tiiEntity) {
+			throw new Error('Turnitin entity not present on attachment');
+		}
+
+		const submitAction = tiiEntity.getActionByName(tiiSubmitActionName);
+		if (!submitAction) {
+			throw new Error('Submit action not present on Turnitin entity');
+		}
+
+		await this._doSirenActionAndRefreshFileStatus(submitAction);
+	}
+
 	async _doSirenActionAndRefreshFileStatus(action) {
 		const newSubmissionEntity = await performSirenAction(this.token, action, undefined, true);
 		const submissionSelfLink = newSubmissionEntity.getLinkByRel('self');
@@ -309,8 +378,11 @@ export class ConsistentEvaluationSubmissionsPage extends SkeletonMixin(RtlMixin(
 							comment=${this._getComment(submissionEntity)}
 							.attachments=${this._getAttachments(submissionEntity)}
 							?late=${latenessTimespan !== undefined}
+							?hide-use-grade=${this.hideUseGrade}
 							@d2l-consistent-evaluation-evidence-toggle-action=${this._toggleAction}
 							@d2l-consistent-evaluation-evidence-file-download=${this._downloadAction}
+							@d2l-consistent-evaluation-evidence-refresh-grade-mark=${this._refreshGradeMarkTiiAction}
+							@d2l-consistent-evaluation-evidence-tii-submit-file-action=${this._submitFileTiiAction}
 						></d2l-consistent-evaluation-submission-item>`);
 				} else {
 					console.warn('Consistent Evaluation submission date property not found');

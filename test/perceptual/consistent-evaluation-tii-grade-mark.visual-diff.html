@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+		<meta http-equiv="X-UA-Compatible" content="ie=edge">
+		<title>consistent-evaluation-tii-grade-mark visual diff tests</title>
+		<script type="module">
+			import '@brightspace-ui/core/components/typography/styles.js';
+			import '@brightspace-ui/core/components/typography/typography.js';
+			import '../../components/left-panel/consistent-evaluation-tii-grade-mark.js';
+
+		</script>
+		<style>
+			html {
+				font-size: 20px;
+			}
+			div {
+				padding: 50px;
+				justify-content: center;
+			}
+		</style>
+	</head>
+	<body class="d2l-typography">
+
+		<div id="default">
+			<d2l-consistent-evaluation-tii-grade-mark
+				grade-mark-file-name="Assignment-01.png"
+				grade-mark-href="href"
+				grade-mark-score=79
+				grade-mark-out-of=100>
+			></d2l-consistent-evaluation-tii-grade-mark>
+		</div>
+
+		<div id="no-grade">
+			<d2l-consistent-evaluation-tii-grade-mark
+				grade-mark-file-name="Assignment-01.png"
+				grade-mark-href="href">
+			></d2l-consistent-evaluation-tii-grade-mark>
+		</div>
+
+		<div id="hide-use-grade">
+			<d2l-consistent-evaluation-tii-grade-mark
+				grade-mark-file-name="Assignment-01.png"
+				grade-mark-href="href"
+				grade-mark-score=79
+				grade-mark-out-of=100
+				hide-use-grade=true>
+			></d2l-consistent-evaluation-tii-grade-mark>
+		</div>
+
+		<div id="no-href">
+			<d2l-consistent-evaluation-tii-grade-mark
+				grade-mark-file-name="Assignment-01.png"
+				grade-mark-score=79
+				grade-mark-out-of=100
+				hide-use-grade=true>
+			></d2l-consistent-evaluation-tii-grade-mark>
+		</div>
+	</body>
+</html>

@@ -1,5 +1,6 @@
 import './consistent-evaluation-page.js';
 import { css, html, LitElement } from 'lit-element';
+import { ConsistentEvalTelemetry } from './helpers/consistent-eval-telemetry.js';
 import { ConsistentEvaluationHrefController } from './controllers/ConsistentEvaluationHrefController.js';
 import { ifDefined } from 'lit-html/directives/if-defined.js';
 
@@ -19,6 +20,10 @@ export class ConsistentEvaluation extends LitElement {
 			},
 			returnHrefText: {
 				attribute: 'return-href-text',
+				type: String
+			},
+			dataTelemetryEndpoint: {
+				attribute: 'data-telemetry-endpoint',
 				type: String
 			},
 			_rubricReadOnly: { type: Boolean },
@@ -71,11 +76,13 @@ export class ConsistentEvaluation extends LitElement {
 
 	async updated(changedProperties) {
 		super.updated();
-
+		if (changedProperties.has('dataTelemetryEndpoint')) {
+			this._telemetry = new ConsistentEvalTelemetry(this.dataTelemetryEndpoint);
+		}
 		if (changedProperties.has('href')) {
 			const controller = new ConsistentEvaluationHrefController(this.href, this.token);
 			this._childHrefs = await controller.getHrefs();
-			this._rubricInfos = await controller.getRubricInfos();
+			this._rubricInfos = await controller.getRubricInfos(false);
 			this._submissionInfo = await controller.getSubmissionInfo();
 			this._gradeItemInfo = await controller.getGradeItemInfo();
 			this._assignmentName = await controller.getAssignmentOrganizationName('assignment');
@@ -139,6 +146,9 @@ export class ConsistentEvaluation extends LitElement {
 			}
 		}
 		this._loading = false;
+		if (this._telemetry && this._submissionInfo.submissionList) {
+			this._telemetry.logLoadEvent('consistentEvalMain', this._submissionInfo.submissionList.length);
+		}
 	}
 
 	_setLoading() {
@@ -146,6 +156,11 @@ export class ConsistentEvaluation extends LitElement {
 			this._loadingComponents[component] = true;
 		}
 		this._loading = true;
+	}
+
+	async _refreshRubrics() {
+		const controller = new ConsistentEvaluationHrefController(this.href, this.token);
+		this._rubricInfos = await controller.getRubricInfos(true);
 	}
 
 	render() {
@@ -163,6 +178,8 @@ export class ConsistentEvaluation extends LitElement {
 				return-href=${ifDefined(this.returnHref)}
 				return-href-text=${ifDefined(this.returnHrefText)}
 				current-file-id=${ifDefined(this.currentFileId)}
+				data-telemetry-endpoint=${ifDefined(this.dataTelemetryEndpoint)}
+				rubric-popout-location=${ifDefined(this._childHrefs && this._childHrefs.rubricPopoutLocation)}
 				.rubricInfos=${this._rubricInfos}
 				.submissionInfo=${this._submissionInfo}
 				.gradeItemInfo=${this._gradeItemInfo}
@@ -177,6 +194,7 @@ export class ConsistentEvaluation extends LitElement {
 				@d2l-consistent-evaluation-previous-student-click=${this._onPreviousStudentClick}
 				@d2l-consistent-evaluation-next-student-click=${this._onNextStudentClick}
 				@d2l-consistent-evaluation-loading-finished=${this._finishedLoading}
+				@d2l-consistent-eval-rubric-popup-closed=${this._refreshRubrics}
 			></d2l-consistent-evaluation-page>
 		`;
 	}

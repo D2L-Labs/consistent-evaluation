@@ -5,6 +5,7 @@ import './consistent-evaluation-grade-result.js';
 import './consistent-evaluation-coa-eval-override.js';
 import { css, html, LitElement } from 'lit-element';
 import { getRubricAssessmentScore, mapRubricScoreToGrade} from '../helpers/rubricGradeSyncHelpers.js';
+import { GradeType } from '@brightspace-ui-labs/grade-result/src/controller/Grade';
 import { LocalizeConsistentEvaluation } from '../../lang/localize-consistent-evaluation.js';
 
 export class ConsistentEvaluationRightPanel extends LocalizeConsistentEvaluation(LitElement) {
@@ -85,6 +86,10 @@ export class ConsistentEvaluationRightPanel extends LocalizeConsistentEvaluation
 				attribute: 'rubric-read-only',
 				type: Boolean
 			},
+			rubricPopoutLocation: {
+				attribute: 'rubric-popout-location',
+				type: String
+			},
 			token: {
 				type: Object,
 				converter: {
@@ -104,7 +109,8 @@ export class ConsistentEvaluationRightPanel extends LocalizeConsistentEvaluation
 	static get styles() {
 		return  css`
 			.d2l-consistent-evaluation-right-panel {
-				margin: 1.5rem 1.2rem 0 1.2rem;
+				margin: 1.5rem 1.2rem 2rem 1.2rem;
+				position: relative;
 			}
 
 			@media (max-width: 767px) {
@@ -138,6 +144,7 @@ export class ConsistentEvaluationRightPanel extends LocalizeConsistentEvaluation
 					header=${this.localize('rubrics')}
 					.rubricInfos=${this.rubricInfos}
 					active-scoring-rubric=${this.activeScoringRubric}
+					rubric-popout-location=${this.rubricPopoutLocation}
 					.token=${this.token}
 					?show-active-scoring-rubric-options=${showActiveScoringRubric}
 					?read-only=${this.rubricReadOnly}
@@ -232,35 +239,12 @@ export class ConsistentEvaluationRightPanel extends LocalizeConsistentEvaluation
 		}
 	}
 
-	_closeRubric() {
-		if (!this.rubricInfos || this.rubricInfos.length === 0) {
-			return;
-		}
-		try {
-			const rubrics = this.shadowRoot.querySelector('d2l-consistent-evaluation-rubric')
-				.shadowRoot.querySelectorAll('d2l-consistent-evaluation-right-panel-block d2l-rubric');
-
-			[...rubrics].map(rubric => {
-				const accordionCollapse = rubric
-					.shadowRoot.querySelector('d2l-rubric-adapter')
-					.shadowRoot.querySelector('div d2l-labs-accordion d2l-labs-accordion-collapse');
-				const rubricCollapse = accordionCollapse
-					.shadowRoot.querySelector('div.content iron-collapse');
-				accordionCollapse.removeAttribute('opened');
-				rubricCollapse.opened = false;
-			});
-
-		} catch (err) {
-			console.log('Unable to close rubrics');
-		}
-	}
-
 	_syncGradeToRubricScore(e) {
 		if (!this.allowEvaluationWrite) {
 			return;
 		}
 
-		if (this.rubricsOpen === 0) {
+		if (!e.detail.bypassRubricState && this.rubricsOpen === 0) {
 			return;
 		}
 
@@ -292,6 +276,14 @@ export class ConsistentEvaluationRightPanel extends LocalizeConsistentEvaluation
 			this.grade,
 			newScore
 		);
+
+		if (newGrade.score === this.grade.score && newGrade.scoreType === GradeType.Number) {
+			return;
+		}
+
+		if (newGrade.letterGrade === this.grade.letterGrade && newGrade.scoreType === GradeType.Letter) {
+			return;
+		}
 
 		this.dispatchEvent(new CustomEvent('on-d2l-consistent-eval-grade-changed', {
 			composed: true,

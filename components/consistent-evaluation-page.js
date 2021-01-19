@@ -114,6 +114,10 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 			token: {
 				type: Object
 			},
+			rubricPopoutLocation: {
+				attribute: 'rubric-popout-location',
+				type: String
+			},
 			_displayToast: {
 				type: Boolean
 			},
@@ -142,10 +146,14 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 				type: Boolean,
 				attribute: false
 			},
+			dataTelemetryEndpoint: {
+				attribute: 'data-telemetry-endpoint',
+				type: String
+			},
 			_activeScoringRubric: {
 				attribute: 'active-scoring-rubric',
 				type: String
-			},
+			}
 		};
 	}
 
@@ -290,6 +298,10 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 		this._attachmentsInfo = await this._controller.fetchAttachments(this.evaluationEntity);
 	}
 
+	async _refreshEvaluationEntity() {
+		this.evaluationEntity = await this._controller.fetchEvaluationEntity(true);
+	}
+
 	_noFeedbackComponent() {
 		return this.evaluationEntity && this.evaluationEntity.getSubEntityByRel('feedback') === undefined;
 	}
@@ -306,7 +318,13 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 	}
 
 	async _onNextStudentClick() {
-		this.shadowRoot.querySelector('consistent-evaluation-right-panel')._closeRubric();
+		const rubricComponent = this.shadowRoot.querySelector('consistent-evaluation-right-panel')
+			.shadowRoot.querySelector('d2l-consistent-evaluation-rubric');
+
+		if (rubricComponent) {
+			rubricComponent._closeRubric();
+		}
+
 		this._resetFocusToUser();
 		this.dispatchEvent(new CustomEvent('d2l-consistent-evaluation-next-student-click', {
 			composed: true,
@@ -315,7 +333,13 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 	}
 
 	async _onPreviousStudentClick() {
-		this.shadowRoot.querySelector('consistent-evaluation-right-panel')._closeRubric();
+		const rubricComponent = this.shadowRoot.querySelector('consistent-evaluation-right-panel')
+			.shadowRoot.querySelector('d2l-consistent-evaluation-rubric');
+
+		if (rubricComponent) {
+			rubricComponent._closeRubric();
+		}
+
 		this._resetFocusToUser();
 		this.dispatchEvent(new CustomEvent('d2l-consistent-evaluation-previous-student-click', {
 			composed: true,
@@ -766,7 +790,11 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 						.token=${this.token}
 						user-progress-outcome-href=${ifDefined(this.userProgressOutcomeHref)}
 						.currentFileId=${this.currentFileId}
+						?hide-use-grade=${this._noGradeComponent()}
 						@d2l-consistent-eval-annotations-update=${this._transientSaveAnnotations}
+						@d2l-consistent-evaluation-use-tii-grade=${this._transientSaveGrade}
+						@d2l-consistent-evaluation-refresh-grade-item=${this._refreshEvaluationEntity}
+						data-telemetry-endpoint=${this.dataTelemetryEndpoint}
 					></d2l-consistent-evaluation-left-panel>
 				</div>
 				<div slot="secondary">
@@ -779,6 +807,7 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 						rubric-assessment-href=${ifDefined(this.rubricAssessmentHref)}
 						outcomes-href=${ifDefined(this.outcomesHref)}
 						coa-eval-override-href=${ifDefined(this.coaDemonstrationHref)}
+						rubric-popout-location=${ifDefined(this.rubricPopoutLocation)}
 						.richTextEditorConfig=${this._getRichTextEditorConfig()}
 						.grade=${this._grade}
 						.gradeItemInfo=${this.gradeItemInfo}

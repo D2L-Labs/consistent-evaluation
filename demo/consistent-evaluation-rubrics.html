@@ -5,8 +5,6 @@
 		<script src="/node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
 		<script type="module">
 			import '@brightspace-ui/core/components/demo/demo-page.js';
-			import '@brightspace-ui/core/components/typography/styles.js';
-			import '@brightspace-ui/core/components/typography/typography.js';
 			import '../components/right-panel/consistent-evaluation-rubric.js';
 
 			const tests = document.getElementsByTagName('d2l-consistent-evaluation-rubric');
@@ -20,7 +18,6 @@
 				tests[i].rubricInfos = [{rubricHref: 'data/rubric.json', rubricAssessmentHref: 'data/assessment.json'}];
 			}
 		</script>
-		<title>d2l-consistent-rubric</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<meta http-equiv="X-UA-Compatible" content="ie=edge">
 		<meta charset="UTF-8">
@@ -34,7 +31,7 @@
 			}
 		</style>
 	</head>
-	<body class="d2l-typography">
+	<body>
 		<d2l-demo-page page-title="consistent-evaluation-rubric">
 
 			<h2>Single Rubric</h2>

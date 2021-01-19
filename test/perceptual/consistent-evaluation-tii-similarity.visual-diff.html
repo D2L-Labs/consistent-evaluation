@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+		<meta http-equiv="X-UA-Compatible" content="ie=edge">
+		<title>consistent-evaluation-tii-similarity visual diff tests</title>
+		<script type="module">
+			import '@brightspace-ui/core/components/typography/styles.js';
+			import '@brightspace-ui/core/components/typography/typography.js';
+			import '../../components/left-panel/consistent-evaluation-tii-similarity.js';
+
+		</script>
+		<style>
+			html {
+				font-size: 20px;
+			}
+			div {
+				padding: 50px;
+				justify-content: center;
+			}
+		</style>
+	</head>
+	<body class="d2l-typography">
+
+		<div id="report-exists">
+			<d2l-consistent-evaluation-tii-similarity
+				colour="yellow"
+				report-status="ReportComplete"
+				score=0.75
+			></d2l-consistent-evaluation-tii-similarity>
+		</div>
+
+		<div id="file-to-be-submitted">
+			<d2l-consistent-evaluation-tii-similarity
+				report-status="NotSubmitted"
+				submit-file-url="https://www.d2l.com"
+			></d2l-consistent-evaluation-tii-similarity>
+		</div>
+
+		<div id="file-being-submitted">
+			<d2l-consistent-evaluation-tii-similarity
+				report-status="PendingReport"
+				submit-file-url="https://www.d2l.com"
+			></d2l-consistent-evaluation-tii-similarity>
+		</div>
+
+		<div id="no-report">
+			<d2l-consistent-evaluation-tii-similarity
+				colour="yellow"
+				report-status="ReportComplete"
+			></d2l-consistent-evaluation-tii-similarity>
+		</div>
+
+		<div id="error">
+			<d2l-consistent-evaluation-tii-similarity
+				submit-file-url="https://www.d2l.com"
+				report-status="Error"
+			></d2l-consistent-evaluation-tii-similarity>
+		</div>
+
+	</body>
+</html>
