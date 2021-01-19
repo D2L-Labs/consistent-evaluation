@@ -23,6 +23,10 @@ export class ConsistentEvaluationSubmissionsPage extends SkeletonMixin(RtlMixin(
 				attribute: 'submission-type',
 				type: String
 			},
+			downloadAllSubmissionLink: {
+				attribute: 'download-all-submissions-location',
+				type: String
+			},
 			token: {
 				type: Object,
 				converter: {
@@ -429,7 +433,9 @@ export class ConsistentEvaluationSubmissionsPage extends SkeletonMixin(RtlMixin(
 				<d2l-list separators="between">
 					${this._renderListItems()}
 				</d2l-list>
+				<a href=${this.downloadAllSubmissionLink}>DOWNLOAD ALL FILES!!!!</a>
 			</div>
+
 		`;
 	}
 }

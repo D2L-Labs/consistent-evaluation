@@ -11,6 +11,7 @@ import { LocalizeConsistentEvaluation } from '../../lang/localize-consistent-eva
 import { performSirenAction } from 'siren-sdk/src/es6/SirenAction.js';
 import { SkeletonMixin } from '@brightspace-ui/core/components/skeleton/skeleton-mixin.js';
 import { toggleIsReadActionName } from '../controllers/constants.js';
+import { ifDefined } from 'lit-html/directives/if-defined.js';
 
 function getSubmissionTypeName(type) {
 	switch (type) {
@@ -50,6 +51,10 @@ export class ConsistentEvaluationLeftPanel extends SkeletonMixin(LocalizeConsist
 			},
 			userProgressOutcomeHref: {
 				attribute: 'user-progress-outcome-href',
+				type: String
+			},
+			downloadAllSubmissionLink: {
+				attribute: 'download-all-submissions-location',
 				type: String
 			},
 			currentFileId: {
@@ -208,6 +213,7 @@ export class ConsistentEvaluationLeftPanel extends SkeletonMixin(LocalizeConsist
 			.submissionList=${this.submissionInfo && this.submissionInfo.submissionList}
 			.token=${this.token}
 			data-telemetry-endpoint=${this.dataTelemetryEndpoint}
+			download-all-submissions-location=${ifDefined(this.downloadAllSubmissionLink)}
 			?skeleton=${this.skeleton}
 			?hide-use-grade=${this.hideUseGrade}
 		></d2l-consistent-evaluation-submissions-page>`;

@@ -1,5 +1,5 @@
 import 'd2l-polymer-siren-behaviors/store/entity-store.js';
-import { actorRel, alignmentsRel, assessmentRel, assessmentRubricApplicationRel, demonstrationRel, editSpecialAccessApplicationRel, evaluationRel, groupRel, nextRel, previousRel, rubricRel, userProgressOutcomeRel, userRel } from './constants.js';
+import { actorRel, alignmentsRel, assessmentRel, assessmentRubricApplicationRel, assignmentSubmissionListRel, demonstrationRel, editSpecialAccessApplicationRel, evaluationRel, groupRel, nextRel, previousRel, rubricRel, userProgressOutcomeRel, userRel } from './constants.js';
 import { Classes, Rels } from 'd2l-hypermedia-constants';
 
 export const ConsistentEvaluationHrefControllerErrors = {
@@ -58,6 +58,7 @@ export class ConsistentEvaluationHrefController {
 		let coaDemonstrationHref = undefined;
 		let specialAccessHref = undefined;
 		let rubricPopoutLocation = undefined;
+		let downloadAllSubmissionLink = undefined;
 
 		if (root && root.entity) {
 			root = root.entity;
@@ -103,6 +104,10 @@ export class ConsistentEvaluationHrefController {
 			if (root.hasSubEntityByRel(assessmentRubricApplicationRel)) {
 				rubricPopoutLocation = root.getSubEntityByRel(assessmentRubricApplicationRel).properties.path;
 			}
+
+			if (root.hasSubEntityByRel(assignmentSubmissionListRel)) {
+				downloadAllSubmissionLink = root.getSubEntityByRel(assignmentSubmissionListRel).properties.downloadAll;
+			}
 		}
 
 		return {
@@ -116,7 +121,8 @@ export class ConsistentEvaluationHrefController {
 			userProgressOutcomeHref,
 			coaDemonstrationHref,
 			specialAccessHref,
-			rubricPopoutLocation
+			rubricPopoutLocation,
+			downloadAllSubmissionLink
 		};
 	}
 
