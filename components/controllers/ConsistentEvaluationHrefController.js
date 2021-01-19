@@ -1,5 +1,5 @@
 import 'd2l-polymer-siren-behaviors/store/entity-store.js';
-import { actorRel, alignmentsRel, assessmentRel, assessmentRubricApplicationRel, demonstrationRel, editSpecialAccessApplicationRel, evaluationRel, groupRel, nextRel, previousRel, rubricRel, userProgressOutcomeRel, userRel } from './constants.js';
+import { actorRel, alignmentsRel, assessmentRel, assessmentRubricApplicationRel, assessorUserRel, demonstrationRel, editSpecialAccessApplicationRel, evaluationRel, groupRel, nextRel, previousRel, rubricRel, userProgressOutcomeRel, userRel } from './constants.js';
 import { Classes, Rels } from 'd2l-hypermedia-constants';
 
 export const ConsistentEvaluationHrefControllerErrors = {
@@ -276,13 +276,21 @@ export class ConsistentEvaluationHrefController {
 						const rubricOutOf = rubricEntity.entity.properties.outOf;
 						const rubricScoringMethod = rubricEntity.entity.properties.scoringMethod;
 
+						let assessorDisplayName = null;
+						const assessorUserHref = this._getHref(assessmentEntity.entity, assessorUserRel);
+						if (assessorUserHref) {
+							const assessorUserEntity = await this._getEntityFromHref(assessorUserHref, false);
+							assessorDisplayName = assessorUserEntity.entity.getSubEntityByRel(Rels.displayName).properties.name;
+						}
+						
 						return {
 							rubricHref,
 							rubricAssessmentHref,
 							rubricTitle,
 							rubricId,
 							rubricOutOf,
-							rubricScoringMethod
+							rubricScoringMethod,
+							assessorDisplayName
 						};
 					}
 				}));

@@ -73,10 +73,6 @@ class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(LitElement
 				white-space: nowrap;
 			}
 
-			.d2l-consistent-evaluation-rubric-title {
-				margin-bottom: -0.5rem;
-			}
-
 			.d2l-consistent-evaluation-rubric.d2l-consistent-evaluation-popout {
 				margin: 0.5rem 1rem 1rem 1rem;
 			}
@@ -187,6 +183,7 @@ class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(LitElement
 			return html`
 				<div class="d2l-consistent-evaluation-rubric ${this.isPopout ? 'd2l-consistent-evaluation-popout' : ''}">
 					${this._renderRubricTitle(rubric.rubricTitle)}
+					${this._renderGradedBy(rubric.assessorDisplayName)}
 					<d2l-rubric
 						data-rubric-id=${rubric.rubricId}
 						href=${rubric.rubricHref}
@@ -304,6 +301,12 @@ class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(LitElement
 		return !this.isPopout ?
 			html`` :
 			html`<h2 aria-label=${this.localize('rubricTitle')} class='d2l-consistent-evaluation-rubric-title'>${rubricTitle}</h2>`;
+	}
+
+	_renderGradedBy(assessorName) {
+		return !this.isPopout ?
+			html ``:
+			html `<label>${assessorName ? this.localize('gradedBy', { assessorName: assessorName }) : this.localize('notGradedSummary')}</label">`
 	}
 
 	_renderCloseButton() {
