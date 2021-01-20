@@ -282,7 +282,7 @@ export class ConsistentEvaluationHrefController {
 							const assessorUserEntity = await this._getEntityFromHref(assessorUserHref, false);
 							assessorDisplayName = assessorUserEntity.entity.getSubEntityByRel(Rels.displayName).properties.name;
 						}
-						
+
 						return {
 							rubricHref,
 							rubricAssessmentHref,

@@ -256,6 +256,13 @@ class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(LitElement
 		return this.localize('rubricSummary');
 	}
 
+	_getGradedByText(assessorName) {
+		if (assessorName) {
+			return this.localize('gradedBy', { assessorName: assessorName });
+		}
+		return `(${this.localize('notGradedSummary')})`;
+	}
+
 	_openRubricPopout() {
 		this._closeRubric();
 
@@ -305,8 +312,8 @@ class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(LitElement
 
 	_renderGradedBy(assessorName) {
 		return !this.isPopout ?
-			html ``:
-			html `<label>${assessorName ? this.localize('gradedBy', { assessorName: assessorName }) : this.localize('notGradedSummary')}</label">`
+			html `` :
+			html `<label>${this._getGradedByText(assessorName)}</label>`;
 	}
 
 	_renderCloseButton() {

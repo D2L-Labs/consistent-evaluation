@@ -38,7 +38,7 @@ export default {
 	"noFeedbackSummary": "No feedback entered",
 	"noGradeSummary" : "No grade entered",
 	"noSubmissions": "No submissions made for this assignment",
-	"notGradedSummary" : "(not graded yet)",
+	"notGradedSummary" : "not graded yet",
 	"observedInPerson": "Observed In Person",
 	"onPaperSubmission": "On Paper Submission",
 	"ok": "OK",
