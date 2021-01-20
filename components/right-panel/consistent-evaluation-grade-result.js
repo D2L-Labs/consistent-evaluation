@@ -113,6 +113,12 @@ export class ConsistentEvaluationGradeResult extends LocalizeConsistentEvaluatio
 		this._gradeSummaryInfo = summary;
 	}
 
+	_roundScore(score) {
+		const numDecimals = 2;
+		const dfactor = Math.pow(10, numDecimals);
+		return Math.round(score * dfactor) / dfactor;
+	}
+
 	render() {
 		const gradeType = this.grade.getScoreType();
 		let score = this.grade.getScore();
@@ -122,6 +128,11 @@ export class ConsistentEvaluationGradeResult extends LocalizeConsistentEvaluatio
 		if (gradeType === GradeType.Letter && score === null) {
 			score = '';
 		}
+
+		if (gradeType === GradeType.Number && score !== null) {
+			score = this._roundScore(score);
+		}
+
 		this._setGradeSummaryInfo(gradeType, score, scoreOutOf);
 
 		return html`
