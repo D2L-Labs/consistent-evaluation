@@ -119,9 +119,7 @@ export class ConsistentEvaluationGradeResult extends LocalizeConsistentEvaluatio
 		const scoreOutOf = this.grade.getScoreOutOf();
 
 		// handle when grade is not yet initialized on the server
-		if (gradeType === GradeType.Number && score === null) {
-			score = 0;
-		} else if (gradeType === GradeType.Letter && score === null) {
+		if (gradeType === GradeType.Letter && score === null) {
 			score = '';
 		}
 		this._setGradeSummaryInfo(gradeType, score, scoreOutOf);
