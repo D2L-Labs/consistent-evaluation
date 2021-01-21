@@ -118,6 +118,10 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 				attribute: 'rubric-popout-location',
 				type: String
 			},
+			downloadAllSubmissionLink: {
+				attribute: 'download-all-submissions-location',
+				type: String
+			},
 			_displayToast: {
 				type: Boolean
 			},
@@ -763,7 +767,6 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 		const canRecordFeedbackVideo = this._attachmentsInfo.canRecordFeedbackVideo;
 		const canRecordFeedbackAudio = this._attachmentsInfo.canRecordFeedbackAudio;
 		const attachments = this._attachmentsInfo.attachments;
-
 		return html`
 			<d2l-template-primary-secondary
 				resizable
@@ -789,6 +792,7 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 						.submissionInfo=${this.submissionInfo}
 						.token=${this.token}
 						user-progress-outcome-href=${ifDefined(this.userProgressOutcomeHref)}
+						download-all-submissions-location=${ifDefined(this.downloadAllSubmissionLink)}
 						.currentFileId=${this.currentFileId}
 						?hide-use-grade=${this._noGradeComponent()}
 						@d2l-consistent-eval-annotations-update=${this._transientSaveAnnotations}

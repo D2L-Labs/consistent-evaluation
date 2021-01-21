@@ -24,6 +24,7 @@ export const alignmentsRel = 'https://alignments.api.brightspace.com/rels/alignm
 export const attachmentListRel = 'https://assignments.api.brightspace.com/rels/attachment-list';
 export const editSpecialAccessApplicationRel = 'https://assignments.api.brightspace.com/rels/edit-special-access-application';
 export const assessmentRubricApplicationRel = 'https://assessments.api.brightspace.com/rels/assessment-rubric-application';
+export const assignmentSubmissionListRel = 'https://assignments.api.brightspace.com/rels/assignment-submission-list';
 export const userProgressOutcomeRel = 'user-progress-outcome';
 export const userProgressOutcomeActivitiesRel = 'https://user-progress.api.brightspace.com/rels/outcome-activities';
 export const demonstrationRel = 'https://achievements.api.brightspace.com/rels/demonstration';

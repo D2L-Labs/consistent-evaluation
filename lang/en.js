@@ -15,6 +15,8 @@ export default {
 	"closeBtn": "Close",
 	"comments": "Comments",
 	"download": "Download",
+	"downloadAll": "Download all files",
+	"downloadAllPleaseWait": "Preparing download, please wait...",
 	"editCopy": "Edit a Copy",
 	"exempt": "Exempt",
 	"fileCannotBePreviewed": "This file can't be previewed",

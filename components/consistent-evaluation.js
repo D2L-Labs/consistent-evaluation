@@ -180,6 +180,7 @@ export class ConsistentEvaluation extends LitElement {
 				current-file-id=${ifDefined(this.currentFileId)}
 				data-telemetry-endpoint=${ifDefined(this.dataTelemetryEndpoint)}
 				rubric-popout-location=${ifDefined(this._childHrefs && this._childHrefs.rubricPopoutLocation)}
+				download-all-submissions-location=${ifDefined(this._childHrefs && this._childHrefs.downloadAllSubmissionLink)}
 				.rubricInfos=${this._rubricInfos}
 				.submissionInfo=${this._submissionInfo}
 				.gradeItemInfo=${this._gradeItemInfo}
