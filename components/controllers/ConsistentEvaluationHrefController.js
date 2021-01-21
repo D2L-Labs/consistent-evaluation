@@ -106,7 +106,9 @@ export class ConsistentEvaluationHrefController {
 			}
 
 			if (root.hasSubEntityByRel(assignmentSubmissionListRel)) {
-				downloadAllSubmissionLink = root.getSubEntityByRel(assignmentSubmissionListRel).properties.downloadAll;
+				if (root.getSubEntityByRel(assignmentSubmissionListRel).properties ){
+					downloadAllSubmissionLink = root.getSubEntityByRel(assignmentSubmissionListRel).properties.downloadAll;
+				}
 			}
 		}
 
