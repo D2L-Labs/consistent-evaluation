@@ -8,11 +8,12 @@ import { tiiRefreshAction, tiiRel, tiiSubmitActionName, toggleFlagActionName, to
 import { Classes } from 'd2l-hypermedia-constants';
 import { ConsistentEvalTelemetry } from '../helpers/consistent-eval-telemetry.js';
 import { findFile } from '../helpers/submissionsAndFilesHelpers.js';
+import { LocalizeConsistentEvaluation } from '../../lang/localize-consistent-evaluation.js';
 import { performSirenAction } from 'siren-sdk/src/es6/SirenAction.js';
 import { RtlMixin } from '@brightspace-ui/core/mixins/rtl-mixin.js';
 import { SkeletonMixin } from '@brightspace-ui/core/components/skeleton/skeleton-mixin.js';
 
-export class ConsistentEvaluationSubmissionsPage extends SkeletonMixin(RtlMixin(LitElement)) {
+export class ConsistentEvaluationSubmissionsPage extends SkeletonMixin(RtlMixin(LocalizeConsistentEvaluation(LitElement))) {
 	static get properties() {
 		return {
 			submissionList: {
@@ -47,6 +48,10 @@ export class ConsistentEvaluationSubmissionsPage extends SkeletonMixin(RtlMixin(
 			dataTelemetryEndpoint: {
 				attribute: 'data-telemetry-endpoint',
 				type: String
+			},
+			_downloading : {
+				attribute: false,
+				type: Boolean
 			}
 		};
 	}
@@ -139,6 +144,9 @@ export class ConsistentEvaluationSubmissionsPage extends SkeletonMixin(RtlMixin(
 			:host([skeleton]) {
 				height: 100%;
 			}
+			#download-all-button {
+				margin: 0 0.65rem 0.65rem 0.65rem;
+			}
 		`];
 	}
 
@@ -148,6 +156,11 @@ export class ConsistentEvaluationSubmissionsPage extends SkeletonMixin(RtlMixin(
 		this._token = undefined;
 		this._submissionEntities = [];
 		this._perfRenderEventName = 'submissionsComponentRender';
+		this._downloading = false;
+		this._expectedCookieName = 'd2lConsistentEvaluationDownloadAll';
+		this._currentCookieCheckAttempts = 0;
+		this._maxCookieCheckAttempts = 60;
+		this._deleteCookie();
 	}
 
 	get submissionList() {
@@ -362,6 +375,42 @@ export class ConsistentEvaluationSubmissionsPage extends SkeletonMixin(RtlMixin(
 		return newSubmissionEntity;
 	}
 
+	_handleAllSubmissionDownload() {
+		this._downloading = true;
+		window.location.href = this.downloadAllSubmissionLink;
+		this._checkDownloadStatus();
+	}
+
+	_checkDownloadStatus() {
+		if (!this._cookieExists() && this._currentCookieCheckAttempts < this._maxCookieCheckAttempts) {
+			this._currentCookieCheckAttempts++;
+			setTimeout(this._checkDownloadStatus.bind(this), 1000);
+		} else {
+			this._deleteCookie();
+			this._downloading = false;
+			this._currentCookieCheckAttempts = 0;
+		}
+	}
+
+	_deleteCookie() {
+		const d = new Date();
+		d.setTime(d.getTime() + 24 * 60 * 60 * 1000 * -1);
+		document.cookie = `${this._expectedCookieName}= ;path=/;expires=${d.toGMTString()}`;
+	}
+
+	_cookieExists() {
+		const b = document.cookie.match(`(^|;) ?${this._expectedCookieName}=([^;]*)(;|$)`);
+		return b ? true : false;
+	}
+
+	_getDownloadButtonText() {
+		if (this._downloading) {
+			return this.localize('downloadAllPleaseWait');
+		} else {
+			return this.localize('downloadAll');
+		}
+	}
+
 	_renderListItems() {
 		const itemTemplate = [];
 		for (let i = 0; i < this._submissionEntities.length; i++) {
@@ -433,9 +482,15 @@ export class ConsistentEvaluationSubmissionsPage extends SkeletonMixin(RtlMixin(
 				<d2l-list separators="between">
 					${this._renderListItems()}
 				</d2l-list>
-				<a href=${this.downloadAllSubmissionLink}>DOWNLOAD ALL FILES!!!!</a>
+				<d2l-button-subtle
+					id="download-all-button"
+					icon="tier2:download"
+					?hidden="${this._submissionEntities.length === 0}"
+					?disabled="${this._downloading}"
+					text="${this._getDownloadButtonText()}"
+					@click="${this._handleAllSubmissionDownload}">
+				</d2l-button-subtle>
 			</div>
-
 		`;
 	}
 }

@@ -767,7 +767,6 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 		const canRecordFeedbackVideo = this._attachmentsInfo.canRecordFeedbackVideo;
 		const canRecordFeedbackAudio = this._attachmentsInfo.canRecordFeedbackAudio;
 		const attachments = this._attachmentsInfo.attachments;
-		console.log(this.downloadAllSubmissionLink);
 		return html`
 			<d2l-template-primary-secondary
 				resizable
