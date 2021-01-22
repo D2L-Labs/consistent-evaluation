@@ -7,6 +7,7 @@ import { css, html, LitElement } from 'lit-element/lit-element.js';
 import { tiiRefreshAction, tiiRel, tiiSubmitActionName, toggleFlagActionName, toggleIsReadActionName } from '../controllers/constants.js';
 import { Classes } from 'd2l-hypermedia-constants';
 import { ConsistentEvalTelemetry } from '../helpers/consistent-eval-telemetry.js';
+import { convertToken } from '../helpers/converterHelpers.js';
 import { findFile } from '../helpers/submissionsAndFilesHelpers.js';
 import { LocalizeConsistentEvaluation } from '../../lang/localize-consistent-evaluation.js';
 import { performSirenAction } from 'siren-sdk/src/es6/SirenAction.js';
@@ -30,16 +31,8 @@ export class ConsistentEvaluationSubmissionsPage extends SkeletonMixin(RtlMixin(
 			},
 			token: {
 				type: Object,
-				converter: {
-					fromAttribute(value) {
-						const retVal = String(value);
-						return retVal;
-					},
-					toAttribute(value) {
-						const retVal = Object(value);
-						return retVal;
-					}
-				}
+				reflect: true,
+				converter: (value) => convertToken(value)
 			},
 			hideUseGrade: {
 				attribute: 'hide-use-grade',
