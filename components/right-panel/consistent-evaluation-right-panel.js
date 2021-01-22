@@ -5,7 +5,7 @@ import './consistent-evaluation-grade-result.js';
 import './consistent-evaluation-coa-eval-override.js';
 import { css, html, LitElement } from 'lit-element';
 import { getRubricAssessmentScore, mapRubricScoreToGrade} from '../helpers/rubricGradeSyncHelpers.js';
-import { convertHref } from '../helpers/converterHelpers.js';
+import { convertToken } from '../helpers/converterHelpers.js';
 import { GradeType } from '@brightspace-ui-labs/grade-result/src/controller/Grade';
 import { LocalizeConsistentEvaluation } from '../../lang/localize-consistent-evaluation.js';
 
@@ -93,7 +93,8 @@ export class ConsistentEvaluationRightPanel extends LocalizeConsistentEvaluation
 			},
 			token: {
 				type: Object,
-				converter: (value) => convertHref(value),
+				reflect: true,
+				converter: (value) => convertToken(value),
 			}
 		};
 	}

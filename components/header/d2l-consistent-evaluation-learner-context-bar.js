@@ -2,7 +2,7 @@ import './d2l-consistent-evaluation-lcb-user-context.js';
 import './d2l-consistent-evaluation-lcb-file-context.js';
 import '@brightspace-ui/core/components/colors/colors.js';
 import { css, html, LitElement } from 'lit-element';
-import { convertHref } from '../helpers/converterHelpers.js';
+import { convertToken } from '../helpers/converterHelpers.js';
 import { RtlMixin } from '@brightspace-ui/core/mixins/rtl-mixin.js';
 import { SkeletonMixin } from '@brightspace-ui/core/components/skeleton/skeleton-mixin.js';
 import { submissionTypesWithNoEvidence } from '../controllers/constants';
@@ -25,7 +25,8 @@ export class ConsistentEvaluationLearnerContextBar extends SkeletonMixin(RtlMixi
 			},
 			token: {
 				type: Object,
-				converter: (value) => convertHref(value)
+				reflect: true,
+				converter: (value) => convertToken(value)
 			},
 			submissionInfo: {
 				attribute: false,
