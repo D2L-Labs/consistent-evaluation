@@ -122,13 +122,34 @@ export class ConsistentEvaluation extends LitElement {
 	}
 
 	_onNextStudentClick() {
+		this._updateCurrentUrl(this._childHrefs?.nextHref);
 		this.href = this._childHrefs?.nextHref;
 		this._setLoading();
 	}
 
 	_onPreviousStudentClick() {
+		this._updateCurrentUrl(this._childHrefs?.previousHref);
 		this.href = this._childHrefs?.previousHref;
 		this._setLoading();
+	}
+
+	_updateCurrentUrl(targetHref) {
+		const targetHrefUrl = new URL(targetHref);
+		if (targetHrefUrl) {
+			const queryString = targetHrefUrl.search;
+			const searchParams = new URLSearchParams(queryString);
+			const nextActorUsageId = searchParams.get('currentActorUsageId');
+
+			if (nextActorUsageId) {
+				const currentUrl = new URL(window.location.href);
+				const currentUrlQueryString = currentUrl.search;
+				const currentUrlSearchParams = new URLSearchParams(currentUrlQueryString);
+				currentUrlSearchParams.set('currentActorActivityUsage', nextActorUsageId);
+				currentUrl.search = currentUrlSearchParams.toString();
+
+				window.history.replaceState(null, null, currentUrl.toString());
+			}
+		}
 	}
 
 	_shouldHideLearnerContextBar() {

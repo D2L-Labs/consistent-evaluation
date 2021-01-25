@@ -4,6 +4,7 @@ import './consistent-evaluation-right-panel-block';
 import './consistent-evaluation-attachments-editor.js';
 import 'd2l-polymer-siren-behaviors/store/entity-store.js';
 import { html, LitElement } from 'lit-element';
+import { convertToken } from '../helpers/converterHelpers.js';
 import { Debouncer } from '@polymer/polymer/lib/utils/debounce.js';
 import { ifDefined } from 'lit-html/directives/if-defined.js';
 import { LocalizeConsistentEvaluation } from '../../lang/localize-consistent-evaluation.js';
@@ -43,16 +44,8 @@ class ConsistentEvaluationFeedbackPresentational extends LocalizeConsistentEvalu
 			},
 			token: {
 				type: Object,
-				converter: {
-					fromAttribute(value) {
-						const retVal = String(value);
-						return retVal;
-					},
-					toAttribute(value) {
-						const retVal = Object(value);
-						return retVal;
-					}
-				}
+				reflect: true,
+				converter: (value) => convertToken(value),
 			},
 			_key: {
 				type: String
