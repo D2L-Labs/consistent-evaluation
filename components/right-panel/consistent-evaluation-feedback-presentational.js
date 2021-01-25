@@ -42,6 +42,10 @@ class ConsistentEvaluationFeedbackPresentational extends LocalizeConsistentEvalu
 				attribute: false,
 				type: Object
 			},
+			useNewHtmlEditor: {
+				attribute: 'use-new-html-editor',
+				type: Boolean
+			},
 			token: {
 				type: Object,
 				reflect: true,
@@ -146,6 +150,31 @@ class ConsistentEvaluationFeedbackPresentational extends LocalizeConsistentEvalu
 		this._feedbackSummaryInfo = summary;
 	}
 
+	_getHtmlEditor() {
+		if (this.useNewHtmlEditor) {
+			return html `
+				<d2l-htmleditor
+					html="${this.feedbackText}"
+					label="${this.localize('overallFeedback')}"
+					label-hidden
+					paste-local-images
+					height="10rem"
+					@d2l-htmleditor-blur="${this._saveOnFeedbackChangeNewEditor}">
+				</d2l-htmleditor>
+			`;
+		} else {
+			return html `
+				<d2l-activity-text-editor
+					.key="${this._key}"
+					.value="${this.feedbackText}"
+					.richtextEditorConfig="${this.richTextEditorConfig}"
+					@d2l-activity-text-editor-change="${this._saveOnFeedbackChange}"
+					ariaLabel="${this.localize('overallFeedback')}">
+				</d2l-activity-text-editor>
+			`;
+		}
+	}
+
 	render() {
 		if (this.href && this.token && this.richTextEditorConfig) {
 			const attachmentsComponent = this.canEditFeedback || this.attachments.length !== 0
@@ -165,14 +194,7 @@ class ConsistentEvaluationFeedbackPresentational extends LocalizeConsistentEvalu
 				<d2l-consistent-evaluation-right-panel-block
 					supportingInfo=${ifDefined(this._feedbackSummaryInfo)}
 					title="${this.localize('overallFeedback')}">
-						<d2l-htmleditor
-							html="${this.feedbackText}"
-							label="${this.localize('overallFeedback')}"
-							label-hidden
-							paste-local-images
-							height="10rem"
-							@d2l-htmleditor-blur="${this._saveOnFeedbackChange}">
-						</d2l-htmleditor>
+
 						${attachmentsComponent}
 				</d2l-consistent-evaluation-right-panel-block>
 			`;
