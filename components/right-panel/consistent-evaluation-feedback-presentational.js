@@ -1,5 +1,4 @@
 import 'd2l-activities/components/d2l-activity-editor/d2l-activity-text-editor.js';
-import '@brightspace-ui/htmleditor/htmleditor.js';
 import './consistent-evaluation-right-panel-block';
 import './consistent-evaluation-attachments-editor.js';
 import 'd2l-polymer-siren-behaviors/store/entity-store.js';
@@ -152,13 +151,14 @@ class ConsistentEvaluationFeedbackPresentational extends LocalizeConsistentEvalu
 
 	_getHtmlEditor() {
 		if (this.useNewHtmlEditor) {
+			import('@brightspace-ui/htmleditor/htmleditor.js');
 			return html `
 				<d2l-htmleditor
 					html="${this.feedbackText}"
 					label="${this.localize('overallFeedback')}"
 					label-hidden
 					paste-local-images
-					height="10rem"
+					height="15rem"
 					@d2l-htmleditor-blur="${this._saveOnFeedbackChangeNewEditor}">
 				</d2l-htmleditor>
 			`;
@@ -194,7 +194,7 @@ class ConsistentEvaluationFeedbackPresentational extends LocalizeConsistentEvalu
 				<d2l-consistent-evaluation-right-panel-block
 					supportingInfo=${ifDefined(this._feedbackSummaryInfo)}
 					title="${this.localize('overallFeedback')}">
-
+						${this._getHtmlEditor()}
 						${attachmentsComponent}
 				</d2l-consistent-evaluation-right-panel-block>
 			`;
