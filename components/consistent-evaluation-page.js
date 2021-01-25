@@ -14,6 +14,7 @@ import { css, html, LitElement } from 'lit-element/lit-element.js';
 import { Grade, GradeType } from '@brightspace-ui-labs/grade-result/src/controller/Grade';
 import { Awaiter } from './awaiter.js';
 import { ConsistentEvaluationController } from './controllers/ConsistentEvaluationController.js';
+import { ConsistentEvaluationHrefController } from './controllers/ConsistentEvaluationHrefController.js';
 import { ifDefined } from 'lit-html/directives/if-defined.js';
 import { LocalizeConsistentEvaluation } from '../lang/localize-consistent-evaluation.js';
 import { Rels } from 'd2l-hypermedia-constants';
@@ -22,6 +23,7 @@ import { TransientSaveAwaiter } from './transient-save-awaiter.js';
 
 const DIALOG_ACTION_LEAVE = 'leave';
 const DIALOG_ACTION_DISCARD = 'discard';
+const DIALOG_ACTION_CONTINUE_GRADING = 'continue_grading';
 
 export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeConsistentEvaluation(LitElement)) {
 
@@ -49,6 +51,10 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 			},
 			specialAccessHref: {
 				attribute: 'special-access-href',
+				type: String
+			},
+			href: {
+				attribute: 'href',
 				type: String
 			},
 			rubricInfos: {
@@ -143,6 +149,14 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 				attribute: false
 			},
 			_unsavedAnnotationsDialogOpened: {
+				type: Boolean,
+				attribute: false
+			},
+			_publishUnscoredCriteriaDialogOpened: {
+				type: Boolean,
+				attribute: false
+			},
+			_updateUnscoredCriteriaDialogOpened: {
 				type: Boolean,
 				attribute: false
 			},
@@ -459,6 +473,34 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 		);
 	}
 
+	async _checkAndUpdateEvaluation() {
+		window.dispatchEvent(new CustomEvent('d2l-flush', {
+			composed: true,
+			bubbles: true
+		}));
+
+		const hasUnscoredCriteria = await this._checkUnscoredCriteria();
+		if (hasUnscoredCriteria) {
+			this._updateUnscoredCriteriaDialogOpened = true;
+			return;
+		}
+		this._updateEvaluation();
+	}
+
+	async _checkAndPublishEvaluation() {
+		window.dispatchEvent(new CustomEvent('d2l-flush', {
+			composed: true,
+			bubbles: true
+		}));
+
+		const hasUnscoredCriteria = await this._checkUnscoredCriteria();
+		if (hasUnscoredCriteria) {
+			this._publishUnscoredCriteriaDialogOpened = true;
+			return;
+		}
+		this._publishEvaluation();
+	}
+
 	async _updateEvaluation() {
 		window.dispatchEvent(new CustomEvent('d2l-flush', {
 			composed: true,
@@ -651,6 +693,27 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 		this.currentFileId = undefined;
 	}
 
+	async _checkUnscoredCriteria() {
+		const controller = new ConsistentEvaluationHrefController(this.href, this.token);
+		const _rubricsInfo = await controller.getRubricInfos(true);
+		const hasUnscoredCriteria = _rubricsInfo.find(rubric => rubric.hasUnscoredCriteria) !== undefined;
+		return hasUnscoredCriteria;
+	}
+
+	async _onPublishUnscoredCriteriaDialogClosed(e) {
+		this._publishUnscoredCriteriaDialogOpened = false;
+		if (e.detail.action !== DIALOG_ACTION_CONTINUE_GRADING) {
+			this._publishEvaluation();
+		}
+	}
+
+	async _onUpdateUnscoredCriteriaDialogClosed(e) {
+		this._updateUnscoredCriteriaDialogOpened = false;
+		if (e.detail.action !== DIALOG_ACTION_CONTINUE_GRADING) {
+			this._updateEvaluation();
+		}
+	}
+
 	async _checkUnsavedAnnotations(newFileId) {
 		return await this._mutex.dispatch(
 			async() => {
@@ -836,10 +899,10 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 						?published=${this._isEvaluationPublished()}
 						?allow-evaluation-write=${this._allowEvaluationWrite()}
 						?allow-evaluation-delete=${this._allowEvaluationDelete()}
-						@d2l-consistent-evaluation-on-publish=${this._publishEvaluation}
+						@d2l-consistent-evaluation-on-publish=${this._checkAndPublishEvaluation}
 						@d2l-consistent-evaluation-on-save-draft=${this._saveEvaluation}
 						@d2l-consistent-evaluation-on-retract=${this._retractEvaluation}
-						@d2l-consistent-evaluation-on-update=${this._updateEvaluation}
+						@d2l-consistent-evaluation-on-update=${this._checkAndUpdateEvaluation}
 						@d2l-consistent-evaluation-navigate=${this._showUnsavedChangesDialog}
 					></d2l-consistent-evaluation-footer-presentational>
 				</div>
@@ -859,6 +922,22 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 				@d2l-dialog-close=${this._onUnsavedAnnotationsDialogClosed}>
 					<d2l-button slot="footer" primary data-dialog-action=${DIALOG_ACTION_DISCARD}>${this.localize('unsavedAnnotationsDiscardButton')}</d2l-button>
 					<d2l-button slot="footer" data-dialog-action>${this.localize('cancelBtn')}</d2l-button>
+			</d2l-dialog-confirm>
+			<d2l-dialog-confirm
+				title-text=${this.localize('unscoredCriteriaTitle')}
+				text=${this.localize('unscoredCriteriaBody')}
+				?opened=${this._publishUnscoredCriteriaDialogOpened}
+				@d2l-dialog-close=${this._onPublishUnscoredCriteriaDialogClosed}>
+					<d2l-button slot="footer" primary data-dialog-action=${DIALOG_ACTION_CONTINUE_GRADING}>${this.localize('continueGrading')}</d2l-button>
+					<d2l-button slot="footer" data-dialog-action>${this.localize('publish')}</d2l-button>
+			</d2l-dialog-confirm>
+			<d2l-dialog-confirm
+				title-text=${this.localize('unscoredCriteriaTitle')}
+				text=${this.localize('unscoredCriteriaBody')}
+				?opened=${this._updateUnscoredCriteriaDialogOpened}
+				@d2l-dialog-close=${this._onUpdateUnscoredCriteriaDialogClosed}>
+					<d2l-button slot="footer" primary data-dialog-action=${DIALOG_ACTION_CONTINUE_GRADING}>${this.localize('continueGrading')}</d2l-button>
+					<d2l-button slot="footer" data-dialog-action>${this.localize('update')}</d2l-button>
 			</d2l-dialog-confirm>
 		`;
 	}

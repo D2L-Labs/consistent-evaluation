@@ -189,6 +189,7 @@ export class ConsistentEvaluation extends LitElement {
 				.iteratorTotal=${this._iteratorTotal}
 				.iteratorIndex=${this._iteratorIndex}
 				.token=${this.token}
+				.href=${this.href}
 				?rubric-read-only=${this._rubricReadOnly}
 				?hide-learner-context-bar=${this._shouldHideLearnerContextBar()}
 				@d2l-consistent-evaluation-previous-student-click=${this._onPreviousStudentClick}
