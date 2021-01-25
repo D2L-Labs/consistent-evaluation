@@ -1,4 +1,5 @@
 import 'd2l-activities/components/d2l-activity-editor/d2l-activity-text-editor.js';
+import '@brightspace-ui/htmleditor/htmleditor.js';
 import './consistent-evaluation-right-panel-block';
 import './consistent-evaluation-attachments-editor.js';
 import 'd2l-polymer-siren-behaviors/store/entity-store.js';
@@ -97,8 +98,8 @@ class ConsistentEvaluationFeedbackPresentational extends LocalizeConsistentEvalu
 		}
 	}
 
-	_saveOnFeedbackChange(e) {
-		const feedback = e.detail.content;
+	_saveOnFeedbackChange() {
+		const feedback = this.shadowRoot.querySelector('d2l-htmleditor').html;
 		this._emitFeedbackTextEditorChangeEvent();
 		this._debounceJobs.feedback = Debouncer.debounce(
 			this._debounceJobs.feedback,
@@ -161,13 +162,14 @@ class ConsistentEvaluationFeedbackPresentational extends LocalizeConsistentEvalu
 				<d2l-consistent-evaluation-right-panel-block
 					supportingInfo=${ifDefined(this._feedbackSummaryInfo)}
 					title="${this.localize('overallFeedback')}">
-						<d2l-activity-text-editor
-							.key="${this._key}"
-							.value="${this.feedbackText}"
-							.richtextEditorConfig="${this.richTextEditorConfig}"
-							@d2l-activity-text-editor-change="${this._saveOnFeedbackChange}"
-							ariaLabel="${this.localize('overallFeedback')}">
-						</d2l-activity-text-editor>
+						<d2l-htmleditor
+							html="${this.feedbackText}"
+							label="${this.localize('overallFeedback')}"
+							label-hidden
+							paste-local-images
+							height="10rem"
+							@d2l-htmleditor-blur="${this._saveOnFeedbackChange}">
+						</d2l-htmleditor>
 						${attachmentsComponent}
 				</d2l-consistent-evaluation-right-panel-block>
 			`;
