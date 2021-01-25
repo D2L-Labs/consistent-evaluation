@@ -149,6 +149,22 @@ export class ConsistentEvaluation extends LitElement {
 		if (this._telemetry && this._submissionInfo.submissionList) {
 			this._telemetry.logLoadEvent('consistentEvalMain', this._submissionInfo.submissionList.length);
 		}
+
+		if(this._childHrefs?.nextHref) {
+			this._primeUser(this._childHrefs?.nextHref)
+		}
+
+		if(this._childHrefs?.previousHref) {
+			this._primeUser(this._childHrefs?.previousHref)
+		}
+	}
+
+	async _primeUser(href){
+		const controller = new ConsistentEvaluationHrefController(href, this.token);
+		await controller.getRubricInfos(false);
+		await controller.getSubmissionInfo();
+		await controller.getGradeItemInfo();
+		await controller.getUserName();
 	}
 
 	_setLoading() {
