@@ -91,6 +91,10 @@ export class ConsistentEvaluationRightPanel extends LocalizeConsistentEvaluation
 				attribute: 'rubric-popout-location',
 				type: String
 			},
+			useNewHtmlEditor: {
+				attribute: 'use-new-html-editor',
+				type: Boolean
+			},
 			token: {
 				type: Object,
 				reflect: true,
@@ -186,6 +190,7 @@ export class ConsistentEvaluationRightPanel extends LocalizeConsistentEvaluation
 					?can-add-file=${this.canAddFeedbackFile}
 					?can-record-video=${this.canRecordFeedbackVideo}
 					?can-record-audio=${this.canRecordFeedbackAudio}
+					?use-new-html-editor=${this.useNewHtmlEditor}
 					.feedbackText=${this.feedbackText}
 					.attachments=${this.feedbackAttachments}
 					.richTextEditorConfig=${this.richTextEditorConfig}

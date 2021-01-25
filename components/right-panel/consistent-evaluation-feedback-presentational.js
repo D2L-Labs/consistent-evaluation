@@ -91,7 +91,17 @@ class ConsistentEvaluationFeedbackPresentational extends LocalizeConsistentEvalu
 		}
 	}
 
-	_saveOnFeedbackChange() {
+	_saveOnFeedbackChange(e) {
+		const feedback = e.detail.content;
+		this._emitFeedbackTextEditorChangeEvent();
+		this._debounceJobs.feedback = Debouncer.debounce(
+			this._debounceJobs.feedback,
+			timeOut.after(800),
+			() => this._emitFeedbackEditEvent(feedback)
+		);
+	}
+
+	_saveOnFeedbackChangeNewEditor() {
 		const feedback = this.shadowRoot.querySelector('d2l-htmleditor').html;
 		this._emitFeedbackTextEditorChangeEvent();
 		this._debounceJobs.feedback = Debouncer.debounce(
