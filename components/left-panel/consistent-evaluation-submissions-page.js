@@ -160,7 +160,6 @@ export class ConsistentEvaluationSubmissionsPage extends SkeletonMixin(RtlMixin(
 		this._expectedCookieName = 'd2lConsistentEvaluationDownloadAll';
 		this._currentCookieCheckAttempts = 0;
 		this._maxCookieCheckAttempts = 60;
-		this._deleteCookie();
 	}
 
 	get submissionList() {
@@ -376,6 +375,7 @@ export class ConsistentEvaluationSubmissionsPage extends SkeletonMixin(RtlMixin(
 	}
 
 	_handleAllSubmissionDownload() {
+		this._deleteCookie();
 		this._downloading = true;
 		window.location.href = this.downloadAllSubmissionLink;
 		this._checkDownloadStatus();
