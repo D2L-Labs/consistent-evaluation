@@ -4,6 +4,7 @@ import './footer/consistent-evaluation-footer-presentational.js';
 import './right-panel/consistent-evaluation-right-panel.js';
 import './left-panel/consistent-evaluation-submissions-page.js';
 import './header/consistent-evaluation-nav-bar.js';
+import './consistent-evaluation-dialogs.js';
 import '@brightspace-ui/core/components/alert/alert-toast.js';
 import '@brightspace-ui/core/components/inputs/input-text.js';
 import '@brightspace-ui/core/templates/primary-secondary/primary-secondary.js';
@@ -49,6 +50,10 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 			},
 			specialAccessHref: {
 				attribute: 'special-access-href',
+				type: String
+			},
+			href: {
+				attribute: 'href',
 				type: String
 			},
 			rubricInfos: {
@@ -161,6 +166,14 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 			_activeScoringRubric: {
 				attribute: 'active-scoring-rubric',
 				type: String
+			},
+			_isPublishClicked: {
+				type: Boolean,
+				attribute: false
+			},
+			_isUpdateClicked: {
+				type: Boolean,
+				attribute: false
 			}
 		};
 	}
@@ -204,6 +217,8 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 		this._unsavedChangesDialogOpened = false;
 		this.unsavedChangesHandler = this._confirmUnsavedChangesBeforeUnload.bind(this);
 		this._transientSaveAwaiter = new TransientSaveAwaiter();
+		this._isUpdateClicked = false;
+		this._isPublishClicked = false;
 	}
 
 	get evaluationEntity() {
@@ -467,6 +482,14 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 		);
 	}
 
+	async _updateIsUpdateClicked() {
+		this._isUpdateClicked = true;
+	}
+
+	async _updateIsPublishClicked() {
+		this._isPublishClicked = true;
+	}
+
 	async _updateEvaluation() {
 		window.dispatchEvent(new CustomEvent('d2l-flush', {
 			composed: true,
@@ -508,6 +531,11 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 				this.submissionInfo.evaluationState = publishedState;
 			}
 		);
+	}
+
+	_closeUnscoredCriteriaDialog() {
+		this._isUpdateClicked = false;
+		this._isPublishClicked = false;
 	}
 
 	async _retractEvaluation() {
@@ -845,10 +873,10 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 						?published=${this._isEvaluationPublished()}
 						?allow-evaluation-write=${this._allowEvaluationWrite()}
 						?allow-evaluation-delete=${this._allowEvaluationDelete()}
-						@d2l-consistent-evaluation-on-publish=${this._publishEvaluation}
+						@d2l-consistent-evaluation-on-publish=${this._updateIsPublishClicked}
 						@d2l-consistent-evaluation-on-save-draft=${this._saveEvaluation}
 						@d2l-consistent-evaluation-on-retract=${this._retractEvaluation}
-						@d2l-consistent-evaluation-on-update=${this._updateEvaluation}
+						@d2l-consistent-evaluation-on-update=${this._updateIsUpdateClicked}
 						@d2l-consistent-evaluation-navigate=${this._showUnsavedChangesDialog}
 					></d2l-consistent-evaluation-footer-presentational>
 				</div>
@@ -869,6 +897,14 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 					<d2l-button slot="footer" primary data-dialog-action=${DIALOG_ACTION_DISCARD}>${this.localize('unsavedAnnotationsDiscardButton')}</d2l-button>
 					<d2l-button slot="footer" data-dialog-action>${this.localize('cancelBtn')}</d2l-button>
 			</d2l-dialog-confirm>
+			<d2l-consistent-evaluation-dialogs
+				href=${this.href}
+				.publishClicked=${this._isPublishClicked}
+				.updateClicked=${this._isUpdateClicked}
+				@d2l-publish-evaluation=${this._publishEvaluation}
+				@d2l-update-evaluation=${this._updateEvaluation}
+				@d2l-unscored-criteria-dialog-closed=${this._closeUnscoredCriteriaDialog}
+			></d2l-consistent-evaluation-dialogs>
 		`;
 	}
 

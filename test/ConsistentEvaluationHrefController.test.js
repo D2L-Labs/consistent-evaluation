@@ -203,8 +203,18 @@ describe('ConsistentEvaluationHrefController', () => {
 			const expectedAssessmentHrefTwo = 'the_assessment_href_to_find_two';
 			const expectedRubricHrefOne = 'the_rubric_href_to_find_one';
 			const expectedRubricHrefTwo = 'the_rubric_href_to_find_two';
-			const assessmentEntityOne = {name:'entity1'};
-			const assessmentEntityTwo = {name:'entity2'};
+			const assessmentEntityOne = {
+				name:'entity1',
+				properties: {
+					hasUnscoredCriteria: false
+				}
+			};
+			const assessmentEntityTwo = {
+				name:'entity2',
+				properties: {
+					hasUnscoredCriteria: true
+				}
+			};
 			const rubricEntityOne = {
 				properties: {
 					name: 'rubric_one',
@@ -277,6 +287,9 @@ describe('ConsistentEvaluationHrefController', () => {
 			assert.equal(rubricInfos[1].rubricId, rubricEntityTwo.properties.rubricId);
 			assert.equal(rubricInfos[1].rubricOutOf, rubricEntityTwo.properties.outOf);
 			assert.equal(rubricInfos[1].rubricScoringMethod, rubricEntityTwo.properties.scoringMethod);
+
+			assert.equal(rubricInfos[0].hasUnscoredCriteria, assessmentEntityOne.properties.hasUnscoredCriteria);
+			assert.equal(rubricInfos[1].hasUnscoredCriteria, assessmentEntityTwo.properties.hasUnscoredCriteria);
 		});
 	});
 });

@@ -174,6 +174,22 @@ export class ConsistentEvaluation extends LitElement {
 		if (this._telemetry && this._submissionInfo.submissionList) {
 			this._telemetry.logLoadEvent('consistentEvalMain', this._submissionInfo.submissionList.length);
 		}
+
+		if (this._childHrefs?.nextHref) {
+			this._primeAdjacentActor(this._childHrefs?.nextHref);
+		}
+
+		if (this._childHrefs?.previousHref) {
+			this._primeAdjacentActor(this._childHrefs?.previousHref);
+		}
+	}
+
+	async _primeAdjacentActor(href) {
+		const controller = new ConsistentEvaluationHrefController(href, this.token);
+		await controller.getRubricInfos(false);
+		await controller.getSubmissionInfo();
+		await controller.getGradeItemInfo();
+		await controller.getUserName();
 	}
 
 	_setLoading() {
@@ -215,6 +231,7 @@ export class ConsistentEvaluation extends LitElement {
 				.iteratorTotal=${this._iteratorTotal}
 				.iteratorIndex=${this._iteratorIndex}
 				.token=${this.token}
+				.href=${this.href}
 				?rubric-read-only=${this._rubricReadOnly}
 				?hide-learner-context-bar=${this._shouldHideLearnerContextBar()}
 				?use-new-html-editor=${this.useNewHtmlEditor}
