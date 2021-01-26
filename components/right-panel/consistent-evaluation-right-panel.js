@@ -130,6 +130,7 @@ export class ConsistentEvaluationRightPanel extends LocalizeConsistentEvaluation
 		this.canAddFeedbackFile = false;
 		this.canRecordFeedbackVideo = false;
 		this.canRecordFeedbackAudio = false;
+		this.useNewHtmlEditor = false;
 		this.rubricsOpen = 0;
 	}
 

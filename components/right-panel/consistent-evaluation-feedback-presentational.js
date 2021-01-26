@@ -66,6 +66,7 @@ class ConsistentEvaluationFeedbackPresentational extends LocalizeConsistentEvalu
 		this.canAddFile = false;
 		this.canRecordVideo = false;
 		this.canRecordAudio = false;
+		this.useNewHtmlEditor = false;
 		this._debounceJobs = {};
 		this.flush = this.flush.bind(this);
 	}
