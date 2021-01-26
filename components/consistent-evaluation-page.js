@@ -491,6 +491,7 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 			composed: true,
 			bubbles: true
 		}));
+		this._isUpdateClicked = false;
 
 		await this._transientSaveAwaiter.awaitAllTransientSaves();
 		await this._mutex.dispatch(
@@ -512,6 +513,7 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 			composed: true,
 			bubbles: true
 		}));
+		this._isPublishClicked = false;
 
 		await this._transientSaveAwaiter.awaitAllTransientSaves();
 		await this._mutex.dispatch(
