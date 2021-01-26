@@ -832,7 +832,7 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 						@d2l-consistent-eval-annotations-update=${this._transientSaveAnnotations}
 						@d2l-consistent-evaluation-use-tii-grade=${this._transientSaveGrade}
 						@d2l-consistent-evaluation-refresh-grade-item=${this._refreshEvaluationEntity}
-						@d2l-consistent-evaluation-download-all-failed=${this._refreshEvaluationEntity}
+						@d2l-consistent-evaluation-download-all-failed=${this._handleDownloadAllFailure}
 						data-telemetry-endpoint=${this.dataTelemetryEndpoint}
 					></d2l-consistent-evaluation-left-panel>
 				</div>
