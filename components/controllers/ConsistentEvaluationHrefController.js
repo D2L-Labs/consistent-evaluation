@@ -284,6 +284,8 @@ export class ConsistentEvaluationHrefController {
 						const rubricOutOf = rubricEntity.entity.properties.outOf;
 						const rubricScoringMethod = rubricEntity.entity.properties.scoringMethod;
 
+						const hasUnscoredCriteria = assessmentEntity.entity.properties.hasUnscoredCriteria;
+
 						let assessorDisplayName = null;
 						const assessorUserHref = this._getHref(assessmentEntity.entity, assessorUserRel);
 						if (assessorUserHref) {
@@ -298,7 +300,8 @@ export class ConsistentEvaluationHrefController {
 							rubricId,
 							rubricOutOf,
 							rubricScoringMethod,
-							assessorDisplayName
+							assessorDisplayName,
+							hasUnscoredCriteria
 						};
 					}
 				}));
