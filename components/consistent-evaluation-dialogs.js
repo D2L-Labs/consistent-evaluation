@@ -92,16 +92,18 @@ export class ConsistentEvaluationDialogs extends LocalizeConsistentEvaluation(Li
 		this._publishUnscoredCriteriaDialogOpened = false;
 		if (e.detail.action !== DIALOG_ACTION_CONTINUE_GRADING) {
 			this._firePublishEvaluationEvent();
+		} else {
+			this._fireDialogClosedEvent();
 		}
-		this._fireDialogClosedEvent();
 	}
 
 	async _onUpdateUnscoredCriteriaDialogClosed(e) {
 		this._updateUnscoredCriteriaDialogOpened = false;
 		if (e.detail.action !== DIALOG_ACTION_CONTINUE_GRADING) {
 			this._fireUpdateEvaluationEvent();
+		} else {
+			this._fireDialogClosedEvent();
 		}
-		this._fireDialogClosedEvent();
 	}
 
 	async _fireUpdateEvaluationEvent() {

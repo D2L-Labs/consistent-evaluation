@@ -17,6 +17,7 @@ export default {
 	"continueGrading": "Continue Grading",
 	"download": "Download",
 	"downloadAll": "Download all files",
+	"downloadAllFailure": "Downloading all files failed, please try again",
 	"downloadAllPleaseWait": "Preparing download, please wait...",
 	"editCopy": "Edit a Copy",
 	"exempt": "Exempt",
