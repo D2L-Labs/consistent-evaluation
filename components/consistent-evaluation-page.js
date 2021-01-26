@@ -147,6 +147,10 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 			_gradeEntity: {
 				attribute: false
 			},
+			_unsavedAnnotationsDialogOpened: {
+				type: Boolean,
+				attribute: false
+			},
 			dataTelemetryEndpoint: {
 				attribute: 'data-telemetry-endpoint',
 				type: String
