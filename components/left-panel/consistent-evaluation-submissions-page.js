@@ -151,8 +151,6 @@ export class ConsistentEvaluationSubmissionsPage extends SkeletonMixin(RtlMixin(
 		this._perfRenderEventName = 'submissionsComponentRender';
 		this._downloading = false;
 		this._expectedCookieName = 'd2lConsistentEvaluationDownloadAll';
-		this._currentCookieCheckAttempts = 0;
-		this._maxCookieCheckAttempts = 60;
 	}
 
 	get submissionList() {
@@ -375,13 +373,24 @@ export class ConsistentEvaluationSubmissionsPage extends SkeletonMixin(RtlMixin(
 	}
 
 	_checkDownloadStatus() {
-		if (!this._cookieExists() && this._currentCookieCheckAttempts < this._maxCookieCheckAttempts) {
-			this._currentCookieCheckAttempts++;
-			setTimeout(this._checkDownloadStatus.bind(this), 1000);
-		} else {
-			this._deleteCookie();
-			this._downloading = false;
-			this._currentCookieCheckAttempts = 0;
+		const cookieValue = this._getCookieValue();
+		switch (cookieValue) {
+			case null:
+				setTimeout(this._checkDownloadStatus.bind(this), 1000);
+				break;
+			case 'failed':
+				this.dispatchEvent(new CustomEvent('d2l-consistent-evaluation-download-all-failed', {
+					composed: true,
+					bubbles: true
+				}));
+				this._deleteCookie();
+				this._downloading = false;
+				break;
+			case 'succeeded':
+			default:
+				this._deleteCookie();
+				this._downloading = false;
+				break;
 		}
 	}
 
@@ -391,9 +400,9 @@ export class ConsistentEvaluationSubmissionsPage extends SkeletonMixin(RtlMixin(
 		document.cookie = `${this._expectedCookieName}= ;path=/;expires=${d.toGMTString()}`;
 	}
 
-	_cookieExists() {
-		const b = document.cookie.match(`(^|;) ?${this._expectedCookieName}=([^;]*)(;|$)`);
-		return b ? true : false;
+	_getCookieValue() {
+		const b = document.cookie.match(`(^|;)\\s*${this._expectedCookieName}\\s*=\\s*([^;]+)`);
+		return b ? b.pop() : null;
 	}
 
 	_getDownloadButtonText() {
