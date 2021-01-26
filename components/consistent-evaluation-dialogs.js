@@ -1,9 +1,12 @@
 import '@brightspace-ui/core/components/dialog/dialog-confirm.js';
 import { html, LitElement } from 'lit-element/lit-element.js';
+import { ConsistentEvaluationController } from './controllers/ConsistentEvaluationController.js';
 import { ConsistentEvaluationHrefController } from './controllers/ConsistentEvaluationHrefController.js';
 import { LocalizeConsistentEvaluation } from '../lang/localize-consistent-evaluation.js';
 
+const DIALOG_ACTION_LEAVE = 'leave';
 const DIALOG_ACTION_CONTINUE_GRADING = 'continue_grading';
+const UNSAVED_CHANGES_DIALOG = 'unsavedChanges';
 const PUBLISH_UNSCORED_DIALOG = 'publishUnscored';
 const UPDATE_UNSCORED_DIALOG = 'updateUnscored';
 
@@ -14,6 +17,14 @@ export class ConsistentEvaluationDialogs extends LocalizeConsistentEvaluation(Li
 			href: {
 				attribute: 'href',
 				type: String
+			},
+			evaluationHref: {
+				attribute: 'evaluation-href',
+				type: String
+			},
+			navigationTarget: {
+				attribute: false,
+				type: String,
 			},
 			publishClicked: {
 				attribute: false,
@@ -34,6 +45,9 @@ export class ConsistentEvaluationDialogs extends LocalizeConsistentEvaluation(Li
 			_unscoredCriteriaDialogOpened: {
 				type: Boolean,
 				attribute: false
+			},
+			_unsavedChangesDialogOpened: {
+				attribute: false
 			}
 		};
 	}
@@ -53,6 +67,9 @@ export class ConsistentEvaluationDialogs extends LocalizeConsistentEvaluation(Li
 		} else if (changedProperties.has('updateClicked') && this.updateClicked) {
 			this._dialogToOpen = UPDATE_UNSCORED_DIALOG;
 			this._showUnscoredCriteriaDialog();
+		} else if (changedProperties.has('navigationTarget') && this.navigationTarget) {
+			this._dialogToOpen = UNSAVED_CHANGES_DIALOG;
+			this._showUnsavedChangesDialog();
 		}
 	}
 
@@ -64,6 +81,16 @@ export class ConsistentEvaluationDialogs extends LocalizeConsistentEvaluation(Li
 		}
 
 		this._updateOrPublishEvaluation();
+	}
+
+	async _showUnsavedChangesDialog() {
+		const controller = new ConsistentEvaluationController(this.evaluationHref, this.token);
+		const entity = await controller.fetchEvaluationEntity(false);
+		if (entity.hasClass('unsaved')) {
+			this._unsavedChangesDialogOpened = true;
+		} else {
+			this._fireNavigateEvent();
+		}
 	}
 
 	async _checkUnscoredCriteria() {
@@ -88,6 +115,23 @@ export class ConsistentEvaluationDialogs extends LocalizeConsistentEvaluation(Li
 		} else if (this._dialogToOpen === UPDATE_UNSCORED_DIALOG) {
 			this._fireUpdateEvaluationEvent();
 		}
+	}
+
+	_onUnsavedChangesDialogClose(e) {
+		this._unsavedChangesDialogOpened = false;
+		if (e.detail.action === DIALOG_ACTION_LEAVE) {
+			this._fireNavigateEvent();
+		} else {
+			this._fireDialogClosedEvent();
+		}
+	}
+
+	async _fireNavigateEvent() {
+		this.dispatchEvent(new CustomEvent('d2l-consistent-evaluation-navigate', {
+			composed: true,
+			bubbles: true
+		}));
+		this._fireDialogClosedEvent();
 	}
 
 	async _fireUpdateEvaluationEvent() {
@@ -118,7 +162,19 @@ export class ConsistentEvaluationDialogs extends LocalizeConsistentEvaluation(Li
 		return this.localize('publish');
 	}
 
-	render() {
+	_renderUnsavedChanges() {
+		return html`
+			<d2l-dialog-confirm
+				title-text=${this.localize('unsavedChangesTitle')}
+				text=${this.localize('unsavedChangesBody')}
+				?opened=${this._unsavedChangesDialogOpened}
+				@d2l-dialog-close=${this._onUnsavedChangesDialogClose}>
+					<d2l-button slot="footer" primary data-dialog-action=${DIALOG_ACTION_LEAVE}>${this.localize('leaveBtn')}</d2l-button>
+					<d2l-button slot="footer" data-dialog-action>${this.localize('cancelBtn')}</d2l-button>
+			</d2l-dialog-confirm>`;
+	}
+
+	_renderUnscoredCriteria() {
 		return html`<d2l-dialog-confirm
 				title-text=${this.localize('unscoredCriteriaTitle')}
 				text=${this.localize('unscoredCriteriaBody')}
@@ -128,5 +184,14 @@ export class ConsistentEvaluationDialogs extends LocalizeConsistentEvaluation(Li
 					<d2l-button slot="footer" data-dialog-action>${this._getUnscoredCriteriaAction()}</d2l-button>
 			</d2l-dialog-confirm>`;
 	}
+
+	render() {
+		if (this._dialogToOpen === UNSAVED_CHANGES_DIALOG) {
+			this._renderUnsavedChanges();
+		} else if (this._dialogToOpen === PUBLISH_UNSCORED_DIALOG || this._dialogToOpen === UPDATE_UNSCORED_DIALOG) {
+			this._renderUnscoredCriteria();
+		}
+	}
 }
+
 customElements.define('d2l-consistent-evaluation-dialogs', ConsistentEvaluationDialogs);
