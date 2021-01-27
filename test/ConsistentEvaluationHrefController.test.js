@@ -205,15 +205,11 @@ describe('ConsistentEvaluationHrefController', () => {
 			const expectedRubricHrefTwo = 'the_rubric_href_to_find_two';
 			const assessmentEntityOne = {
 				name:'entity1',
-				properties: {
-					hasUnscoredCriteria: false
-				}
+				hasClass: () => true
 			};
 			const assessmentEntityTwo = {
 				name:'entity2',
-				properties: {
-					hasUnscoredCriteria: true
-				}
+				hasClass: () => false
 			};
 			const rubricEntityOne = {
 				properties: {
@@ -288,8 +284,8 @@ describe('ConsistentEvaluationHrefController', () => {
 			assert.equal(rubricInfos[1].rubricOutOf, rubricEntityTwo.properties.outOf);
 			assert.equal(rubricInfos[1].rubricScoringMethod, rubricEntityTwo.properties.scoringMethod);
 
-			assert.equal(rubricInfos[0].hasUnscoredCriteria, assessmentEntityOne.properties.hasUnscoredCriteria);
-			assert.equal(rubricInfos[1].hasUnscoredCriteria, assessmentEntityTwo.properties.hasUnscoredCriteria);
+			assert.equal(rubricInfos[0].hasUnscoredCriteria, assessmentEntityOne.hasClass('incomplete'));
+			assert.equal(rubricInfos[1].hasUnscoredCriteria, assessmentEntityTwo.hasClass('incomplete'));
 		});
 	});
 });
