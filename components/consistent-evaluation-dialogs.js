@@ -47,6 +47,7 @@ export class ConsistentEvaluationDialogs extends LocalizeConsistentEvaluation(Li
 				attribute: false
 			},
 			_unsavedChangesDialogOpened: {
+				type: Boolean,
 				attribute: false
 			}
 		};
@@ -187,9 +188,9 @@ export class ConsistentEvaluationDialogs extends LocalizeConsistentEvaluation(Li
 
 	render() {
 		if (this._dialogToOpen === UNSAVED_CHANGES_DIALOG) {
-			this._renderUnsavedChanges();
+			return this._renderUnsavedChanges();
 		} else if (this._dialogToOpen === PUBLISH_UNSCORED_DIALOG || this._dialogToOpen === UPDATE_UNSCORED_DIALOG) {
-			this._renderUnscoredCriteria();
+			return this._renderUnscoredCriteria();
 		}
 	}
 }
