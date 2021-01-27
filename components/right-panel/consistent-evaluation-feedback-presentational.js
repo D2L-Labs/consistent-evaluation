@@ -41,6 +41,10 @@ class ConsistentEvaluationFeedbackPresentational extends LocalizeConsistentEvalu
 				attribute: false,
 				type: Object
 			},
+			useNewHtmlEditor: {
+				attribute: 'use-new-html-editor',
+				type: Boolean
+			},
 			token: {
 				type: Object,
 				reflect: true,
@@ -62,6 +66,7 @@ class ConsistentEvaluationFeedbackPresentational extends LocalizeConsistentEvalu
 		this.canAddFile = false;
 		this.canRecordVideo = false;
 		this.canRecordAudio = false;
+		this.useNewHtmlEditor = false;
 		this._debounceJobs = {};
 		this.flush = this.flush.bind(this);
 	}
@@ -92,6 +97,16 @@ class ConsistentEvaluationFeedbackPresentational extends LocalizeConsistentEvalu
 
 	_saveOnFeedbackChange(e) {
 		const feedback = e.detail.content;
+		this._emitFeedbackTextEditorChangeEvent();
+		this._debounceJobs.feedback = Debouncer.debounce(
+			this._debounceJobs.feedback,
+			timeOut.after(800),
+			() => this._emitFeedbackEditEvent(feedback)
+		);
+	}
+
+	_saveOnFeedbackChangeNewEditor() {
+		const feedback = this.shadowRoot.querySelector('d2l-htmleditor').html;
 		this._emitFeedbackTextEditorChangeEvent();
 		this._debounceJobs.feedback = Debouncer.debounce(
 			this._debounceJobs.feedback,
@@ -135,6 +150,32 @@ class ConsistentEvaluationFeedbackPresentational extends LocalizeConsistentEvalu
 		this._feedbackSummaryInfo = summary;
 	}
 
+	_getHtmlEditor() {
+		if (this.useNewHtmlEditor) {
+			import('@brightspace-ui/htmleditor/htmleditor.js');
+			return html `
+				<d2l-htmleditor
+					html="${this.feedbackText}"
+					label="${this.localize('overallFeedback')}"
+					label-hidden
+					paste-local-images
+					height="15rem"
+					@d2l-htmleditor-blur="${this._saveOnFeedbackChangeNewEditor}">
+				</d2l-htmleditor>
+			`;
+		} else {
+			return html `
+				<d2l-activity-text-editor
+					.key="${this._key}"
+					.value="${this.feedbackText}"
+					.richtextEditorConfig="${this.richTextEditorConfig}"
+					@d2l-activity-text-editor-change="${this._saveOnFeedbackChange}"
+					ariaLabel="${this.localize('overallFeedback')}">
+				</d2l-activity-text-editor>
+			`;
+		}
+	}
+
 	render() {
 		if (this.href && this.token && this.richTextEditorConfig) {
 			const attachmentsComponent = this.canEditFeedback || this.attachments.length !== 0
@@ -154,13 +195,7 @@ class ConsistentEvaluationFeedbackPresentational extends LocalizeConsistentEvalu
 				<d2l-consistent-evaluation-right-panel-block
 					supportingInfo=${ifDefined(this._feedbackSummaryInfo)}
 					title="${this.localize('overallFeedback')}">
-						<d2l-activity-text-editor
-							.key="${this._key}"
-							.value="${this.feedbackText}"
-							.richtextEditorConfig="${this.richTextEditorConfig}"
-							@d2l-activity-text-editor-change="${this._saveOnFeedbackChange}"
-							ariaLabel="${this.localize('overallFeedback')}">
-						</d2l-activity-text-editor>
+						${this._getHtmlEditor()}
 						${attachmentsComponent}
 				</d2l-consistent-evaluation-right-panel-block>
 			`;

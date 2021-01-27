@@ -127,6 +127,10 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 				attribute: 'download-all-submissions-location',
 				type: String
 			},
+			useNewHtmlEditor: {
+				attribute: 'use-new-html-editor',
+				type: Boolean
+			},
 			_displayToast: {
 				type: Boolean
 			},
@@ -860,6 +864,7 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 						?allow-add-file=${canAddFeedbackFile}
 						?allow-record-video=${canRecordFeedbackVideo}
 						?allow-record-audio=${canRecordFeedbackAudio}
+						?use-new-html-editor=${this.useNewHtmlEditor}
 						@on-d2l-consistent-eval-feedback-edit=${this._transientSaveFeedback}
 						@on-d2l-consistent-eval-feedback-attachments-add=${this._transientAddAttachment}
 						@on-d2l-consistent-eval-feedback-attachments-remove=${this._transientRemoveAttachment}

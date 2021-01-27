@@ -26,6 +26,10 @@ export class ConsistentEvaluation extends LitElement {
 				attribute: 'data-telemetry-endpoint',
 				type: String
 			},
+			useNewHtmlEditor: {
+				attribute: 'use-new-html-editor',
+				type: Boolean
+			},
 			_rubricReadOnly: { type: Boolean },
 			_childHrefs: { type: Object },
 			_rubricInfos: { type: Array },
@@ -230,6 +234,7 @@ export class ConsistentEvaluation extends LitElement {
 				.href=${this.href}
 				?rubric-read-only=${this._rubricReadOnly}
 				?hide-learner-context-bar=${this._shouldHideLearnerContextBar()}
+				?use-new-html-editor=${this.useNewHtmlEditor}
 				@d2l-consistent-evaluation-previous-student-click=${this._onPreviousStudentClick}
 				@d2l-consistent-evaluation-next-student-click=${this._onNextStudentClick}
 				@d2l-consistent-evaluation-loading-finished=${this._finishedLoading}
