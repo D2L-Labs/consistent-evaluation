@@ -21,7 +21,6 @@ import { Rels } from 'd2l-hypermedia-constants';
 import { SkeletonMixin } from '@brightspace-ui/core/components/skeleton/skeleton-mixin.js';
 import { TransientSaveAwaiter } from './transient-save-awaiter.js';
 
-const DIALOG_ACTION_LEAVE = 'leave';
 const DIALOG_ACTION_DISCARD = 'discard';
 
 export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeConsistentEvaluation(LitElement)) {
@@ -152,9 +151,6 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 			_gradeEntity: {
 				attribute: false
 			},
-			_unsavedChangesDialogOpened: {
-				attribute: false
-			},
 			_unsavedAnnotationsDialogOpened: {
 				type: Boolean,
 				attribute: false
@@ -173,6 +169,10 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 			},
 			_isUpdateClicked: {
 				type: Boolean,
+				attribute: false
+			},
+			_navigationTarget: {
+				type: String,
 				attribute: false
 			}
 		};
@@ -214,7 +214,6 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 		this._displayToast = false;
 		this._toastMessage = '';
 		this._mutex = new Awaiter();
-		this._unsavedChangesDialogOpened = false;
 		this.unsavedChangesHandler = this._confirmUnsavedChangesBeforeUnload.bind(this);
 		this._transientSaveAwaiter = new TransientSaveAwaiter();
 		this._isUpdateClicked = false;
@@ -538,6 +537,7 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 	_closeDialogs() {
 		this._isUpdateClicked = false;
 		this._isPublishClicked = false;
+		this._navigationTarget = null;
 	}
 
 	async _retractEvaluation() {
@@ -577,24 +577,7 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 			bubbles: true
 		}));
 
-		await this._mutex.dispatch(
-			async() => {
-				const entity = await this._controller.fetchEvaluationEntity(false);
-				this.navigationTarget = e.detail.key;
-				if (entity.hasClass('unsaved')) {
-					this._unsavedChangesDialogOpened = true;
-				} else {
-					this._navigate();
-				}
-			}
-		);
-	}
-
-	_onUnsavedChangesDialogClose(e) {
-		this._unsavedChangesDialogOpened = false;
-		if (e.detail.action === DIALOG_ACTION_LEAVE) {
-			this._navigate();
-		}
+		await this._mutex.dispatch(async() => { this._navigationTarget = e.detail.key; });
 	}
 
 	_resetFocusToUser() {
@@ -608,7 +591,7 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 	}
 
 	async _navigate() {
-		switch (this.navigationTarget) {
+		switch (this._navigationTarget) {
 			case 'back':
 				if (this.evaluationEntity.hasClass('unsaved')) {
 					window.removeEventListener('beforeunload', this.unsavedChangesHandler);
@@ -889,14 +872,6 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 				</div>
 			</d2l-template-primary-secondary>
 			<d2l-dialog-confirm
-				title-text=${this.localize('unsavedChangesTitle')}
-				text=${this.localize('unsavedChangesBody')}
-				?opened=${this._unsavedChangesDialogOpened}
-				@d2l-dialog-close=${this._onUnsavedChangesDialogClose}>
-					<d2l-button slot="footer" primary data-dialog-action=${DIALOG_ACTION_LEAVE}>${this.localize('leaveBtn')}</d2l-button>
-					<d2l-button slot="footer" data-dialog-action>${this.localize('cancelBtn')}</d2l-button>
-			</d2l-dialog-confirm>
-			<d2l-dialog-confirm
 				title-text=${this.localize('unsavedAnnotationsTitle')}
 				text=${this.localize('unsavedAnnotationsBody')}
 				?opened=${this._unsavedAnnotationsDialogOpened}
@@ -907,11 +882,14 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 			<d2l-consistent-evaluation-dialogs
 				href=${this.href}
 				.token=${this.token}
+				evaluation-href=${ifDefined(this.evaluationHref)}
+				.navigationTarget=${this._navigationTarget}
 				.publishClicked=${this._isPublishClicked}
 				.updateClicked=${this._isUpdateClicked}
 				@d2l-publish-evaluation=${this._publishEvaluation}
 				@d2l-update-evaluation=${this._updateEvaluation}
 				@d2l-dialog-closed=${this._closeDialogs}
+				@d2l-consistent-evaluation-navigate=${this._navigate}
 			></d2l-consistent-evaluation-dialogs>
 		`;
 	}
