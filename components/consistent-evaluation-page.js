@@ -531,7 +531,7 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 		);
 	}
 
-	_closeUnscoredCriteriaDialog() {
+	_closeDialogs() {
 		this._isUpdateClicked = false;
 		this._isPublishClicked = false;
 	}
@@ -901,11 +901,12 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 			</d2l-dialog-confirm>
 			<d2l-consistent-evaluation-dialogs
 				href=${this.href}
+				.token=${this.token}
 				.publishClicked=${this._isPublishClicked}
 				.updateClicked=${this._isUpdateClicked}
 				@d2l-publish-evaluation=${this._publishEvaluation}
 				@d2l-update-evaluation=${this._updateEvaluation}
-				@d2l-unscored-criteria-dialog-closed=${this._closeUnscoredCriteriaDialog}
+				@d2l-dialog-closed=${this._closeDialogs}
 			></d2l-consistent-evaluation-dialogs>
 		`;
 	}
