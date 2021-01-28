@@ -284,7 +284,7 @@ export class ConsistentEvaluationHrefController {
 						const rubricOutOf = rubricEntity.entity.properties.outOf;
 						const rubricScoringMethod = rubricEntity.entity.properties.scoringMethod;
 
-						const hasUnscoredCriteria = assessmentEntity.entity.properties.hasUnscoredCriteria;
+						const hasUnscoredCriteria = assessmentEntity.entity.hasClass('incomplete');
 
 						let assessorDisplayName = null;
 						const assessorUserHref = this._getHref(assessmentEntity.entity, assessorUserRel);
