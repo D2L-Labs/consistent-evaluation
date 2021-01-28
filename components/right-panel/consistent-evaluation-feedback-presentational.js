@@ -107,6 +107,9 @@ class ConsistentEvaluationFeedbackPresentational extends LocalizeConsistentEvalu
 
 	_saveOnFeedbackChangeNewEditor() {
 		const feedback = this.shadowRoot.querySelector('d2l-htmleditor').html;
+		if (this.feedbackText === feedback) {
+			return;
+		}
 		this._emitFeedbackTextEditorChangeEvent();
 		this._debounceJobs.feedback = Debouncer.debounce(
 			this._debounceJobs.feedback,
