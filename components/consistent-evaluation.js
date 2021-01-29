@@ -4,7 +4,7 @@ import { ConsistentEvalTelemetry } from './helpers/consistent-eval-telemetry.js'
 import { ConsistentEvaluationHrefController } from './controllers/ConsistentEvaluationHrefController.js';
 import { ifDefined } from 'lit-html/directives/if-defined.js';
 
-export class ConsistentEvaluation extends LitElement {
+export class ConsistentEvaluation extends LitElement { // bump
 
 	static get properties() {
 		return {
