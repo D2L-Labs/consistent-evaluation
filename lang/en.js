@@ -54,6 +54,7 @@ export default {
 	"overallGrade": "Overall Grade",
 	"publish": "Publish",
 	"published":   "Evaluation published",
+	"publishAnyway": "Publish Anyway",
 	"recordAudio": "Record Audio",
 	"recordVideo": "Record Video",
 	"retract": "Retract",

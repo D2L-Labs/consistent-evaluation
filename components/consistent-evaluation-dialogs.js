@@ -1,14 +1,16 @@
 import '@brightspace-ui/core/components/dialog/dialog-confirm.js';
+import '@brightspace-ui/core/components/dialog/dialog.js';
 import { html, LitElement } from 'lit-element/lit-element.js';
 import { ConsistentEvaluationController } from './controllers/ConsistentEvaluationController.js';
 import { ConsistentEvaluationHrefController } from './controllers/ConsistentEvaluationHrefController.js';
 import { LocalizeConsistentEvaluation } from '../lang/localize-consistent-evaluation.js';
 
 const DIALOG_ACTION_LEAVE = 'leave';
-const DIALOG_ACTION_CONTINUE_GRADING = 'continue_grading';
+const DIALOG_ACTION_PUBLISH_OR_UPDATE = 'publish_or_update';
 const UNSAVED_CHANGES_DIALOG = 'unsavedChanges';
 const PUBLISH_UNSCORED_DIALOG = 'publishUnscored';
 const UPDATE_UNSCORED_DIALOG = 'updateUnscored';
+const UNSCORED_DIALOG_WIDTH = 464;
 
 export class ConsistentEvaluationDialogs extends LocalizeConsistentEvaluation(LitElement) {
 
@@ -103,10 +105,10 @@ export class ConsistentEvaluationDialogs extends LocalizeConsistentEvaluation(Li
 
 	_onUnscoredCriteriaDialogClosed(e) {
 		this._unscoredCriteriaDialogOpened = false;
-		if (e.detail.action === DIALOG_ACTION_CONTINUE_GRADING) {
-			this._fireDialogClosedEvent();
-		} else {
+		if (e.detail.action === DIALOG_ACTION_PUBLISH_OR_UPDATE) {
 			this._updateOrPublishEvaluation();
+		} else {
+			this._fireDialogClosedEvent();
 		}
 	}
 
@@ -155,14 +157,6 @@ export class ConsistentEvaluationDialogs extends LocalizeConsistentEvaluation(Li
 			bubbles: true
 		}));
 	}
-
-	_getUnscoredCriteriaAction() {
-		if (this._dialogToOpen === UPDATE_UNSCORED_DIALOG) {
-			return this.localize('update');
-		}
-		return this.localize('publish');
-	}
-
 	_renderUnsavedChanges() {
 		return html`
 			<d2l-dialog-confirm
@@ -176,14 +170,15 @@ export class ConsistentEvaluationDialogs extends LocalizeConsistentEvaluation(Li
 	}
 
 	_renderUnscoredCriteria() {
-		return html`<d2l-dialog-confirm
+		return html`<d2l-dialog
 				title-text=${this.localize('unscoredCriteriaTitle')}
-				text=${this.localize('unscoredCriteriaBody')}
 				?opened=${this._unscoredCriteriaDialogOpened}
+				width=${UNSCORED_DIALOG_WIDTH}
 				@d2l-dialog-close=${this._onUnscoredCriteriaDialogClosed}>
-					<d2l-button slot="footer" primary data-dialog-action=${DIALOG_ACTION_CONTINUE_GRADING}>${this.localize('continueGrading')}</d2l-button>
-					<d2l-button slot="footer" data-dialog-action>${this._getUnscoredCriteriaAction()}</d2l-button>
-			</d2l-dialog-confirm>`;
+					<div>${this.localize('unscoredCriteriaBody')}</div>
+					<d2l-button slot="footer" primary data-dialog-action>${this.localize('continueGrading')}</d2l-button>
+					<d2l-button slot="footer" data-dialog-action=${DIALOG_ACTION_PUBLISH_OR_UPDATE}>${this.localize('publishAnyway')}</d2l-button>
+			</d2l-dialog>`;
 	}
 
 	render() {
