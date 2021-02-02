@@ -1,4 +1,5 @@
 import 'd2l-users/components/d2l-profile-image.js';
+import './consistent-evaluation-user-profile-card.js';
 import { bodyCompactStyles, bodyStandardStyles } from '@brightspace-ui/core/components/typography/styles.js';
 import { css, html, LitElement } from 'lit-element';
 import { EntityMixinLit } from 'siren-sdk/src/mixin/entity-mixin-lit.js';
@@ -22,6 +23,10 @@ export class ConsistentEvaluationLcbUserContext extends EntityMixinLit(RtlMixin(
 			_displayName: {
 				attribute: false,
 				type: String
+			},
+			_showProfileCard: {
+				attribute: false,
+				type: Boolean
 			}
 		};
 	}
@@ -54,6 +59,16 @@ export class ConsistentEvaluationLcbUserContext extends EntityMixinLit(RtlMixin(
 			}
 			h2:focus {
 				outline: none;
+			}
+			.d2l-user-context-container {
+				align-items: center;
+				display: flex;
+			}
+			.d2l-consistent-evaluation-user-profile-card-container {
+				top: 3rem;
+				z-index: 1;
+				background: white;
+				position: absolute;
 			}
 		`];
 	}
@@ -100,11 +115,40 @@ export class ConsistentEvaluationLcbUserContext extends EntityMixinLit(RtlMixin(
 		}
 	}
 
+	_renderProfileCard() {
+		return this._showProfileCard ?
+			html`
+			<d2l-consistent-evaluation-user-profile-card
+				display-name=${ifDefined(this._displayName)}
+				tag-line="This is a tag-line that will come from the API?"
+				@d2l-consistent-eval-profile-card-mouse-leave=${this._toggleOffProfileCard}>
+			</d2l-consistent-evaluation-user-profile-card>
+			` :
+			html``;
+	}
+
+	_toggleOnProfileCard() {
+		this._showProfileCard = true;
+	}
+
+	_toggleOffProfileCard() {
+		this._showProfileCard = false;
+	}
+
 	render() {
 		return html`
+		<div class="d2l-user-context-container"
+			@click=${this._toggleOnProfileCard}
+			@mouseover=${this._toggleOnProfileCard}>
+
 			${this._renderProfileImage()}
 			<h2 tabindex="0" class="d2l-body-compact d2l-consistent-evaluation-lcb-user-name">${ifDefined(this._displayName)}</h2>
 			${this._getExemptText()}
+		</div>
+
+		<div class="d2l-consistent-evaluation-user-profile-card-container">
+			${this._renderProfileCard()}
+		</div>
 		`;
 	}
 }
