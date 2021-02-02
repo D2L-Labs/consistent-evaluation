@@ -65,10 +65,10 @@ export class ConsistentEvaluationLcbUserContext extends EntityMixinLit(RtlMixin(
 				display: flex;
 			}
 			.d2l-consistent-evaluation-user-profile-card-container {
-				top: 3rem;
-				z-index: 1;
 				background: white;
 				position: absolute;
+				top: 3rem;
+				z-index: 1;
 			}
 		`];
 	}
