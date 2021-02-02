@@ -73,6 +73,7 @@ export default {
 	"submitted": "Submitted",
 	"textSubmission": "Text Submission",
 	"tryDonwloadFile": "Try downloading the file instead",
+	"turnitinFeedbackSummary": "Feedback has been provided in Turnitin® GradeMark®",
 	"turnitinGradeMark": "Turnitin® GradeMark®",
 	"turnitinGradeMarkEdit": "Edit or View Turnitin® GradeMark® information for {file}",
 	"turnitinGradeMarkRefresh": "Refresh Turnitin® GradeMark® information for {file}",
