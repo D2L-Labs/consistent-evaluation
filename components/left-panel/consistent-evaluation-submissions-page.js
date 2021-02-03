@@ -201,8 +201,7 @@ export class ConsistentEvaluationSubmissionsPage extends SkeletonMixin(RtlMixin(
 		}
 	}
 
-	async _getSubmissionEntity(submissionHref) {
-		const byPassCache = false;
+	async _getSubmissionEntity(submissionHref, byPassCache = false) {
 		return await window.D2L.Siren.EntityStore.fetch(submissionHref, this._token, byPassCache);
 	}
 
@@ -390,7 +389,20 @@ export class ConsistentEvaluationSubmissionsPage extends SkeletonMixin(RtlMixin(
 			default:
 				this._deleteCookie();
 				this._downloading = false;
+				this._refreshAllSubmissionEntities();
 				break;
+		}
+	}
+
+	async _refreshAllSubmissionEntities() {
+		if (this._submissionList !== undefined) {
+			for (let i = 0; i < this._submissionList.length; i++) {
+				if (this._submissionList[i].href) {
+					const submission = await this._getSubmissionEntity(this._submissionList[i].href, true);
+					this._submissionEntities[i] = submission;
+				}
+			}
+			this.requestUpdate();
 		}
 	}
 
