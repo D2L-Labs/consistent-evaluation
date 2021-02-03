@@ -57,7 +57,7 @@ export class ConsistentEvaluationLcbUserContext extends EntityMixinLit(RtlMixin(
 				margin-left: 0;
 				margin-right: 0.5rem;
 			}
-			h2:focus {
+			.d2l-user-context-container:focus {
 				outline: none;
 			}
 			.d2l-user-context-container {
@@ -77,6 +77,16 @@ export class ConsistentEvaluationLcbUserContext extends EntityMixinLit(RtlMixin(
 		super();
 
 		this._setEntityType(UserEntity);
+	}
+
+	firstUpdated() {
+		const userContextContainer = this.shadowRoot.querySelector('.d2l-user-context-container');
+		userContextContainer.addEventListener('focusin', () => {
+			this._toggleOnProfileCard();
+		});
+		userContextContainer.addEventListener('focusout', () => {
+			this._toggleOffProfileCard();
+		});
 	}
 
 	set _entity(entity) {
@@ -120,7 +130,7 @@ export class ConsistentEvaluationLcbUserContext extends EntityMixinLit(RtlMixin(
 			html`
 			<d2l-consistent-evaluation-user-profile-card
 				display-name=${ifDefined(this._displayName)}
-				tag-line="This is a tag-line that will come from the API?"
+				tagline="This is a tag-line that will come from the API?"
 				@d2l-consistent-eval-profile-card-mouse-leave=${this._toggleOffProfileCard}>
 			</d2l-consistent-evaluation-user-profile-card>
 			` :
@@ -138,11 +148,12 @@ export class ConsistentEvaluationLcbUserContext extends EntityMixinLit(RtlMixin(
 	render() {
 		return html`
 		<div class="d2l-user-context-container"
-			@click=${this._toggleOnProfileCard}
+			tabindex="0"
+			aria-label=${ifDefined(this._displayName)}
 			@mouseover=${this._toggleOnProfileCard}>
 
 			${this._renderProfileImage()}
-			<h2 tabindex="0" class="d2l-body-compact d2l-consistent-evaluation-lcb-user-name">${ifDefined(this._displayName)}</h2>
+			<h2 class="d2l-body-compact d2l-consistent-evaluation-lcb-user-name">${ifDefined(this._displayName)}</h2>
 			${this._getExemptText()}
 		</div>
 

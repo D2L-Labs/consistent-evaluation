@@ -13,7 +13,6 @@ export class ConsistentEvaluationUserProfileCard extends LocalizeConsistentEvalu
 				type: String
 			},
 			tagline: {
-				attribute: 'tag-line',
 				type: String
 			}
 		};
@@ -31,7 +30,7 @@ export class ConsistentEvaluationUserProfileCard extends LocalizeConsistentEvalu
 		<d2l-labs-user-profile-card
 			@mouseleave=${this.dispatchMouseLeaveEvent}
 			tagline=${this.tagline}>
-			<img slot="illustration" src="" width="116px" height="116px">
+			<img slot="illustration" src="">
 			${this.displayName}
 		</d2l-labs-user-profile-card>
 		`;
