@@ -60,7 +60,7 @@ export class ConsistentEvaluationTiiGradeMark extends LocalizeConsistentEvaluati
 				margin-right: 8px;
 				padding-bottom: 2px;
 			}
-			#overall-score-container {
+			.d2l-consistent-evaluation-tii-grade-mark-overall-score-container {
 				display: inline-block;
 				padding-bottom: 6px;
 				vertical-align: bottom;
@@ -159,7 +159,7 @@ export class ConsistentEvaluationTiiGradeMark extends LocalizeConsistentEvaluati
 		return html`
 			<div class="d2l-label-text">${this.localize('turnitinGradeMark')}</div>
 			${this._renderFeedbackIcon()}
-			<div class="d2l-body-compact" id=overall-score-container>
+			<div class="d2l-body-compact d2l-consistent-evaluation-tii-grade-mark-overall-score-container">
 				${this._overallScore}
 			</div>
 			${this._renderEditButton()}
