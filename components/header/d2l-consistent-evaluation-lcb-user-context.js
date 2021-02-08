@@ -5,6 +5,7 @@ import { css, html, LitElement } from 'lit-element';
 import { EntityMixinLit } from 'siren-sdk/src/mixin/entity-mixin-lit.js';
 import { ifDefined } from 'lit-html/directives/if-defined.js';
 import { LocalizeConsistentEvaluation } from '../../lang/localize-consistent-evaluation.js';
+import { pagerRel } from '../controllers/constants.js';
 import { RtlMixin } from '@brightspace-ui/core/mixins/rtl-mixin.js';
 import { UserEntity } from 'siren-sdk/src/users/UserEntity.js';
 
@@ -19,6 +20,10 @@ export class ConsistentEvaluationLcbUserContext extends EntityMixinLit(RtlMixin(
 			isGroupActivity: {
 				attribute: 'is-group-activity',
 				type: Boolean
+			},
+			enrolledUser: {
+				attribute: false,
+				type: Object
 			},
 			_displayName: {
 				attribute: false,
@@ -125,12 +130,26 @@ export class ConsistentEvaluationLcbUserContext extends EntityMixinLit(RtlMixin(
 		}
 	}
 
+	_getInstantMessageHref() {
+		if (this.isGroupActivity) {
+			if (super._entity && super._entity._entity.getSubEntityByRel(pagerRel)) {
+				this._instantMessageHref = super._entity._entity.getSubEntityByRel(pagerRel).properties.path;
+			}
+		} else {
+			if (this.enrolledUser) {
+				this._instantMessageHref = this.enrolledUser.pagerPath;
+			}
+		}
+	}
+
 	_renderProfileCard() {
+		this._getInstantMessageHref();
 		return this._showProfileCard ?
 			html`
 			<d2l-consistent-evaluation-user-profile-card
 				display-name=${ifDefined(this._displayName)}
 				tagline="This is a tag-line that will come from the API?"
+				instantMessageHref=${ifDefined(this._instantMessageHref)}
 				@d2l-consistent-eval-profile-card-mouse-leave=${this._toggleOffProfileCard}>
 			</d2l-consistent-evaluation-user-profile-card>
 			` :

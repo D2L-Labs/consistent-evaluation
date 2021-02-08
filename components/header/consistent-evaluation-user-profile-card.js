@@ -14,8 +14,16 @@ export class ConsistentEvaluationUserProfileCard extends LocalizeConsistentEvalu
 			},
 			tagline: {
 				type: String
+			},
+			instantMessageHref: {
+				type: String
 			}
 		};
+	}
+
+	constructor() {
+		super();
+		this.messagePopout = undefined;
 	}
 
 	dispatchMouseLeaveEvent() {
@@ -25,10 +33,26 @@ export class ConsistentEvaluationUserProfileCard extends LocalizeConsistentEvalu
 		}));
 	}
 
+	_openMessageDialog() {
+		if (this.messagePopout) {
+			if (!this.messagePopout.closed) {
+				this.messagePopout.focus();
+				return;
+			}
+		}
+
+		this.messagePopout = window.open(
+			this.instantMessageHref,
+			'messagePopout',
+			'width=400,height=200,scrollbars=no,toolbar=no,screenx=0,screeny=0,location=no,titlebar=no,directories=no,status=no,menubar=no'
+		);
+	}
+
 	render() {
 		return html`
 		<d2l-labs-user-profile-card
 			@mouseleave=${this.dispatchMouseLeaveEvent}
+			@d2l-labs-user-profile-card-message=${this._openMessageDialog}
 			tagline=${this.tagline}>
 			<img slot="illustration" src="">
 			${this.displayName}

@@ -140,6 +140,30 @@ describe('ConsistentEvaluationHrefController', () => {
 		});
 	});
 
+	describe('getEnrolledUser gets correct enrolled user info', () => {
+		it('sets the enrolled user info', async() => {
+			const enrolledUserHref = 'enrolledUserHref';
+			const pagerPath = 'pagerPath';
+
+			const controller = new ConsistentEvaluationHrefController('href', 'token');
+
+			sinon.stub(controller, '_getRootEntity').returns({
+				entity: { }
+			});
+
+			sinon.stub(controller, '_getHref').returns(enrolledUserHref);
+			sinon.stub(controller, '_getEntityFromHref').returns({
+				entity: {
+					getSubEntityByRel: () => ({properties: { path: pagerPath } })
+				}
+			});
+
+			const enrolledUser = await controller.getEnrolledUser();
+			assert.equal(enrolledUser.enrolledUserHref, enrolledUserHref);
+			assert.equal(enrolledUser.pagerPath, pagerPath);
+		});
+	});
+
 	describe('getAssignmentOrganizationName gets correct info', () => {
 		it('sets the assignment name', async() => {
 			const assignmentHref = 'expected_assignment_href';

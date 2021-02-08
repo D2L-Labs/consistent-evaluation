@@ -95,6 +95,10 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 				attribute: false,
 				type: Object
 			},
+			enrolledUser: {
+				attribute: false,
+				type: Object
+			},
 			assignmentName: {
 				attribute: false,
 				type: String
@@ -632,6 +636,7 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 					.token=${this.token}
 					.currentFileId=${this.currentFileId}
 					.submissionInfo=${this.submissionInfo}
+					.enrolledUser=${this.enrolledUser}
 					?skeleton=${this.skeleton}
 				></d2l-consistent-evaluation-learner-context-bar>
 			`;

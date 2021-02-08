@@ -1,5 +1,5 @@
 import 'd2l-polymer-siren-behaviors/store/entity-store.js';
-import { actorRel, alignmentsRel, assessmentRel, assessmentRubricApplicationRel, assessorUserRel, assignmentSubmissionListRel, demonstrationRel, editSpecialAccessApplicationRel, evaluationRel, groupRel, nextRel, previousRel, rubricRel, userProgressOutcomeRel, userRel } from './constants.js';
+import { actorRel, alignmentsRel, assessmentRel, assessmentRubricApplicationRel, assessorUserRel, assignmentSubmissionListRel, demonstrationRel, editSpecialAccessApplicationRel, enrolledUserRel, evaluationRel, groupRel, nextRel, pagerRel, previousRel, rubricRel, userProgressOutcomeRel, userRel } from './constants.js';
 import { Classes, Rels } from 'd2l-hypermedia-constants';
 
 export const ConsistentEvaluationHrefControllerErrors = {
@@ -247,6 +247,27 @@ export class ConsistentEvaluationHrefController {
 				}
 			}
 		}
+		return undefined;
+	}
+
+	async getEnrolledUser() {
+		const root = await this._getRootEntity(false);
+		if (root && root.entity) {
+			const enrolledUserHref = this._getHref(root.entity, enrolledUserRel);
+			if (enrolledUserHref) {
+				const enrolledUserEntity = await this._getEntityFromHref(enrolledUserHref, false);
+				const pagerEntity = enrolledUserEntity.entity.getSubEntityByRel(pagerRel);
+				let pagerPath = undefined;
+				if (pagerEntity) {
+					pagerPath = pagerEntity.properties.path;
+				}
+				return {
+					enrolledUserHref,
+					pagerPath
+				};
+			}
+		}
+
 		return undefined;
 	}
 
