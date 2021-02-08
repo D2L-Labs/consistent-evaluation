@@ -1,5 +1,5 @@
 import 'd2l-polymer-siren-behaviors/store/entity-store.js';
-import { publishActionName, removeFeedbackAttachmentActionName, retractActionName, saveActionName, saveFeedbackActionName, saveFeedbackAttachmentActionName, saveFeedbackAttachmentAFieldName, saveFeedbackFieldName, saveGradeActionName, saveGradeFieldName, updateActionName } from './constants.js';
+import { publishActionName, removeFeedbackAttachmentActionName, retractActionName, saveActionName, saveFeedbackActionName, saveFeedbackAttachmentAFieldName, saveFeedbackAttachmentFileActionName, saveFeedbackAttachmentLinkActionName, saveFeedbackFieldName, saveGradeActionName, saveGradeFieldName, updateActionName } from './constants.js';
 import { Grade } from '@brightspace-ui-labs/grade-result/src/controller/Grade';
 import { performSirenAction } from 'siren-sdk/src/es6/SirenAction.js';
 
@@ -148,22 +148,37 @@ export class ConsistentEvaluationController {
 			throw new Error(ConsistentEvaluationControllerErrors.INVALID_EVALUATION_ENTITY);
 		}
 
-		let updatedEvaluationEntity = evaluationEntity;
-		for (let i = 0; files.length > i; i++) {
-			const fileSystemType = files[i].m_fileSystemType;
-			const fileId = files[i].m_id;
-
-			const value = JSON.stringify({ FileSystemType: fileSystemType, FileId: fileId});
-
-			const targetEntity = updatedEvaluationEntity.getSubEntityByRel('attachments');
+		let updatedEntity = evaluationEntity;
+		for (const attachment of files) {
+			const targetEntity = updatedEntity.getSubEntityByRel('attachments');
 			if (!targetEntity) {
 				throw new Error(ConsistentEvaluationControllerErrors.ERROR_FETCHING_ATTACHMENTS_ENTITY);
 			}
 
-			updatedEvaluationEntity = await this._performAction(targetEntity, saveFeedbackAttachmentActionName, saveFeedbackAttachmentAFieldName, value);
+			if (attachment.GetFileSystemType) {
+				updatedEntity = await this._performAction(
+					targetEntity,
+					saveFeedbackAttachmentFileActionName,
+					saveFeedbackAttachmentAFieldName,
+					JSON.stringify({
+						FileId: attachment.GetId(),
+						FileSystemType: attachment.GetFileSystemType(),
+					}));
+			} else if (attachment.GetLocation) {
+				updatedEntity = await this._performAction(
+					targetEntity,
+					saveFeedbackAttachmentLinkActionName,
+					saveFeedbackAttachmentAFieldName,
+					JSON.stringify({
+						LinkId: attachment.GetId(),
+						Name: attachment.GetName(),
+						Url: attachment.GetLocation(),
+						Urn: attachment.GetUrn(),
+					}));
+			}
 		}
 
-		return updatedEvaluationEntity;
+		return updatedEntity;
 	}
 
 	async transientRemoveFeedbackAttachment(evaluationEntity, fileIdentifier) {
