@@ -85,15 +85,12 @@ export class ConsistentEvaluationUserProfileCard extends LocalizeConsistentEvalu
 	}
 
 	render() {
-		console.log(this.emailHref);
-		const showEmail = false;
 		return html`
 		<d2l-labs-user-profile-card
 			@mouseleave=${this.dispatchMouseLeaveEvent}
 			@d2l-labs-user-profile-card-message=${this._openMessageDialog}
 			@d2l-labs-user-profile-card-email=${this._openEmailDialog}
 			@d2l-labs-user-profile-card-progress=${this._openUserProgress}
-			show-email=${showEmail}
 			tagline=${this.tagline}
 			progress-viewable=${this._shouldShowOutcomes()}
 			>

@@ -259,17 +259,19 @@ export class ConsistentEvaluationHrefController {
 				const enrolledUserEntity = await this._getEntityFromHref(enrolledUserHref, false);
 				const pagerEntity = enrolledUserEntity.entity.getSubEntityByRel(pagerRel);
 				const userProgressEntity = enrolledUserEntity.entity.getSubEntityByRel('https://api.brightspace.com/rels/user-progress');
-
 				const emailEntity = enrolledUserEntity.entity.getSubEntityByRel(emailRel, false);
-				const emailPath = emailEntity.properties.path;
 
 				let pagerPath = undefined;
 				let userProgressPath = undefined;
+				let emailPath = undefined;
 				if (pagerEntity) {
 					pagerPath = pagerEntity.properties.path;
 				}
 				if (userProgressEntity) {
 					userProgressPath = userProgressEntity.properties.path;
+				}
+				if (emailEntity) {
+					emailPath = emailEntity.properties.path;
 				}
 				return {
 					enrolledUserHref,
@@ -285,7 +287,7 @@ export class ConsistentEvaluationHrefController {
 					pagerPath = pagerEntity.properties.path;
 				}
 				return {
-					enrolledUserHref,
+					groupHref,
 					pagerPath
 				};
 			}
