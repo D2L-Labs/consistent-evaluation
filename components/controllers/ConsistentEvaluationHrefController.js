@@ -258,7 +258,7 @@ export class ConsistentEvaluationHrefController {
 			if (enrolledUserHref) {
 				const enrolledUserEntity = await this._getEntityFromHref(enrolledUserHref, false);
 				const pagerEntity = enrolledUserEntity.entity.getSubEntityByRel(pagerRel);
-				const userProgressEntity = enrolledUserEntity.entity.getSubEntityByRel('https://api.brightspace.com/rels/user-progress');
+				const userProgressEntity = enrolledUserEntity.entity.getSubEntityByRel(Rels.userProgress);
 				const emailEntity = enrolledUserEntity.entity.getSubEntityByRel(emailRel, false);
 
 				let pagerPath = undefined;
