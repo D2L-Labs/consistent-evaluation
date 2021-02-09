@@ -138,12 +138,17 @@ export class ConsistentEvaluationLcbUserContext extends EntityMixinLit(RtlMixin(
 
 	_renderProfileCard() {
 		this._getInstantMessageHref();
+		let emailHref = undefined;
+		if (this.enrolledUser) {
+			emailHref = this.enrolledUser.emailPath;
+		}
 		return this._showProfileCard ?
 			html`
 			<d2l-consistent-evaluation-user-profile-card
 				display-name=${ifDefined(this._displayName)}
 				tagline="This is a tag-line that will come from the API?"
 				instantMessageHref=${ifDefined(this._instantMessageHref)}
+				emailHref=${emailHref}
 				@d2l-consistent-eval-profile-card-mouse-leave=${this._toggleOffProfileCard}>
 			</d2l-consistent-evaluation-user-profile-card>
 			` :

@@ -16,6 +16,7 @@ export const gradesRel = 'https://activities.api.brightspace.com/rels/grade';
 export const groupRel = 'https://api.brightspace.com/rels/group';
 export const feedbackRel = 'https://activities.api.brightspace.com/rels/feedback';
 export const evaluationRel = 'https://activities.api.brightspace.com/rels/evaluation';
+export const emailRel = 'https://api.brightspace.com/rels/email';
 export const assessmentRel = 'https://api.brightspace.com/rels/assessment';
 export const rubricRel = 'https://api.brightspace.com/rels/rubric';
 export const userRel = 'https://api.brightspace.com/rels/user';

@@ -17,6 +17,9 @@ export class ConsistentEvaluationUserProfileCard extends LocalizeConsistentEvalu
 			},
 			instantMessageHref: {
 				type: String
+			},
+			emailHref: {
+				type: String
 			}
 		};
 	}
@@ -24,6 +27,7 @@ export class ConsistentEvaluationUserProfileCard extends LocalizeConsistentEvalu
 	constructor() {
 		super();
 		this.messagePopout = undefined;
+		this.emailPopout = undefined;
 	}
 
 	dispatchMouseLeaveEvent() {
@@ -43,16 +47,35 @@ export class ConsistentEvaluationUserProfileCard extends LocalizeConsistentEvalu
 
 		this.messagePopout = window.open(
 			this.instantMessageHref,
-			'messagePopout',
+			'emailPopout',
 			'width=400,height=200,scrollbars=no,toolbar=no,screenx=0,screeny=0,location=no,titlebar=no,directories=no,status=no,menubar=no'
 		);
 	}
 
+	_openEmailDialog() {
+		if (this.emailPopout) {
+			if (!this.emailPopout.closed) {
+				this.emailPopout.focus();
+				return;
+			}
+		}
+
+		this.emailPopout = window.open(
+			this.emailHref,
+			'messagePopout',
+			'width=1000,height=1000,scrollbars=no,toolbar=no,screenx=0,screeny=0,location=no,titlebar=no,directories=no,status=no,menubar=no'
+		);
+	}
+
 	render() {
+		console.log(this.emailHref);
+		const showEmail = false
 		return html`
 		<d2l-labs-user-profile-card
 			@mouseleave=${this.dispatchMouseLeaveEvent}
 			@d2l-labs-user-profile-card-message=${this._openMessageDialog}
+			@d2l-labs-user-profile-card-email=${this._openEmailDialog}
+			show-email=${showEmail}
 			tagline=${this.tagline}>
 			<img slot="illustration" src="">
 			${this.displayName}
