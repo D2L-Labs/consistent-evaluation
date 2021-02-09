@@ -254,9 +254,11 @@ export class ConsistentEvaluationHrefController {
 		const root = await this._getRootEntity(false);
 		if (root && root.entity) {
 			const enrolledUserHref = this._getHref(root.entity, enrolledUserRel);
-			if (enrolledUserHref) {
-				const enrolledUserEntity = await this._getEntityFromHref(enrolledUserHref, false);
-				const pagerEntity = enrolledUserEntity.entity.getSubEntityByRel(pagerRel);
+			const groupHref = this._getHref(root.entity, groupRel);
+			const userHref = enrolledUserHref ? enrolledUserHref : groupHref;
+			if (userHref) {
+				const userEntity = await this._getEntityFromHref(userHref, false);
+				const pagerEntity = userEntity.entity.getSubEntityByRel(pagerRel);
 				let pagerPath = undefined;
 				if (pagerEntity) {
 					pagerPath = pagerEntity.properties.path;

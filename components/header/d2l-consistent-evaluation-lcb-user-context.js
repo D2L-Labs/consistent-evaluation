@@ -131,14 +131,8 @@ export class ConsistentEvaluationLcbUserContext extends EntityMixinLit(RtlMixin(
 	}
 
 	_getInstantMessageHref() {
-		if (this.isGroupActivity) {
-			if (super._entity && super._entity._entity.getSubEntityByRel(pagerRel)) {
-				this._instantMessageHref = super._entity._entity.getSubEntityByRel(pagerRel).properties.path;
-			}
-		} else {
-			if (this.enrolledUser) {
-				this._instantMessageHref = this.enrolledUser.pagerPath;
-			}
+		if (this.enrolledUser) {
+			this._instantMessageHref = this.enrolledUser.pagerPath;
 		}
 	}
 
