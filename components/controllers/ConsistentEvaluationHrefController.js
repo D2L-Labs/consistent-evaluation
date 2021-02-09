@@ -255,27 +255,44 @@ export class ConsistentEvaluationHrefController {
 		if (root && root.entity) {
 			const enrolledUserHref = this._getHref(root.entity, enrolledUserRel);
 			const groupHref = this._getHref(root.entity, groupRel);
-			const userHref = enrolledUserHref ? enrolledUserHref : groupHref;
-			if (userHref) {
-				const userEntity = await this._getEntityFromHref(userHref, false);
+			//const userHref = enrolledUserHref ? enrolledUserHref : groupHref;
+			if (enrolledUserHref) {
+				const enrolledUserEntity = await this._getEntityFromHref(enrolledUserHref, false);
+				const pagerEntity = enrolledUserEntity.entity.getSubEntityByRel(pagerRel);
+				const userProgressEntity = enrolledUserEntity.entity.getSubEntityByRel('https://api.brightspace.com/rels/user-progress');
 
-				// const emailEntity = userEntity.entity.getSubEntityByRel(emailRel, false);
-				// const emailPath = emailEntity.properties.path;
+				const emailEntity = enrolledUserEntity.entity.getSubEntityByRel(emailRel, false);
+				const emailPath = emailEntity.properties.path;
 
-				const pagerEntity = userEntity.entity.getSubEntityByRel(pagerRel);
+				let pagerPath = undefined;
+				let userProgressPath = undefined;
+				if (pagerEntity) {
+					pagerPath = pagerEntity.properties.path;
+				}
+				if (userProgressEntity) {
+					userProgressPath = userProgressEntity.properties.path;
+				}
+				return {
+					enrolledUserHref,
+					emailPath,
+					pagerPath,
+					userProgressPath
+				};
+			} else if (groupHref) {
+				const groupEntity = await this._getEntityFromHref(groupHref, false);
+				const pagerEntity = groupEntity.entity.getSubEntityByRel(pagerRel);
 				let pagerPath = undefined;
 				if (pagerEntity) {
 					pagerPath = pagerEntity.properties.path;
 				}
 				return {
 					enrolledUserHref,
-					emailPath,
 					pagerPath
 				};
 			}
-		}
 
-		return undefined;
+			return undefined;
+		}
 	}
 
 	async getIteratorInfo(iteratorProperty) {

@@ -12,13 +12,19 @@ export class ConsistentEvaluationUserProfileCard extends LocalizeConsistentEvalu
 				attribute: 'display-name',
 				type: String
 			},
-			tagline: {
+			emailHref: {
+				attribute: false,
 				type: String
 			},
 			instantMessageHref: {
+				attribute: false,
 				type: String
 			},
-			emailHref: {
+			tagline: {
+				type: String
+			},
+			userProgressHref: {
+				attribute: false,
 				type: String
 			}
 		};
@@ -28,6 +34,17 @@ export class ConsistentEvaluationUserProfileCard extends LocalizeConsistentEvalu
 		super();
 		this.messagePopout = undefined;
 		this.emailPopout = undefined;
+	}
+
+	_shouldShowOutcomes() {
+		if (this.userProgressHref !== 'undefined' && this.userProgressHref) {
+			return true;
+		}
+		return false;
+	}
+
+	_openUserProgress() {
+		window.open(this.userProgressHref);
 	}
 
 	dispatchMouseLeaveEvent() {
@@ -69,14 +86,17 @@ export class ConsistentEvaluationUserProfileCard extends LocalizeConsistentEvalu
 
 	render() {
 		console.log(this.emailHref);
-		const showEmail = false
+		const showEmail = false;
 		return html`
 		<d2l-labs-user-profile-card
 			@mouseleave=${this.dispatchMouseLeaveEvent}
 			@d2l-labs-user-profile-card-message=${this._openMessageDialog}
 			@d2l-labs-user-profile-card-email=${this._openEmailDialog}
+			@d2l-labs-user-profile-card-progress=${this._openUserProgress}
 			show-email=${showEmail}
-			tagline=${this.tagline}>
+			tagline=${this.tagline}
+			progress-viewable=${this._shouldShowOutcomes()}
+			>
 			<img slot="illustration" src="">
 			${this.displayName}
 		</d2l-labs-user-profile-card>
