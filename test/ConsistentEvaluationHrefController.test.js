@@ -1,7 +1,7 @@
 // import 'd2l-polymer-siren-behaviors/store/entity-store.js';
 import { Classes, Rels } from 'd2l-hypermedia-constants';
 import { ConsistentEvaluationHrefController, ConsistentEvaluationHrefControllerErrors } from '../components/controllers/ConsistentEvaluationHrefController';
-import { editSpecialAccessApplicationRel, evaluationRel, nextRel, previousRel, rubricRel } from '../components/controllers/constants.js';
+import { editSpecialAccessApplicationRel, evaluationRel, nextRel, pagerRel, previousRel, rubricRel } from '../components/controllers/constants.js';
 import { assert } from '@open-wc/testing';
 import sinon from 'sinon';
 
@@ -144,6 +144,7 @@ describe('ConsistentEvaluationHrefController', () => {
 		it('sets the enrolled user info', async() => {
 			const enrolledUserHref = 'enrolledUserHref';
 			const pagerPath = 'pagerPath';
+			const userProgressPath = 'userProgress';
 
 			const controller = new ConsistentEvaluationHrefController('href', 'token');
 
@@ -154,13 +155,15 @@ describe('ConsistentEvaluationHrefController', () => {
 			sinon.stub(controller, '_getHref').returns(enrolledUserHref);
 			sinon.stub(controller, '_getEntityFromHref').returns({
 				entity: {
-					getSubEntityByRel: () => ({properties: { path: pagerPath } })
+					getSubEntityByRel: (r) => (r === pagerRel ? {properties: { path: pagerPath } } : {properties: { path: userProgressPath } })
 				}
 			});
 
 			const enrolledUser = await controller.getEnrolledUser();
 			assert.equal(enrolledUser.enrolledUserHref, enrolledUserHref);
 			assert.equal(enrolledUser.pagerPath, pagerPath);
+			assert.equal(enrolledUser.userProgressPath, userProgressPath);
+			assert.equal(enrolledUser.emailPath, userProgressPath);
 		});
 	});
 
