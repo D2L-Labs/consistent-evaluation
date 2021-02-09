@@ -12,10 +12,39 @@ export class ConsistentEvaluationUserProfileCard extends LocalizeConsistentEvalu
 				attribute: 'display-name',
 				type: String
 			},
+			emailHref: {
+				attribute: false,
+				type: String
+			},
+			instantMessageHref: {
+				attribute: false,
+				type: String
+			},
 			tagline: {
+				type: String
+			},
+			userProgressHref: {
+				attribute: false,
 				type: String
 			}
 		};
+	}
+
+	constructor() {
+		super();
+		this.messagePopout = undefined;
+		this.emailPopout = undefined;
+	}
+
+	_shouldShowOutcomes() {
+		if (this.userProgressHref !== 'undefined' && this.userProgressHref) {
+			return true;
+		}
+		return false;
+	}
+
+	_openUserProgress() {
+		window.open(this.userProgressHref);
 	}
 
 	dispatchMouseLeaveEvent() {
@@ -25,11 +54,46 @@ export class ConsistentEvaluationUserProfileCard extends LocalizeConsistentEvalu
 		}));
 	}
 
+	_openMessageDialog() {
+		if (this.messagePopout) {
+			if (!this.messagePopout.closed) {
+				this.messagePopout.focus();
+				return;
+			}
+		}
+
+		this.messagePopout = window.open(
+			this.instantMessageHref,
+			'emailPopout',
+			'width=400,height=200,scrollbars=no,toolbar=no,screenx=0,screeny=0,location=no,titlebar=no,directories=no,status=no,menubar=no'
+		);
+	}
+
+	_openEmailDialog() {
+		if (this.emailPopout) {
+			if (!this.emailPopout.closed) {
+				this.emailPopout.focus();
+				return;
+			}
+		}
+
+		this.emailPopout = window.open(
+			this.emailHref,
+			'messagePopout',
+			'width=1000,height=1000,scrollbars=no,toolbar=no,screenx=0,screeny=0,location=no,titlebar=no,directories=no,status=no,menubar=no'
+		);
+	}
+
 	render() {
 		return html`
 		<d2l-labs-user-profile-card
 			@mouseleave=${this.dispatchMouseLeaveEvent}
-			tagline=${this.tagline}>
+			@d2l-labs-user-profile-card-message=${this._openMessageDialog}
+			@d2l-labs-user-profile-card-email=${this._openEmailDialog}
+			@d2l-labs-user-profile-card-progress=${this._openUserProgress}
+			tagline=${this.tagline}
+			progress-viewable=${this._shouldShowOutcomes()}
+			>
 			<img slot="illustration" src="">
 			${this.displayName}
 		</d2l-labs-user-profile-card>

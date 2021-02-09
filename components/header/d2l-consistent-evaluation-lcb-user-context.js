@@ -20,6 +20,10 @@ export class ConsistentEvaluationLcbUserContext extends EntityMixinLit(RtlMixin(
 				attribute: 'is-group-activity',
 				type: Boolean
 			},
+			enrolledUser: {
+				attribute: false,
+				type: Object
+			},
 			_displayName: {
 				attribute: false,
 				type: String
@@ -126,11 +130,23 @@ export class ConsistentEvaluationLcbUserContext extends EntityMixinLit(RtlMixin(
 	}
 
 	_renderProfileCard() {
+		let emailHref = undefined;
+		let instantMessageHref = undefined;
+		let userProgressHref = undefined;
+		if (this.enrolledUser) {
+			emailHref = this.enrolledUser.emailPath;
+			instantMessageHref = this.enrolledUser.pagerPath;
+			userProgressHref = this.enrolledUser.userProgressPath;
+		}
+
 		return this._showProfileCard ?
 			html`
 			<d2l-consistent-evaluation-user-profile-card
 				display-name=${ifDefined(this._displayName)}
 				tagline="This is a tag-line that will come from the API?"
+				.emailHref=${emailHref}
+				.instantMessageHref=${instantMessageHref}
+				.userProgressHref=${userProgressHref}
 				@d2l-consistent-eval-profile-card-mouse-leave=${this._toggleOffProfileCard}>
 			</d2l-consistent-evaluation-user-profile-card>
 			` :
