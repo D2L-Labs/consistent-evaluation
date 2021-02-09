@@ -36,13 +36,6 @@ export class ConsistentEvaluationUserProfileCard extends LocalizeConsistentEvalu
 		this.emailPopout = undefined;
 	}
 
-	_shouldShowOutcomes() {
-		if (this.userProgressHref !== 'undefined' && this.userProgressHref) {
-			return true;
-		}
-		return false;
-	}
-
 	_openUserProgress() {
 		window.open(this.userProgressHref);
 	}
@@ -92,10 +85,12 @@ export class ConsistentEvaluationUserProfileCard extends LocalizeConsistentEvalu
 			@d2l-labs-user-profile-card-email=${this._openEmailDialog}
 			@d2l-labs-user-profile-card-progress=${this._openUserProgress}
 			tagline=${this.tagline}
-			progress-viewable=${this._shouldShowOutcomes()}
+			?show-email=${this.emailHref}
+			?show-im=${this.instantMessageHref}
+			?show-progress=${this.userProgressHref}
+			display-name=${this.displayName}
 			>
 			<img slot="illustration" src="">
-			${this.displayName}
 		</d2l-labs-user-profile-card>
 		`;
 	}
