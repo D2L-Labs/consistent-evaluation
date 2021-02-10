@@ -261,11 +261,17 @@ export class ConsistentEvaluationHrefController {
 				const userProgressEntity = enrolledUserEntity.entity.getSubEntityByRel(Rels.userProgress);
 				const emailEntity = enrolledUserEntity.entity.getSubEntityByRel(emailRel, false);
 				const userProfileEntity = enrolledUserEntity.entity.getSubEntityByRel(Rels.userProfile);
+				const displayNameEntity = enrolledUserEntity.entity.getSubEntityByRel(Rels.displayName);
 
+				let displayName = undefined;
 				let pagerPath = undefined;
 				let userProgressPath = undefined;
 				let emailPath = undefined;
 				let userProfilePath = undefined;
+
+				if (displayNameEntity) {
+					displayName = displayNameEntity.properties.name;
+				}
 				if (pagerEntity) {
 					pagerPath = pagerEntity.properties.path;
 				}
@@ -279,6 +285,7 @@ export class ConsistentEvaluationHrefController {
 					userProfilePath = userProfileEntity.properties.path;
 				}
 				return {
+					displayName,
 					enrolledUserHref,
 					emailPath,
 					pagerPath,
