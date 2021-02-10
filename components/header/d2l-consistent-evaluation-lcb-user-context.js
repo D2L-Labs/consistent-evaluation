@@ -134,19 +134,20 @@ export class ConsistentEvaluationLcbUserContext extends EntityMixinLit(RtlMixin(
 		let instantMessageHref = undefined;
 		let userProgressHref = undefined;
 		let userProfileHref = undefined;
+		let displayName = undefined;
 		if (this.enrolledUser) {
 			emailHref = this.enrolledUser.emailPath;
 			instantMessageHref = this.enrolledUser.pagerPath;
 			userProgressHref = this.enrolledUser.userProgressPath;
 			userProfileHref = this.enrolledUser.userProfilePath;
+			displayName = this.enrolledUser.displayName;
 		}
 
 		return this._showProfileCard ?
 			html`
 			<d2l-consistent-evaluation-user-profile-card
 				.token=${this.token}
-				display-name=${ifDefined(this._displayName)}
-				tagline="This is a tag-line that will come from the API?"
+				display-name=${displayName}
 				.emailHref=${emailHref}
 				.instantMessageHref=${instantMessageHref}
 				.userProgressHref=${userProgressHref}

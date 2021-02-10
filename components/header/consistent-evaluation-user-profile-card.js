@@ -20,9 +20,6 @@ export class ConsistentEvaluationUserProfileCard extends LocalizeConsistentEvalu
 				attribute: false,
 				type: String
 			},
-			tagline: {
-				type: String
-			},
 			userProgressHref: {
 				attribute: false,
 				type: String
@@ -113,7 +110,6 @@ export class ConsistentEvaluationUserProfileCard extends LocalizeConsistentEvalu
 			@d2l-labs-user-profile-card-email=${this._openEmailDialog}
 			@d2l-labs-user-profile-card-progress=${this._openUserProgress}
 			@d2l-labs-user-profile-card-profile=${this._openUserProfile}
-			tagline=${this.tagline}
 			?show-email=${this.emailHref}
 			?show-im=${this.instantMessageHref}
 			?show-progress=${this.userProgressHref}
