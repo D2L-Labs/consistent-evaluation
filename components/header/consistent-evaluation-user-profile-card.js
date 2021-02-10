@@ -31,6 +31,10 @@ export class ConsistentEvaluationUserProfileCard extends LocalizeConsistentEvalu
 			userHref: {
 				attribute: false,
 				type: String
+			},
+			isGroupActivity: {
+				attribute: 'is-group-activity',
+				type: Boolean
 			}
 		};
 	}
