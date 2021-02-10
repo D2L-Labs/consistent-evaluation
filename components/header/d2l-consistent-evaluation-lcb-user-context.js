@@ -71,7 +71,7 @@ export class ConsistentEvaluationLcbUserContext extends EntityMixinLit(RtlMixin(
 			.d2l-consistent-evaluation-user-profile-card-container {
 				background: white;
 				position: absolute;
-				top: 3rem;
+				top: 6rem;
 				z-index: 1;
 			}
 		`];
@@ -144,12 +144,14 @@ export class ConsistentEvaluationLcbUserContext extends EntityMixinLit(RtlMixin(
 		return this._showProfileCard ?
 			html`
 			<d2l-consistent-evaluation-user-profile-card
+				.token=${this.token}
 				display-name=${ifDefined(this._displayName)}
 				tagline="This is a tag-line that will come from the API?"
 				.emailHref=${emailHref}
 				.instantMessageHref=${instantMessageHref}
 				.userProgressHref=${userProgressHref}
 				.userProfileHref=${userProfileHref}
+				.userHref=${this.href}
 				@d2l-consistent-eval-profile-card-mouse-leave=${this._toggleOffProfileCard}>
 			</d2l-consistent-evaluation-user-profile-card>
 			` :

@@ -30,6 +30,10 @@ export class ConsistentEvaluationUserProfileCard extends LocalizeConsistentEvalu
 			userProfileHref: {
 				attribute: false,
 				type: String
+			},
+			userHref: {
+				attribute: false,
+				type: String
 			}
 		};
 	}
@@ -87,6 +91,20 @@ export class ConsistentEvaluationUserProfileCard extends LocalizeConsistentEvalu
 		);
 	}
 
+	_renderProfileImage() {
+		if (this.isGroupActivity) {
+			return html``;
+		} else {
+			return html `
+			<d2l-profile-image
+				slot="illustration"
+				href=${this.userHref}
+				.token=${this.token}
+				x-large
+			></d2l-profile-image>`;
+		}
+	}
+
 	render() {
 		return html`
 		<d2l-labs-user-profile-card
@@ -99,9 +117,9 @@ export class ConsistentEvaluationUserProfileCard extends LocalizeConsistentEvalu
 			?show-email=${this.emailHref}
 			?show-im=${this.instantMessageHref}
 			?show-progress=${this.userProgressHref}
-			display-name=${this.displayName}
-			>
-			<img slot="illustration" src="">
+			display-name=${this.displayName}>
+
+			${this._renderProfileImage()}
 		</d2l-labs-user-profile-card>
 		`;
 	}
