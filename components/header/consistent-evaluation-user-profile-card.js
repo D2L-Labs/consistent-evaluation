@@ -31,10 +31,6 @@ export class ConsistentEvaluationUserProfileCard extends LocalizeConsistentEvalu
 			userHref: {
 				attribute: false,
 				type: String
-			},
-			isGroupActivity: {
-				attribute: 'is-group-activity',
-				type: Boolean
 			}
 		};
 	}
@@ -93,17 +89,14 @@ export class ConsistentEvaluationUserProfileCard extends LocalizeConsistentEvalu
 	}
 
 	_renderProfileImage() {
-		if (this.isGroupActivity) {
-			return html``;
-		} else {
-			return html `
+		return html `
 			<d2l-profile-image
 				slot="illustration"
 				href=${this.userHref}
 				.token=${this.token}
 				x-large
-			></d2l-profile-image>`;
-		}
+			></d2l-profile-image>
+		`;
 	}
 
 	render() {

@@ -143,7 +143,7 @@ export class ConsistentEvaluationLcbUserContext extends EntityMixinLit(RtlMixin(
 			displayName = this.enrolledUser.displayName;
 		}
 
-		return this._showProfileCard ?
+		return (this._showProfileCard && !this.isGroupActivity) ?
 			html`
 			<d2l-consistent-evaluation-user-profile-card
 				.token=${this.token}
@@ -153,7 +153,6 @@ export class ConsistentEvaluationLcbUserContext extends EntityMixinLit(RtlMixin(
 				.userProgressHref=${userProgressHref}
 				.userProfileHref=${userProfileHref}
 				.userHref=${this.href}
-				?is-group-activity=${this.isGroupActivity}
 				@d2l-consistent-eval-profile-card-mouse-leave=${this._toggleOffProfileCard}>
 			</d2l-consistent-evaluation-user-profile-card>
 			` :
