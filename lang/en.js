@@ -86,6 +86,7 @@ export default {
 	"turnitinNoReportDescription": "Originality Report isn't applicable for this submission and won't be generated.",
 	"turnitinReportNotGenerated": "An originality report could not be generated.",
 	"turnitinSimilarity": "Turnitin® Similarity",
+	"turnitinPercentSimilar": "{percent}% Similar",
 	"turnitinSubmitFile": "Submit file to Turnitin®",
 	"turnitinViewReport": "View originality report for {file}",
 	"unevaluated": "Unevaluated",
