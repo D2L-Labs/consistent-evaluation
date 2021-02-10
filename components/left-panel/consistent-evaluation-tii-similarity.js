@@ -108,7 +108,7 @@ export class ConsistentEvaluationTiiSimilarity extends LocalizeConsistentEvaluat
 				class="d2l-consistent-evaluation-tii-similarity-bar"
 				@click=${this._onSimilarityBarClick}
 				title="${this.localize('turnitinViewReport', 'file', this.fileName)}"
-				aria-label="${renderScore}% Similar"
+				aria-label="${this.localize('turnitinPercentSimilar', 'percent', renderScore)}"
 				tabindex=0
 			>
 				<div class="d2l-consistent-evaluation-tii-similarity-score">${renderScore}%</div>
