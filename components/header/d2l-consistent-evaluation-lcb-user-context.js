@@ -1,5 +1,6 @@
 import 'd2l-users/components/d2l-profile-image.js';
 import './consistent-evaluation-user-profile-card.js';
+import '@brightspace-ui/core/components/focus-trap/focus-trap.js';
 import { bodyCompactStyles, bodyStandardStyles } from '@brightspace-ui/core/components/typography/styles.js';
 import { css, html, LitElement } from 'lit-element';
 import { EntityMixinLit } from 'siren-sdk/src/mixin/entity-mixin-lit.js';
@@ -29,6 +30,10 @@ export class ConsistentEvaluationLcbUserContext extends EntityMixinLit(RtlMixin(
 				type: String
 			},
 			_showProfileCard: {
+				attribute: false,
+				type: Boolean
+			},
+			_focusTrap: {
 				attribute: false,
 				type: Boolean
 			}
@@ -84,6 +89,7 @@ export class ConsistentEvaluationLcbUserContext extends EntityMixinLit(RtlMixin(
 		super();
 
 		this._setEntityType(UserEntity);
+		this._focusTrap = false;
 	}
 
 	set _entity(entity) {
@@ -146,6 +152,7 @@ export class ConsistentEvaluationLcbUserContext extends EntityMixinLit(RtlMixin(
 				.userProgressHref=${userProgressHref}
 				.userProfileHref=${userProfileHref}
 				.userHref=${this.href}
+				trapFocus=${this._focusTrap}
 				@d2l-consistent-eval-profile-card-mouse-leave=${this._toggleOffProfileCard}>
 			</d2l-consistent-evaluation-user-profile-card>
 			` :
@@ -163,20 +170,32 @@ export class ConsistentEvaluationLcbUserContext extends EntityMixinLit(RtlMixin(
 		}
 	}
 
+	_dispatchUserContextKeyDown(e) {
+		if (e.key === 'Enter' || e.key === 'ArrowDown') {
+			this._focusTrap = true;
+			let focus123 = this.shadowRoot.querySelector('d2l-consistent-evaluation-user-profile-card').shadowRoot.querySelector('d2l-labs-user-profile-card').shadowRoot.querySelector('.d2l-labs-profile-card-name');
+			console.log(focus123);
+			focus123.focus();
+		}
+	}
+
 	render() {
 		return html`
 		<div class="d2l-user-context-container"
 			tabindex="0"
 			aria-label=${ifDefined(this._displayName)}
 			@mouseover=${this._toggleOnProfileCard}
-			@mouseleave=${this._toggleOffProfileCard}>
+			@mouseleave=${this._toggleOffProfileCard}
+			@keydown=${this._dispatchUserContextKeyDown}>
 
 			${this._renderProfileImage()}
 			<h2 class="d2l-body-compact d2l-consistent-evaluation-lcb-user-name">${ifDefined(this._displayName)}</h2>
 			${this._getExemptText()}
+
 			<div class="d2l-consistent-evaluation-user-profile-card-container" @click=${this._toggleOffProfileCard}>
 				${this._renderProfileCard()}
 			</div>
+
 		</div>
 
 		`;

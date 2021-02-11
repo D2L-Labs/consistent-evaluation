@@ -1,5 +1,6 @@
 import '@brightspace-ui-labs/user-profile-card/user-profile-card.js';
 import '@brightspace-ui/core/components/icons/icon.js';
+import '@brightspace-ui/core/components/focus-trap/focus-trap.js';
 
 import { html, LitElement } from 'lit-element';
 import { LocalizeConsistentEvaluation } from '../../lang/localize-consistent-evaluation.js';
@@ -31,12 +32,17 @@ export class ConsistentEvaluationUserProfileCard extends LocalizeConsistentEvalu
 			userHref: {
 				attribute: false,
 				type: String
+			},
+			trapFocus: {
+				attribute: false,
+				type: Boolean
 			}
 		};
 	}
 
 	constructor() {
 		super();
+		this.trapFocus = false;
 		this.messagePopout = undefined;
 		this.emailPopout = undefined;
 	}
@@ -101,19 +107,22 @@ export class ConsistentEvaluationUserProfileCard extends LocalizeConsistentEvalu
 
 	render() {
 		return html`
-		<d2l-labs-user-profile-card
-			@mouseleave=${this.dispatchMouseLeaveEvent}
-			@d2l-labs-user-profile-card-message=${this._openMessageDialog}
-			@d2l-labs-user-profile-card-email=${this._openEmailDialog}
-			@d2l-labs-user-profile-card-progress=${this._openUserProgress}
-			@d2l-labs-user-profile-card-profile=${this._openUserProfile}
-			?show-email=${this.emailHref}
-			?show-im=${this.instantMessageHref}
-			?show-progress=${this.userProgressHref}
-			display-name=${this.displayName}>
+		<d2l-focus-trap trap=${this.trapFocus}>
+			<d2l-labs-user-profile-card
+				tabindex="0"
+				@mouseleave=${this.dispatchMouseLeaveEvent}
+				@d2l-labs-user-profile-card-message=${this._openMessageDialog}
+				@d2l-labs-user-profile-card-email=${this._openEmailDialog}
+				@d2l-labs-user-profile-card-progress=${this._openUserProgress}
+				@d2l-labs-user-profile-card-profile=${this._openUserProfile}
+				?show-email=${this.emailHref}
+				?show-im=${this.instantMessageHref}
+				?show-progress=${this.userProgressHref}
+				display-name=${this.displayName}>
 
-			${this._renderProfileImage()}
-		</d2l-labs-user-profile-card>
+				${this._renderProfileImage()}
+			</d2l-labs-user-profile-card>
+		</d2l-focus-trap>
 		`;
 	}
 }
