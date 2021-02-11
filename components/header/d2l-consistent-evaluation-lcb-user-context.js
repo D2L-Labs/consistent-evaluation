@@ -92,6 +92,16 @@ export class ConsistentEvaluationLcbUserContext extends EntityMixinLit(RtlMixin(
 		this._focusTrap = false;
 	}
 
+	firstUpdated() {
+		const userContextContainer = this.shadowRoot.querySelector('.d2l-user-context-container');
+		userContextContainer.addEventListener('focusin', () => {
+			this._toggleOnProfileCard();
+		});
+		userContextContainer.addEventListener('focusout', () => {
+			this._toggleOffProfileCard('tabOut');
+		});
+	}
+
 	set _entity(entity) {
 		if (this._entityHasChanged(entity)) {
 			this._onActorEntityChanged(entity);
@@ -165,17 +175,17 @@ export class ConsistentEvaluationLcbUserContext extends EntityMixinLit(RtlMixin(
 
 	_toggleOffProfileCard(event) {
 		//Don't close/flciker the profile card when mousing off of it and onto the user-context-container
-		if (event.type !== 'd2l-consistent-eval-profile-card-mouse-leave') {
+		if (event === 'tabOut' || event.type !== 'd2l-consistent-eval-profile-card-mouse-leave') {
 			this._showProfileCard = false;
 		}
 	}
 
 	_dispatchUserContextKeyDown(e) {
 		if (e.key === 'Enter' || e.key === 'ArrowDown') {
-			this._focusTrap = true;
-			let focus123 = this.shadowRoot.querySelector('d2l-consistent-evaluation-user-profile-card').shadowRoot.querySelector('d2l-labs-user-profile-card').shadowRoot.querySelector('.d2l-labs-profile-card-name');
-			console.log(focus123);
-			focus123.focus();
+			//this._focusTrap = true;
+			// let focus123 = this.shadowRoot.querySelector('d2l-consistent-evaluation-user-profile-card').shadowRoot.querySelector('d2l-labs-user-profile-card').shadowRoot.querySelector('.d2l-labs-profile-card-name');
+			// console.log(focus123);
+			// focus123.focus();
 		}
 	}
 

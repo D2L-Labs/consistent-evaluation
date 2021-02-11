@@ -109,7 +109,6 @@ export class ConsistentEvaluationUserProfileCard extends LocalizeConsistentEvalu
 		return html`
 		<d2l-focus-trap trap=${this.trapFocus}>
 			<d2l-labs-user-profile-card
-				tabindex="0"
 				@mouseleave=${this.dispatchMouseLeaveEvent}
 				@d2l-labs-user-profile-card-message=${this._openMessageDialog}
 				@d2l-labs-user-profile-card-email=${this._openEmailDialog}
