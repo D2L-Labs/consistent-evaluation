@@ -88,7 +88,7 @@ export class ConsistentEvaluationLcbUserContext extends EntityMixinLit(RtlMixin(
 
 	firstUpdated() {
 		const userContextContainer = this.shadowRoot.querySelector('.d2l-user-context-container');
-		userContextContainer.addEventListener('focusin', () => {
+		userContextContainer.addEventListener('focus', () => {
 			this._toggleOnProfileCard();
 		});
 	}
@@ -177,8 +177,7 @@ export class ConsistentEvaluationLcbUserContext extends EntityMixinLit(RtlMixin(
 			tabindex="0"
 			aria-label=${ifDefined(this._displayName)}
 			@mouseover=${this._toggleOnProfileCard}
-			@mouseleave=${this._toggleOffProfileCard}
-			@keydown=${this._dispatchUserContextKeyDown}>
+			@mouseleave=${this._toggleOffProfileCard}>
 
 			${this._renderProfileImage()}
 			<h2 class="d2l-body-compact d2l-consistent-evaluation-lcb-user-name">${ifDefined(this._displayName)}</h2>

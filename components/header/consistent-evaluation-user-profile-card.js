@@ -111,19 +111,19 @@ export class ConsistentEvaluationUserProfileCard extends LocalizeConsistentEvalu
 
 	render() {
 		return html`
-			<d2l-labs-user-profile-card
-				@mouseleave=${this.dispatchMouseLeaveEvent}
-				@d2l-labs-user-profile-card-message=${this._openMessageDialog}
-				@d2l-labs-user-profile-card-email=${this._openEmailDialog}
-				@d2l-labs-user-profile-card-progress=${this._openUserProgress}
-				@d2l-labs-user-profile-card-profile=${this._openUserProfile}
-				?show-email=${this.emailHref}
-				?show-im=${this.instantMessageHref}
-				?show-progress=${this.userProgressHref}
-				display-name=${this.displayName}>
+		<d2l-labs-user-profile-card
+			@mouseleave=${this.dispatchMouseLeaveEvent}
+			@d2l-labs-user-profile-card-message=${this._openMessageDialog}
+			@d2l-labs-user-profile-card-email=${this._openEmailDialog}
+			@d2l-labs-user-profile-card-progress=${this._openUserProgress}
+			@d2l-labs-user-profile-card-profile=${this._openUserProfile}
+			?show-email=${this.emailHref}
+			?show-im=${this.instantMessageHref}
+			?show-progress=${this.userProgressHref}
+			display-name=${this.displayName}>
 
-				${this._renderProfileImage()}
-			</d2l-labs-user-profile-card>
+			${this._renderProfileImage()}
+		</d2l-labs-user-profile-card>
 		`;
 	}
 }
