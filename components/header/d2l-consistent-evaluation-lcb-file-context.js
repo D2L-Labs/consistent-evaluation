@@ -80,6 +80,7 @@ export class ConsistentEvaluationLcbFileContext extends RtlMixin(LocalizeConsist
 	}
 
 	_onSelectChange(e) {
+		console.log(e);
 		if (e.target.value === submissions) {
 			this.dispatchEvent(new Event('d2l-consistent-evaluation-evidence-back-to-user-submissions', {
 				composed: true,

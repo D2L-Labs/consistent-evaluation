@@ -31,13 +31,15 @@ export class ConsistentEvaluationEvidenceFile extends LitElement {
 
 	constructor() {
 		super();
-
 		this._resizeStart = this._resizeStart.bind(this);
 		this._resizeEnd = this._resizeEnd.bind(this);
 		this._handleMessage = this._handleMessage.bind(this);
 		this.flush = this.flush.bind(this);
-
 		this._debounceJobs = {};
+	}
+
+	updated(changedProperties) {
+		console.log(changedProperties);
 	}
 
 	connectedCallback() {
@@ -57,6 +59,7 @@ export class ConsistentEvaluationEvidenceFile extends LitElement {
 	}
 
 	_handleMessage(e) {
+		console.log(e);
 		if (e.data.type === 'token-request') {
 			return this._handleTokenRequest(e);
 		} else if (e.data.type === 'annotations-update') {
@@ -88,7 +91,10 @@ export class ConsistentEvaluationEvidenceFile extends LitElement {
 			() => this.dispatchEvent(new CustomEvent('d2l-consistent-eval-annotations-update', {
 				composed: true,
 				bubbles: true,
-				detail: e.data.value
+				detail: {
+					value: e.data.value,
+					fileId: this.fileId
+				}
 			}))
 		);
 	}
@@ -107,7 +113,15 @@ export class ConsistentEvaluationEvidenceFile extends LitElement {
 		this._resizing = false;
 	}
 
+	_sendOpenEvent() {
+		this.dispatchEvent(new CustomEvent('d2l-consistent-evaluation-annotations-state-update', {
+			composed: true,
+			bubbles: true,
+		}));
+	}
+
 	render() {
+		this._sendOpenEvent();
 		return html`
 			<d2l-consistent-evaluation-evidence-top-bar></d2l-consistent-evaluation-evidence-top-bar>
 			<iframe ?data-resizing=${this._resizing}

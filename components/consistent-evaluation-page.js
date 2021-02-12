@@ -10,6 +10,7 @@ import '@brightspace-ui/core/components/inputs/input-text.js';
 import '@brightspace-ui/core/templates/primary-secondary/primary-secondary.js';
 import '@brightspace-ui/core/components/dialog/dialog-confirm.js';
 import '@brightspace-ui/core/components/button/button.js';
+
 import { attachmentsRel, draftState, publishActionName, publishedState, retractActionName, saveActionName, updateActionName } from './controllers/constants.js';
 import { css, html, LitElement } from 'lit-element/lit-element.js';
 import { Grade, GradeType } from '@brightspace-ui-labs/grade-result/src/controller/Grade';
@@ -222,6 +223,7 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 		this._transientSaveAwaiter = new TransientSaveAwaiter();
 		this._isUpdateClicked = false;
 		this._isPublishClicked = false;
+		this._annotationsViewerOpen = false;
 	}
 
 	get evaluationEntity() {
@@ -431,7 +433,7 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 		await this._mutex.dispatch(
 			async() => {
 				const entity = await this._controller.fetchEvaluationEntity(false);
-				const annotationsData = e.detail;
+				const annotationsData = e.detail.value;
 				const fileId = this.currentFileId;
 
 				this.evaluationEntity = await this._controller.transientSaveAnnotations(entity, annotationsData, fileId);
@@ -470,6 +472,7 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 			bubbles: true
 		}));
 
+		await this._waitForAnnotations();
 		await this._transientSaveAwaiter.awaitAllTransientSaves();
 		await this._mutex.dispatch(
 			async() => {
@@ -493,13 +496,26 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 		this._isPublishClicked = true;
 	}
 
+	_updateAnnotationsViewerOpen() {
+		this._shouldWaitForAnnotations = true;
+	}
+
+	async _waitForAnnotations() {
+		if(this._shouldWaitForAnnotations){
+			await new Promise(resolve => {
+				this._shouldWaitForAnnotations = false;
+				setTimeout( resolve, 2000);
+			});
+		}
+	}
+
 	async _updateEvaluation() {
 		window.dispatchEvent(new CustomEvent('d2l-flush', {
 			composed: true,
 			bubbles: true
 		}));
 		this._isUpdateClicked = false;
-
+		await this._waitForAnnotations();
 		await this._transientSaveAwaiter.awaitAllTransientSaves();
 		await this._mutex.dispatch(
 			async() => {
@@ -550,6 +566,7 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 			bubbles: true
 		}));
 
+		await this._waitForAnnotations();
 		await this._transientSaveAwaiter.awaitAllTransientSaves();
 		await this._mutex.dispatch(
 			async() => {
@@ -581,7 +598,11 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 			bubbles: true
 		}));
 
-		await this._mutex.dispatch(async() => { this._navigationTarget = e.detail.key; });
+		await this._waitForAnnotations();
+		await this._transientSaveAwaiter.awaitAllTransientSaves();
+		await this._mutex.dispatch(async() => {
+			this._navigationTarget = e.detail.key;
+		});
 	}
 
 	_resetFocusToUser() {
@@ -612,6 +633,7 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 	}
 
 	_confirmUnsavedChangesBeforeUnload(e) {
+
 		if (this.evaluationEntity.hasClass('unsaved')) {
 			//Triggers the native browser confirmation dialog
 			e.preventDefault();
@@ -825,6 +847,7 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 						@d2l-consistent-evaluation-use-tii-grade=${this._transientSaveGrade}
 						@d2l-consistent-evaluation-refresh-grade-item=${this._refreshEvaluationEntity}
 						@d2l-consistent-evaluation-download-all-failed=${this._handleDownloadAllFailure}
+						@d2l-consistent-evaluation-annotations-state-update=${this._updateAnnotationsViewerOpen}
 						data-telemetry-endpoint=${this.dataTelemetryEndpoint}
 					></d2l-consistent-evaluation-left-panel>
 				</div>

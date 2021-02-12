@@ -87,6 +87,7 @@ export class ConsistentEvaluationDialogs extends LocalizeConsistentEvaluation(Li
 	}
 
 	async _showUnsavedChangesDialog() {
+		console.log('CHECKING UNSAVED');
 		const controller = new ConsistentEvaluationController(this.evaluationHref, this.token);
 		const entity = await controller.fetchEvaluationEntity(false);
 		if (entity.hasClass('unsaved')) {

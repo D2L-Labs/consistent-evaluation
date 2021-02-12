@@ -9,6 +9,7 @@ export class TransientSaveAwaiter {
 	}
 
 	async awaitAllTransientSaves() {
+		console.log("CALLED");
 		let resolvedSaves;
 		try {
 			resolvedSaves = await Promise.all(this._pendingTransientSaves);
