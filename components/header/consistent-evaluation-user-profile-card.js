@@ -41,6 +41,16 @@ export class ConsistentEvaluationUserProfileCard extends LocalizeConsistentEvalu
 		this.emailPopout = undefined;
 	}
 
+	firstUpdated() {
+		const userProfileCard = this.shadowRoot.querySelector('d2l-labs-user-profile-card');
+		userProfileCard.addEventListener('focusout', () => {
+			this.dispatchEvent(new CustomEvent('d2l-consistent-eval-profile-card-tab-leave', {
+				composed: true,
+				bubbles: true,
+			}));
+		});
+	}
+
 	_openUserProgress() {
 		window.open(this.userProgressHref);
 	}
