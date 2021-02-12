@@ -23,8 +23,8 @@ describe('d2l-consistent-evaluation-user-profile-card', () => {
 		await visualDiff.screenshotAndCompare(page, this.test.fullTitle(), { clip: rect });
 	});
 
-	it('renders the default user profile card with wrapped tagline', async function() {
-		const rect = await visualDiff.getRect(page, '#long-tagline');
+	it('renders the user profile card with no links', async function() {
+		const rect = await visualDiff.getRect(page, '#no-links');
 		await visualDiff.screenshotAndCompare(page, this.test.fullTitle(), { clip: rect });
 	});
 });
