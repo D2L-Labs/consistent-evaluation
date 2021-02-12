@@ -35,6 +35,7 @@ export class ConsistentEvaluation extends LitElement {
 			_rubricInfos: { type: Array },
 			_submissionInfo: { type: Object },
 			_gradeItemInfo: { type: Object },
+			_enrolledUser: { type: Object},
 			_assignmentName: { type: String },
 			_organizationName: { type: String },
 			_userName: { type: String },
@@ -92,6 +93,7 @@ export class ConsistentEvaluation extends LitElement {
 			this._assignmentName = await controller.getAssignmentOrganizationName('assignment');
 			this._organizationName = await controller.getAssignmentOrganizationName('organization');
 			this._userName = await controller.getUserName();
+			this._enrolledUser = await controller.getEnrolledUser();
 			this._iteratorTotal = await controller.getIteratorInfo('total');
 			this._iteratorIndex = await controller.getIteratorInfo('index');
 			const stripped = this._stripFileIdFromUrl();
@@ -216,6 +218,7 @@ export class ConsistentEvaluation extends LitElement {
 				.iteratorIndex=${this._iteratorIndex}
 				.token=${this.token}
 				.href=${this.href}
+				.enrolledUser=${this._enrolledUser}
 				?rubric-read-only=${this._rubricReadOnly}
 				?hide-learner-context-bar=${this._shouldHideLearnerContextBar()}
 				?use-new-html-editor=${this.useNewHtmlEditor}

@@ -1,7 +1,7 @@
 // import 'd2l-polymer-siren-behaviors/store/entity-store.js';
 import { Classes, Rels } from 'd2l-hypermedia-constants';
 import { ConsistentEvaluationHrefController, ConsistentEvaluationHrefControllerErrors } from '../components/controllers/ConsistentEvaluationHrefController';
-import { editSpecialAccessApplicationRel, evaluationRel, nextRel, previousRel, rubricRel } from '../components/controllers/constants.js';
+import { editSpecialAccessApplicationRel, emailRel, evaluationRel, nextRel, pagerRel, previousRel, rubricRel } from '../components/controllers/constants.js';
 import { assert } from '@open-wc/testing';
 import sinon from 'sinon';
 
@@ -137,6 +137,50 @@ describe('ConsistentEvaluationHrefController', () => {
 			assert.equal(gradeItemInfo.evaluationUrl, evaluationUrl);
 			assert.equal(gradeItemInfo.statsUrl, statsUrl);
 			assert.equal(gradeItemInfo.gradeItemName, gradeItemName);
+		});
+	});
+
+	describe('getEnrolledUser gets correct enrolled user info', () => {
+		it('sets the enrolled user info', async() => {
+			const enrolledUserHref = 'enrolledUserHref';
+			const emailPath = 'emailPath';
+			const pagerPath = 'pagerPath';
+			const userProgressPath = 'userProgress';
+			const userProfilePath = 'userProfilePath';
+			const displayName = 'displayName';
+
+			const controller = new ConsistentEvaluationHrefController('href', 'token');
+
+			sinon.stub(controller, '_getRootEntity').returns({
+				entity: { }
+			});
+
+			sinon.stub(controller, '_getHref').returns(enrolledUserHref);
+			sinon.stub(controller, '_getEntityFromHref').returns({
+				entity: {
+					getSubEntityByRel: (r) => {
+						if (r === pagerRel) {
+							return { properties: { path: pagerPath } };
+						} else if (r === emailRel) {
+							return { properties: { path: emailPath } };
+						} else if (r === Rels.userProgress) {
+							return { properties: { path: userProgressPath } };
+						} else if (r === Rels.displayName) {
+							return { properties: { name: displayName } };
+						} else {
+							return { properties: { path: userProfilePath } };
+						}
+					}
+				}
+			});
+
+			const enrolledUser = await controller.getEnrolledUser();
+			assert.equal(enrolledUser.enrolledUserHref, enrolledUserHref);
+			assert.equal(enrolledUser.pagerPath, pagerPath);
+			assert.equal(enrolledUser.userProgressPath, userProgressPath);
+			assert.equal(enrolledUser.userProfilePath, userProfilePath);
+			assert.equal(enrolledUser.emailPath, emailPath);
+			assert.equal(enrolledUser.displayName, displayName);
 		});
 	});
 
