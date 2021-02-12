@@ -13,23 +13,18 @@ export class ConsistentEvaluationUserProfileCard extends LocalizeConsistentEvalu
 				type: String
 			},
 			emailHref: {
-				attribute: false,
 				type: String
 			},
 			instantMessageHref: {
-				attribute: false,
 				type: String
 			},
 			userProgressHref: {
-				attribute: false,
 				type: String
 			},
 			userProfileHref: {
-				attribute: false,
 				type: String
 			},
 			userHref: {
-				attribute: false,
 				type: String
 			}
 		};
