@@ -60,8 +60,10 @@ export class ConsistentEvaluationEvidenceFile extends LitElement {
 		if (e.data.type === 'token-request') {
 			return this._handleTokenRequest(e);
 		} else if (e.data.type === 'annotations-update') {
-			return this._handleAnnotationsUpdate(e);
-		}
+            return this._handleAnnotationsUpdate(e);
+        } else if (e.data.type === 'annotations-will-change') {
+            return this._handleAnnotationsWillChange(e);
+        }
 	}
 
 	_handleTokenRequest(e) {
@@ -92,6 +94,16 @@ export class ConsistentEvaluationEvidenceFile extends LitElement {
 			}))
 		);
 	}
+
+	_handleAnnotationsWillChange(e) {
+        if (e.data.value === 'TEXT_EDIT_START') {
+            this.dispatchEvent(new CustomEvent('d2l-consistent-eval-annotations-will-change', {
+                composed: true,
+                bubbles: true,
+                detail: e.data.value
+            }));
+        }
+    }
 
 	flush() {
 		if (this._debounceJobs.annotations && this._debounceJobs.annotations.isActive()) {
