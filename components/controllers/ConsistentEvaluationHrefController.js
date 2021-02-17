@@ -250,6 +250,26 @@ export class ConsistentEvaluationHrefController {
 		return undefined;
 	}
 
+	async getGroupInfo() {
+		const root = await this._getRootEntity(false);
+		if (root && root.entity) {
+			const groupHref = this._getHref(root.entity, Rels.group);
+			if (groupHref) {
+				const groupEntity = await this._getEntityFromHref(groupHref, false);
+				const viewMembersEntity = groupEntity.entity.getSubEntityByRel('https://api.brightspace.com/rels/view-members');
+
+				const viewMembers = viewMembersEntity ? viewMembersEntity.properties.path : undefined;
+
+				return {
+					viewMembers
+				};
+
+			}
+
+			return undefined;
+		}
+	}
+
 	async getEnrolledUser() {
 		const root = await this._getRootEntity(false);
 		if (root && root.entity) {
