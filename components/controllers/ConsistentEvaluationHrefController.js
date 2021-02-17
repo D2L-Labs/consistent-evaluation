@@ -1,5 +1,8 @@
 import 'd2l-polymer-siren-behaviors/store/entity-store.js';
-import { actorRel, alignmentsRel, assessmentRel, assessmentRubricApplicationRel, assessorUserRel, assignmentSubmissionListRel, demonstrationRel, editSpecialAccessApplicationRel, emailRel, enrolledUserRel, evaluationRel, groupRel, nextRel, pagerRel, previousRel, rubricRel, userProgressOutcomeRel, userRel } from './constants.js';
+import { actorRel, alignmentsRel, assessmentRel, assessmentRubricApplicationRel,
+	assessorUserRel, assignmentSubmissionListRel, demonstrationRel, editSpecialAccessApplicationRel,
+	emailRel, enrolledUserRel, evaluationRel, groupRel, nextRel, pagerRel, previousRel, rubricRel,
+	userProgressOutcomeRel, userRel, viewMembersRel } from './constants.js';
 import { Classes, Rels } from 'd2l-hypermedia-constants';
 
 export const ConsistentEvaluationHrefControllerErrors = {
@@ -256,7 +259,7 @@ export class ConsistentEvaluationHrefController {
 			const groupHref = this._getHref(root.entity, Rels.group);
 			if (groupHref) {
 				const groupEntity = await this._getEntityFromHref(groupHref, false);
-				const viewMembersEntity = groupEntity.entity.getSubEntityByRel('https://api.brightspace.com/rels/view-members');
+				const viewMembersEntity = groupEntity.entity.getSubEntityByRel(viewMembersRel);
 
 				const viewMembers = viewMembersEntity ? viewMembersEntity.properties.path : undefined;
 
