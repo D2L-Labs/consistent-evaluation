@@ -127,17 +127,35 @@ export class ConsistentEvaluationLcbUserContext extends EntityMixinLit(RtlMixin(
 	}
 
 	_onClickGroupMembers() {
-		if (this.viewMembersPopout) {
-			if (!this.viewMembersPopout.closed) {
-				this.viewMembersPopout.focus();
-				return;
-			}
+		const viewMembersPath = this.groupInfo ? this.groupInfo.viewMembers : undefined;
+
+		if (!viewMembersPath) {
+			console.error('Consistent-Eval: Expected view-members item dialog URL, but none found');
+			return;
 		}
 
-		this.viewMembersPopout = window.open(
-			this.groupInfo.viewMembers,
-			'messagePopout',
-			'width=1000,height=1000,scrollbars=no,toolbar=no,screenx=0,screeny=0,location=no,titlebar=no,directories=no,status=no,menubar=no'
+		const location = new D2L.LP.Web.Http.UrlLocation(viewMembersPath);
+
+		const buttons = [
+			{
+				Text: this.localize('closeBtn'),
+				ResponseType: 1, // D2L.Dialog.ResponseType.Positive
+				IsPrimary: true,
+				IsEnabled: true
+			}
+		];
+
+		D2L.LP.Web.UI.Legacy.MasterPages.Dialog.Open(
+			/*               opener: */ this.shadowRoot.querySelector('d2l-menu-item'),
+			/*             location: */ location,
+			/*          srcCallback: */ 'SrcCallback',
+			/*       resizeCallback: */ '',
+			/*      responseDataKey: */ 'result',
+			/*                width: */ 500,
+			/*               height: */ 800,
+			/*            closeText: */ this.localize('closeBtn'),
+			/*              buttons: */ buttons,
+			/* forceTriggerOnCancel: */ false
 		);
 	}
 
