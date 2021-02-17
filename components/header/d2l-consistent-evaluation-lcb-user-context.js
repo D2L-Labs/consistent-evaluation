@@ -27,6 +27,10 @@ export class ConsistentEvaluationLcbUserContext extends EntityMixinLit(RtlMixin(
 				attribute: false,
 				type: Object
 			},
+			groupInfo: {
+				attribute: false,
+				type: Object
+			},
 			_displayName: {
 				attribute: false,
 				type: String
@@ -123,7 +127,18 @@ export class ConsistentEvaluationLcbUserContext extends EntityMixinLit(RtlMixin(
 	}
 
 	_onClickGroupMembers() {
-		console.warn('View Group Members Not Implemented!');
+		if (this.viewMembersPopout) {
+			if (!this.viewMembersPopout.closed) {
+				this.viewMembersPopout.focus();
+				return;
+			}
+		}
+
+		this.viewMembersPopout = window.open(
+			this.groupInfo.viewMembers,
+			'messagePopout',
+			'width=1000,height=1000,scrollbars=no,toolbar=no,screenx=0,screeny=0,location=no,titlebar=no,directories=no,status=no,menubar=no'
+		);
 	}
 
 	_getExemptText() {
