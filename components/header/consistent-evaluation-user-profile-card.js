@@ -73,7 +73,7 @@ export class ConsistentEvaluationUserProfileCard extends LocalizeConsistentEvalu
 
 		this.messagePopout = window.open(
 			this.instantMessageHref,
-			'emailPopout',
+			'messagePopout',
 			'width=400,height=200,scrollbars=no,toolbar=no,screenx=0,screeny=0,location=no,titlebar=no,directories=no,status=no,menubar=no'
 		);
 	}
@@ -88,7 +88,7 @@ export class ConsistentEvaluationUserProfileCard extends LocalizeConsistentEvalu
 
 		this.emailPopout = window.open(
 			this.emailHref,
-			'messagePopout',
+			'emailPopout',
 			'width=1000,height=1000,scrollbars=no,toolbar=no,screenx=0,screeny=0,location=no,titlebar=no,directories=no,status=no,menubar=no'
 		);
 	}

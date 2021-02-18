@@ -1,5 +1,8 @@
 import 'd2l-polymer-siren-behaviors/store/entity-store.js';
-import { actorRel, alignmentsRel, assessmentRel, assessmentRubricApplicationRel, assessorUserRel, assignmentSubmissionListRel, demonstrationRel, editSpecialAccessApplicationRel, emailRel, enrolledUserRel, evaluationRel, groupRel, nextRel, pagerRel, previousRel, rubricRel, userProgressOutcomeRel, userRel } from './constants.js';
+import { actorRel, alignmentsRel, assessmentRel, assessmentRubricApplicationRel,
+	assessorUserRel, assignmentSubmissionListRel, demonstrationRel, editSpecialAccessApplicationRel,
+	emailRel, enrolledUserRel, evaluationRel, groupRel, nextRel, pagerRel, previousRel, rubricRel,
+	userProgressOutcomeRel, userRel, viewMembersRel } from './constants.js';
 import { Classes, Rels } from 'd2l-hypermedia-constants';
 
 export const ConsistentEvaluationHrefControllerErrors = {
@@ -248,6 +251,31 @@ export class ConsistentEvaluationHrefController {
 			}
 		}
 		return undefined;
+	}
+
+	async getGroupInfo() {
+		const root = await this._getRootEntity(false);
+		if (root && root.entity) {
+			const groupHref = this._getHref(root.entity, Rels.group);
+			if (groupHref) {
+				const groupEntity = await this._getEntityFromHref(groupHref, false);
+				const viewMembersEntity = groupEntity.entity.getSubEntityByRel(viewMembersRel);
+				const viewMembersPath = viewMembersEntity ? viewMembersEntity.properties.path : undefined;
+
+				const pagerEntity = groupEntity.entity.getSubEntityByRel(pagerRel);
+				const pagerPath = pagerEntity ? pagerEntity.properties.path : undefined;
+
+				const emailEntity = groupEntity.entity.getSubEntityByRel(emailRel);
+				const emailPath = emailEntity ? emailEntity.properties.path : undefined;
+
+				return {
+					viewMembersPath,
+					pagerPath,
+					emailPath
+				};
+			}
+			return undefined;
+		}
 	}
 
 	async getEnrolledUser() {
