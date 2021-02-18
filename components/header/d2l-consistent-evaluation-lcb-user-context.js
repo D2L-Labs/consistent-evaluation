@@ -92,7 +92,8 @@ export class ConsistentEvaluationLcbUserContext extends EntityMixinLit(RtlMixin(
 
 	constructor() {
 		super();
-
+		this.messagePopout = undefined;
+		this.emailPopout = undefined;
 		this._setEntityType(UserEntity);
 	}
 
@@ -119,15 +120,49 @@ export class ConsistentEvaluationLcbUserContext extends EntityMixinLit(RtlMixin(
 	}
 
 	_onClickGroupEmail() {
-		console.warn('Email Group Not Implemented!');
+		if (this.emailPopout) {
+			if (!this.emailPopout.closed) {
+				this.emailPopout.focus();
+				return;
+			}
+		}
+		const emailPath = this.groupInfo ? this.groupInfo.emailPath : undefined;
+
+		if (!emailPath) {
+			console.error('Consistent-Eval: Expected emailPath for groups, but none found');
+			return;
+		}
+
+		this.emailPopout = window.open(
+			emailPath,
+			'emailPopout',
+			'width=1000,height=1000,scrollbars=no,toolbar=no,screenx=0,screeny=0,location=no,titlebar=no,directories=no,status=no,menubar=no'
+		);
 	}
 
 	_onClickGroupIM() {
-		console.warn('IM Group Not Implemented!');
+		if (this.messagePopout) {
+			if (!this.messagePopout.closed) {
+				this.messagePopout.focus();
+				return;
+			}
+		}
+		const pagerPath = this.groupInfo ? this.groupInfo.pagerPath : undefined;
+
+		if (!pagerPath) {
+			console.error('Consistent-Eval: Expected pagerPath for groups, but none found');
+			return;
+		}
+
+		this.messagePopout = window.open(
+			pagerPath,
+			'messagePopout',
+			'width=400,height=200,scrollbars=no,toolbar=no,screenx=0,screeny=0,location=no,titlebar=no,directories=no,status=no,menubar=no'
+		);
 	}
 
 	_onClickGroupMembers() {
-		const viewMembersPath = this.groupInfo ? this.groupInfo.viewMembers : undefined;
+		const viewMembersPath = this.groupInfo ? this.groupInfo.viewMembersPath : undefined;
 
 		if (!viewMembersPath) {
 			console.error('Consistent-Eval: Expected view-members item dialog URL, but none found');

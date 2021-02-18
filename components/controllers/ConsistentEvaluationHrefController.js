@@ -260,11 +260,18 @@ export class ConsistentEvaluationHrefController {
 			if (groupHref) {
 				const groupEntity = await this._getEntityFromHref(groupHref, false);
 				const viewMembersEntity = groupEntity.entity.getSubEntityByRel(viewMembersRel);
+				const viewMembersPath = viewMembersEntity ? viewMembersEntity.properties.path : undefined;
 
-				const viewMembers = viewMembersEntity ? viewMembersEntity.properties.path : undefined;
+				const pagerEntity = groupEntity.entity.getSubEntityByRel(pagerRel);
+				const pagerPath = pagerEntity ? pagerEntity.properties.path : undefined;
+
+				const emailEntity = groupEntity.entity.getSubEntityByRel(emailRel);
+				const emailPath = emailEntity ? emailEntity.properties.path : undefined;
 
 				return {
-					viewMembers
+					viewMembersPath,
+					pagerPath,
+					emailPath
 				};
 
 			}
