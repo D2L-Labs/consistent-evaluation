@@ -273,9 +273,7 @@ export class ConsistentEvaluationHrefController {
 					pagerPath,
 					emailPath
 				};
-
 			}
-
 			return undefined;
 		}
 	}
