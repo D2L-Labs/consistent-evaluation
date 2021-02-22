@@ -285,7 +285,7 @@ export class ConsistentEvaluationLcbUserContext extends EntityMixinLit(RtlMixin(
 					<d2l-menu @d2l-menu-item-select=${this._onGroupOptionSelect} label=${this.localize('groupOptions')}>
 						<d2l-menu-item id=${this._groupEmailItemID} text=${this.localize('emailGroup')}></d2l-menu-item>
 						<d2l-menu-item id=${this._groupMembersItemID} text=${this.localize('seeAllGroupMembers')}></d2l-menu-item>
-						<d2l-menu-item id=${this._groupIMItemID} text=${this.localize('instantMessage')}></d2l-menu-item>
+						<d2l-menu-item id=${this._groupIMItemID} text=${this.localize('instantMessage')} ?hidden=${!(this.groupInfo && this.groupInfo.pagerPath)}></d2l-menu-item>
 					</d2l-menu>
 				</d2l-dropdown-menu>
 			</d2l-dropdown-context-menu>
