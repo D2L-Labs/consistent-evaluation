@@ -9,6 +9,7 @@ export default {
 	"addLink": "Attach Weblink",
 	"addOneDriveLink": "Attach from OneDrive",
 	"addQuicklink": "Attach Link to Existing Activity",
+	"anonymousMarkingPublishButtonSummary": "Use the \"Publish All\" button found in Assignments or Quick Eval to publish submissions when using anonymous marking.",
 	"attachedGradeItem": "{gradeItemName} attached",
 	"backToUserSubmissions": "Back to User Submissions",
 	"cancelBtn": "Cancel",
