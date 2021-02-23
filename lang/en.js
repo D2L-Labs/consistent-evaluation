@@ -31,6 +31,7 @@ export default {
 	"gradeSummary": "{grade} out of {outOf}",
 	"gradingRubric": "Grading Rubric",
 	"groupIteratorText": "Group {num} of {total}",
+	"groupMembers": "Group Members - {groupName}",
 	"groupOptions": "Group Options",
 	"instantMessage": "Instant Message",
 	"inProgress": "In progress",

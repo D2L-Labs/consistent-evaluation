@@ -206,7 +206,8 @@ export class ConsistentEvaluationLcbUserContext extends EntityMixinLit(RtlMixin(
 			/*               height: */ 800,
 			/*            closeText: */ this.localize('closeBtn'),
 			/*              buttons: */ buttons,
-			/* forceTriggerOnCancel: */ false
+			/* forceTriggerOnCancel: */ false,
+			/* 			 	  title: */ this.localize('groupMembers', { groupName: this._displayName })
 		);
 	}
 
