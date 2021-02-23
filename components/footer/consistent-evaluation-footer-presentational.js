@@ -75,7 +75,7 @@ export class ConsistentEvaluationFooterPresentational extends LocalizeConsistent
 		const eventEmitter = this.published ? this._emitUpdateEvent : this._emitPublishEvent;
 		const id = `consistent-evaluation-footer-${text.toLowerCase()}`;
 
-		const shouldDisablePublishButton = this.anonymousInfo ? this.anonymousInfo.isAnonymous && !this.anonymousInfo.assignmentHasPublishedSubmission : true;
+		const shouldDisablePublishButton = this.anonymousInfo ? this.anonymousInfo.isAnonymous && !this.anonymousInfo.assignmentHasPublishedSubmission : false;
 		const buttonHtml = html`<d2l-button primary id=${id} @click=${eventEmitter} ?disabled=${shouldDisablePublishButton} >${text}</d2l-button>`;
 
 		if (!this.allowEvaluationWrite) {
