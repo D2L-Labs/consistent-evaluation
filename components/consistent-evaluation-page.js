@@ -103,6 +103,10 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 				attribute: false,
 				type: Object
 			},
+			anonymousInfo: {
+				attribute: false,
+				type: Object
+			},
 			assignmentName: {
 				attribute: false,
 				type: String
@@ -888,6 +892,7 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 				<div slot="footer">
 					${this._renderToast()}
 					<d2l-consistent-evaluation-footer-presentational
+						.anonymousInfo=${this.anonymousInfo}
 						?show-next-student=${this.nextStudentHref}
 						?published=${this._isEvaluationPublished()}
 						?allow-evaluation-write=${this._allowEvaluationWrite()}
