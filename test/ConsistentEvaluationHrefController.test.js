@@ -310,7 +310,7 @@ describe('ConsistentEvaluationHrefController', () => {
 		const anonymousInfo = await controller.getAnonymousInfo();
 
 		assert.equal(anonymousInfo.isAnonymous, true);
-		assert.equal(anonymousInfo.assignHasPublishedSub, true);
+		assert.equal(anonymousInfo.assignmentHasPublishedSubmission, true);
 	});
 
 	describe('getRubricInfos gets correct rubric info', () => {

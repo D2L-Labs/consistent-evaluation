@@ -362,10 +362,10 @@ export class ConsistentEvaluationHrefController {
 				if (assignmentEntity.entity.hasSubEntityByRel(anonymousMarkingRel)) {
 					const anonymousAssignmentEntity = assignmentEntity.entity.getSubEntityByRel(anonymousMarkingRel);
 					const isAnonymous = anonymousAssignmentEntity.hasClass(checkedClassName);
-					const assignHasPublishedSub = anonymousAssignmentEntity.hasClass(publishedClassName);
+					const assignmentHasPublishedSubmission = anonymousAssignmentEntity.hasClass(publishedClassName);
 					return {
 						isAnonymous,
-						assignHasPublishedSub
+						assignmentHasPublishedSubmission
 					};
 				} else {
 					return {
