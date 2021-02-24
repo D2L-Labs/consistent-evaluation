@@ -24,6 +24,10 @@ export class ConsistentEvaluationLcbUserContext extends EntityMixinLit(RtlMixin(
 				attribute: 'is-group-activity',
 				type: Boolean
 			},
+			anonymousInfo: {
+				attribute: false,
+				type: Object
+			},
 			enrolledUser: {
 				attribute: false,
 				type: Object
@@ -244,6 +248,10 @@ export class ConsistentEvaluationLcbUserContext extends EntityMixinLit(RtlMixin(
 			userProgressHref = this.enrolledUser.userProgressPath;
 			userProfileHref = this.enrolledUser.userProfilePath;
 			displayName = this.enrolledUser.displayName;
+		}
+
+		if (this.anonymousInfo && this.anonymousInfo.isAnonymous && !this.anonymousInfo.assignmentHasPublishedSubmission) {
+			return html ``;
 		}
 
 		return (this._showProfileCard && !this.isGroupActivity) ?
