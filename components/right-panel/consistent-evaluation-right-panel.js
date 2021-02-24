@@ -110,10 +110,22 @@ export class ConsistentEvaluationRightPanel extends LocalizeConsistentEvaluation
 				position: relative;
 			}
 
+			.d2l-consistent-evaluation-right-panel-clearfix::after {
+				clear: both;
+				content: "";
+				display: table;
+			}
+
 			@media (max-width: 767px) {
 				.d2l-consistent-evaluation-right-panel {
 					margin: 0;
 				}
+			}
+
+			.d2l-consistent-evaluation-right-panel-overflow-menu {
+				float: right;
+				margin-bottom: -0.25rem;
+				margin-top: -0.5;
 			}
 		`;
 	}
@@ -170,6 +182,23 @@ export class ConsistentEvaluationRightPanel extends LocalizeConsistentEvaluation
 		return html``;
 	}
 
+	_renderOverflowButtonIcon() {
+		return html`<div class="d2l-consistent-evaluation-right-panel-clearfix">
+				<d2l-dropdown-more class="d2l-consistent-evaluation-right-panel-overflow-menu">
+					<d2l-dropdown-menu>
+						<d2l-menu label=${this.localize('overflowMenu')}>
+						</d2l-menu>
+					</d2l-dropdown-menu>
+				</d2l-dropdown-more>
+			</div>`;
+	}
+
+	_renderOverflowButton() {
+		return html`<d2l-consistent-evaluation-right-panel-block title="">
+					${this._renderOverflowButtonIcon()}
+			</d2l-consistent-evaluation-right-panel-block>`;
+	}
+
 	_renderCoaOverride() {
 		if (!this.hideCoaOverride) {
 			return html`
@@ -219,6 +248,7 @@ export class ConsistentEvaluationRightPanel extends LocalizeConsistentEvaluation
 	render() {
 		return html`
 			<div class="d2l-consistent-evaluation-right-panel">
+				${this._renderOverflowButton()}
 				${this._renderRubric()}
 				${this._renderGrade()}
 				${this._renderCoaOverride()}
