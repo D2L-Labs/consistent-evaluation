@@ -194,7 +194,7 @@ export class ConsistentEvaluationRightPanel extends LocalizeConsistentEvaluation
 	}
 
 	_renderOverflowButton() {
-		return html`<d2l-consistent-evaluation-right-panel-block title="">
+		return html`<d2l-consistent-evaluation-right-panel-block>
 					${this._renderOverflowButtonIcon()}
 			</d2l-consistent-evaluation-right-panel-block>`;
 	}
