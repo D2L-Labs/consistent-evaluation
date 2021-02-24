@@ -646,6 +646,7 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 					user-href=${ifDefined(this.userHref)}
 					group-href=${ifDefined(this.groupHref)}
 					special-access-href=${ifDefined(this.specialAccessHref)}
+					.anonymousInfo=${this.anonymousInfo}
 					.token=${this.token}
 					.currentFileId=${this.currentFileId}
 					.submissionInfo=${this.submissionInfo}
