@@ -280,13 +280,13 @@ export class ConsistentEvaluationLcbUserContext extends EntityMixinLit(RtlMixin(
 	}
 
 	_renderGroupOptions() {
-		return this.isGroupActivity ? html`
+		return (this.isGroupActivity && this.groupInfo) ? html`
 			<d2l-dropdown-context-menu class="d2l-user-group-context-menu" text=${this.localize('openGroupOptions')}>
 				<d2l-dropdown-menu>
 					<d2l-menu @d2l-menu-item-select=${this._onGroupOptionSelect} label=${this.localize('groupOptions')}>
-						<d2l-menu-item id=${this._groupEmailItemID} text=${this.localize('emailGroup')}></d2l-menu-item>
-						<d2l-menu-item id=${this._groupMembersItemID} text=${this.localize('seeAllGroupMembers')}></d2l-menu-item>
-						<d2l-menu-item id=${this._groupIMItemID} text=${this.localize('instantMessage')} ?hidden=${!(this.groupInfo && this.groupInfo.pagerPath)}></d2l-menu-item>
+						<d2l-menu-item id=${this._groupEmailItemID} text=${this.localize('emailGroup')} ?hidden=${!this.groupInfo.emailPath}></d2l-menu-item>
+						<d2l-menu-item id=${this._groupMembersItemID} text=${this.localize('seeAllGroupMembers')} ?hidden=${!this.groupInfo.viewMembersPath}></d2l-menu-item>
+						<d2l-menu-item id=${this._groupIMItemID} text=${this.localize('instantMessage')} ?hidden=${!this.groupInfo.pagerPath}></d2l-menu-item>
 					</d2l-menu>
 				</d2l-dropdown-menu>
 			</d2l-dropdown-context-menu>
