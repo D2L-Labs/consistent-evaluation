@@ -58,6 +58,7 @@ export default {
 	"overallAverage": "Overall Average",
 	"overallFeedback": "Overall Feedback",
 	"overallGrade": "Overall Grade",
+	"overflowMenu": "Overflow Menu",
 	"publish": "Publish",
 	"published":   "Evaluation published",
 	"publishAnyway": "Publish Anyway",
