@@ -125,7 +125,7 @@ export class ConsistentEvaluationRightPanel extends LocalizeConsistentEvaluation
 			.d2l-consistent-evaluation-right-panel-overflow-menu {
 				float: right;
 				margin-bottom: -0.25rem;
-				margin-top: -0.5;
+				margin-top: -0.5rem;
 			}
 		`;
 	}
