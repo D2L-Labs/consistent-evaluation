@@ -99,12 +99,17 @@ export class ConsistentEvaluationRightPanel extends LocalizeConsistentEvaluation
 				type: Object,
 				reflect: true,
 				converter: (value) => convertToken(value),
-			}
+			},
+			_isMobile: { type: Boolean }
 		};
 	}
 
 	static get styles() {
 		return  css`
+			.d2l-consistent-evaluation-right-panel-overflow-menu-mobile {
+				margin: 0.5rem 1.25rem 0.5rem 1.25rem;
+			}
+
 			.d2l-consistent-evaluation-right-panel {
 				margin: 1.5rem 1.2rem 2rem 1.2rem;
 				position: relative;
@@ -144,6 +149,31 @@ export class ConsistentEvaluationRightPanel extends LocalizeConsistentEvaluation
 		this.canRecordFeedbackAudio = false;
 		this.useNewHtmlEditor = false;
 		this.rubricsOpen = 0;
+		this.mobileMediaQuery = window.matchMedia('(max-width: 767px)');
+		this._handleResize(this.mobileMediaQuery);
+		this._handleResize = this._handleResize.bind(this);
+	}
+
+	connectedCallback() {
+		super.connectedCallback();
+		if (this.mobileMediaQuery.addEventListener) {
+			this.mobileMediaQuery.addEventListener('change', this._handleResize);
+		} else {
+			this.mobileMediaQuery.addListener(this._handleResize);
+		}
+	}
+
+	disconnectedCallback() {
+		super.disconnectedCallback();
+		if (this.mobileMediaQuery.removeEventListener) {
+			this.mobileMediaQuery.removeEventListener('change', this._handleResize);
+		} else {
+			this.mobileMediaQuery.removeListener(this._handleResize);
+		}
+	}
+
+	_handleResize(e) {
+		this._isMobile = e.matches;
 	}
 
 	_renderRubric() {
@@ -182,21 +212,33 @@ export class ConsistentEvaluationRightPanel extends LocalizeConsistentEvaluation
 		return html``;
 	}
 
-	_renderOverflowButtonIcon() {
-		return html`<div class="d2l-consistent-evaluation-right-panel-clearfix">
-				<d2l-dropdown-more class="d2l-consistent-evaluation-right-panel-overflow-menu">
-					<d2l-dropdown-menu>
-						<d2l-menu label=${this.localize('overflowMenu')}>
-						</d2l-menu>
-					</d2l-dropdown-menu>
-				</d2l-dropdown-more>
-			</div>`;
+	_renderOverflowMenu() {
+		return html`<d2l-dropdown-menu>
+				<d2l-menu label=${this.localize('overflowMenu')}>
+				</d2l-menu>
+			</d2l-dropdown-menu>`;
 	}
 
-	_renderOverflowButton() {
-		return html`<d2l-consistent-evaluation-right-panel-block>
-					${this._renderOverflowButtonIcon()}
-			</d2l-consistent-evaluation-right-panel-block>`;
+	_renderOverflowButtonIcon() {
+		if (!this._isMobile) {
+			return html`<div class="d2l-consistent-evaluation-right-panel-clearfix">
+				<d2l-dropdown-more class="d2l-consistent-evaluation-right-panel-overflow-menu">
+					${this._renderOverflowMenu()}
+				</d2l-dropdown-more>
+			</div>`;
+		} else {
+			return html``;
+		}
+	}
+
+	_renderOverflowButtonMobile() {
+		if (this._isMobile) {
+			return html`<d2l-dropdown-button-subtle class="d2l-consistent-evaluation-right-panel-overflow-menu-mobile" text=${this.localize('moreOptions')}>
+					${this._renderOverflowMenu()}
+				</d2l-dropdown-button-subtle>`;
+		} else {
+			return html``;
+		}
 	}
 
 	_renderCoaOverride() {
@@ -248,12 +290,13 @@ export class ConsistentEvaluationRightPanel extends LocalizeConsistentEvaluation
 	render() {
 		return html`
 			<div class="d2l-consistent-evaluation-right-panel">
-				${this._renderOverflowButton()}
+				${this._renderOverflowButtonIcon()}
 				${this._renderRubric()}
 				${this._renderGrade()}
 				${this._renderCoaOverride()}
 				${this._renderFeedback()}
 				${this._renderOutcome()}
+				${this._renderOverflowButtonMobile()}
 			</div>
 		`;
 	}
