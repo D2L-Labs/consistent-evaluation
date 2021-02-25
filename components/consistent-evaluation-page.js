@@ -869,6 +869,7 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 						coa-eval-override-href=${ifDefined(this.coaDemonstrationHref)}
 						rubric-popout-location=${ifDefined(this.rubricPopoutLocation)}
 						.richTextEditorConfig=${this._getRichTextEditorConfig()}
+						special-access-href=${ifDefined(this.specialAccessHref)}
 						.grade=${this._grade}
 						.gradeItemInfo=${this.gradeItemInfo}
 						.token=${this.token}

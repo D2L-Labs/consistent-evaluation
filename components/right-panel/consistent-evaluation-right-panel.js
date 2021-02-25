@@ -3,9 +3,11 @@ import './consistent-evaluation-outcomes.js';
 import './consistent-evaluation-rubric.js';
 import './consistent-evaluation-grade-result.js';
 import './consistent-evaluation-coa-eval-override.js';
+import '@brightspace-ui/core/components/dropdown/dropdown-context-menu.js';
 import { css, html, LitElement } from 'lit-element';
 import { getRubricAssessmentScore, mapRubricScoreToGrade} from '../helpers/rubricGradeSyncHelpers.js';
 import { convertToken } from '../helpers/converterHelpers.js';
+import { getUniqueId } from '@brightspace-ui/core/helpers/uniqueId.js';
 import { GradeType } from '@brightspace-ui-labs/grade-result/src/controller/Grade';
 import { LocalizeConsistentEvaluation } from '../../lang/localize-consistent-evaluation.js';
 
@@ -95,6 +97,18 @@ export class ConsistentEvaluationRightPanel extends LocalizeConsistentEvaluation
 				attribute: 'use-new-html-editor',
 				type: Boolean
 			},
+			specialAccessHref: {
+				attribute: 'special-access-href',
+				type: String
+			},
+			_specialAccessId: {
+				attribute: false,
+				type: String
+			},
+			_editActivityId: {
+				attribute: false,
+				type: String
+			},
 			token: {
 				type: Object,
 				reflect: true,
@@ -156,6 +170,8 @@ export class ConsistentEvaluationRightPanel extends LocalizeConsistentEvaluation
 		this.canRecordFeedbackVideo = false;
 		this.canRecordFeedbackAudio = false;
 		this.useNewHtmlEditor = false;
+		this._specialAccessId = getUniqueId();
+		this._editActivityId = getUniqueId();
 		this.rubricsOpen = 0;
 	}
 
@@ -196,24 +212,95 @@ export class ConsistentEvaluationRightPanel extends LocalizeConsistentEvaluation
 	}
 
 	_renderOverflowMenu() {
-		return html`<d2l-dropdown-menu>
-				<d2l-menu label=${this.localize('overflowMenu')}>
+		return html`
+			<d2l-dropdown-menu>
+				<d2l-menu @d2l-menu-item-select=${this._onOverflowOptionSelect} label=${this.localize('moreOptions')}>
+					<d2l-menu-item id=${this._specialAccessId} text=${this.localize('specialAccessDates')} ?hidden=${!this.specialAccessHref}></d2l-menu-item>
+					<d2l-menu-item id=${this._editActivityId} text=${this.localize('editActivity')}></d2l-menu-item>
 				</d2l-menu>
-			</d2l-dropdown-menu>`;
+			</d2l-dropdown-menu>
+		`;
 	}
 
 	_renderOverflowButtonIcon() {
-		return html`<div class="d2l-consistent-evaluation-right-panel-clearfix">
-			<d2l-dropdown-more class="d2l-consistent-evaluation-right-panel-overflow-menu">
-				${this._renderOverflowMenu()}
-			</d2l-dropdown-more>
-		</div>`;
+		return html`
+			<div class="d2l-consistent-evaluation-right-panel-clearfix">
+				<d2l-dropdown-more class="d2l-consistent-evaluation-right-panel-overflow-menu">
+					${this._renderOverflowMenu()}
+				</d2l-dropdown-more>
+			</div>
+		`;
 	}
 
 	_renderOverflowButtonMobile() {
-		return html`<d2l-dropdown-button-subtle class="d2l-consistent-evaluation-right-panel-overflow-menu-mobile" text=${this.localize('moreOptions')}>
+		return html`
+			<d2l-dropdown-button-subtle class="d2l-consistent-evaluation-right-panel-overflow-menu-mobile" text=${this.localize('moreOptions')}>
 				${this._renderOverflowMenu()}
-			</d2l-dropdown-button-subtle>`;
+			</d2l-dropdown-button-subtle>
+		`;
+	}
+
+	_onOverflowOptionSelect(e) {
+		switch (e.target.id) {
+			case this._specialAccessId:
+				this._openSpecialAccessDialog();
+				break;
+			case this._editActivityId:
+				this._openEditActivity();
+				break;
+		}
+	}
+
+	_renderOverflowButton() {
+		return html`
+			<d2l-consistent-evaluation-right-panel-block>
+				${this._renderOverflowButtonIcon()}
+			</d2l-consistent-evaluation-right-panel-block>
+		`;
+	}
+
+	_openEditActivity() {
+		console.warn('Edit Activity has not yet been implemented');
+	}
+
+	_openSpecialAccessDialog() {
+		const specialAccess = this.specialAccessHref;
+
+		if (!specialAccess) {
+			console.error('Consistent-Eval: Expected special access item dialog URL, but none found');
+			return;
+		}
+
+		const location = new D2L.LP.Web.Http.UrlLocation(specialAccess);
+
+		const buttons = [
+			{
+				Key: 'save',
+				Text: this.localize('saveBtn'),
+				ResponseType: 1, // D2L.Dialog.ResponseType.Positive
+				IsPrimary: true,
+				IsEnabled: true
+			},
+			{
+				Text: this.localize('cancelBtn'),
+				ResponseType: 2, // D2L.Dialog.ResponseType.Negative
+				IsPrimary: false,
+				IsEnabled: true
+			}
+		];
+
+		D2L.LP.Web.UI.Legacy.MasterPages.Dialog.Open(
+			/*               opener: */ this.shadowRoot.querySelector('d2l-dropdown-more'),
+			/*             location: */ location,
+			/*          srcCallback: */ 'SrcCallback',
+			/*       resizeCallback: */ '',
+			/*      responseDataKey: */ 'result',
+			/*                width: */ 1920,
+			/*               height: */ 1080,
+			/*            closeText: */ this.localize('closeBtn'),
+			/*              buttons: */ buttons,
+			/* forceTriggerOnCancel: */ false
+		);
 	}
 
 	_renderCoaOverride() {
