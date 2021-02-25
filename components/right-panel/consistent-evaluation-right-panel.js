@@ -109,19 +109,6 @@ export class ConsistentEvaluationRightPanel extends LocalizeConsistentEvaluation
 				display: none;
 			}
 
-			@media (max-width: 767px) {
-				.d2l-consistent-evaluation-right-panel-overflow-menu-mobile {
-					display: inline-block;
-					margin: 0.5rem 1.25rem 0.5rem 1.25rem;
-				}
-			}
-
-			@media (max-width: 767px) {
-				.d2l-consistent-evaluation-right-panel-clearfix {
-					display: none;
-				}
-			}
-
 			.d2l-consistent-evaluation-right-panel {
 				margin: 1.5rem 1.2rem 2rem 1.2rem;
 				position: relative;
@@ -136,6 +123,15 @@ export class ConsistentEvaluationRightPanel extends LocalizeConsistentEvaluation
 			@media (max-width: 767px) {
 				.d2l-consistent-evaluation-right-panel {
 					margin: 0;
+				}
+
+				.d2l-consistent-evaluation-right-panel-overflow-menu-mobile {
+					display: inline-block;
+					margin: 0.5rem 1.25rem 0.5rem 1.25rem;
+				}
+
+				.d2l-consistent-evaluation-right-panel-clearfix {
+					display: none;
 				}
 			}
 
