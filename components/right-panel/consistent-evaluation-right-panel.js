@@ -251,14 +251,6 @@ export class ConsistentEvaluationRightPanel extends LocalizeConsistentEvaluation
 		}
 	}
 
-	_renderOverflowButton() {
-		return html`
-			<d2l-consistent-evaluation-right-panel-block>
-				${this._renderOverflowButtonIcon()}
-			</d2l-consistent-evaluation-right-panel-block>
-		`;
-	}
-
 	_openEditActivity() {
 		console.warn('Edit Activity has not yet been implemented');
 	}
