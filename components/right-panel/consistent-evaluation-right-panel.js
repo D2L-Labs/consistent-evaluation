@@ -111,8 +111,8 @@ export class ConsistentEvaluationRightPanel extends LocalizeConsistentEvaluation
 
 			@media (max-width: 767px) {
 				.d2l-consistent-evaluation-right-panel-overflow-menu-mobile {
+					display: inline-block;
 					margin: 0.5rem 1.25rem 0.5rem 1.25rem;
-					display: inline-block
 				}
 			}
 
