@@ -99,15 +99,27 @@ export class ConsistentEvaluationRightPanel extends LocalizeConsistentEvaluation
 				type: Object,
 				reflect: true,
 				converter: (value) => convertToken(value),
-			},
-			_isMobile: { type: Boolean }
+			}
 		};
 	}
 
 	static get styles() {
 		return  css`
 			.d2l-consistent-evaluation-right-panel-overflow-menu-mobile {
-				margin: 0.5rem 1.25rem 0.5rem 1.25rem;
+				display: none;
+			}
+
+			@media (max-width: 767px) {
+				.d2l-consistent-evaluation-right-panel-overflow-menu-mobile {
+					margin: 0.5rem 1.25rem 0.5rem 1.25rem;
+					display: inline-block
+				}
+			}
+
+			@media (max-width: 767px) {
+				.d2l-consistent-evaluation-right-panel-clearfix {
+					display: none;
+				}
 			}
 
 			.d2l-consistent-evaluation-right-panel {
@@ -149,31 +161,6 @@ export class ConsistentEvaluationRightPanel extends LocalizeConsistentEvaluation
 		this.canRecordFeedbackAudio = false;
 		this.useNewHtmlEditor = false;
 		this.rubricsOpen = 0;
-		this.mobileMediaQuery = window.matchMedia('(max-width: 767px)');
-		this._handleResize(this.mobileMediaQuery);
-		this._handleResize = this._handleResize.bind(this);
-	}
-
-	connectedCallback() {
-		super.connectedCallback();
-		if (this.mobileMediaQuery.addEventListener) {
-			this.mobileMediaQuery.addEventListener('change', this._handleResize);
-		} else {
-			this.mobileMediaQuery.addListener(this._handleResize);
-		}
-	}
-
-	disconnectedCallback() {
-		super.disconnectedCallback();
-		if (this.mobileMediaQuery.removeEventListener) {
-			this.mobileMediaQuery.removeEventListener('change', this._handleResize);
-		} else {
-			this.mobileMediaQuery.removeListener(this._handleResize);
-		}
-	}
-
-	_handleResize(e) {
-		this._isMobile = e.matches;
 	}
 
 	_renderRubric() {
@@ -220,25 +207,17 @@ export class ConsistentEvaluationRightPanel extends LocalizeConsistentEvaluation
 	}
 
 	_renderOverflowButtonIcon() {
-		if (!this._isMobile) {
-			return html`<div class="d2l-consistent-evaluation-right-panel-clearfix">
-				<d2l-dropdown-more class="d2l-consistent-evaluation-right-panel-overflow-menu">
-					${this._renderOverflowMenu()}
-				</d2l-dropdown-more>
-			</div>`;
-		} else {
-			return html``;
-		}
+		return html`<div class="d2l-consistent-evaluation-right-panel-clearfix">
+			<d2l-dropdown-more class="d2l-consistent-evaluation-right-panel-overflow-menu">
+				${this._renderOverflowMenu()}
+			</d2l-dropdown-more>
+		</div>`;
 	}
 
 	_renderOverflowButtonMobile() {
-		if (this._isMobile) {
-			return html`<d2l-dropdown-button-subtle class="d2l-consistent-evaluation-right-panel-overflow-menu-mobile" text=${this.localize('moreOptions')}>
-					${this._renderOverflowMenu()}
-				</d2l-dropdown-button-subtle>`;
-		} else {
-			return html``;
-		}
+		return html`<d2l-dropdown-button-subtle class="d2l-consistent-evaluation-right-panel-overflow-menu-mobile" text=${this.localize('moreOptions')}>
+				${this._renderOverflowMenu()}
+			</d2l-dropdown-button-subtle>`;
 	}
 
 	_renderCoaOverride() {
