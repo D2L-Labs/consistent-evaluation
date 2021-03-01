@@ -115,10 +115,11 @@ export class ConsistentEvaluationLeftPanel extends SkeletonMixin(LocalizeConsist
 	async updated(changedProperties) {
 		super.updated();
 
-		if ((changedProperties.has('currentFileId') || changedProperties.has('token') || changedProperties.has('submissionInfo'))
+		if ((changedProperties.has('currentFileId') || changedProperties.has('token'))
 			&& this.currentFileId
 			&& this.token
 			&& this.submissionInfo
+			&& this.submissionInfo.submissionList
 		) {
 			await this.getFileFromId();
 		} else if (changedProperties.has('currentFileId') && !this.currentFileId) {
