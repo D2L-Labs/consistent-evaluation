@@ -32,6 +32,7 @@ export const actorRel = 'https://activities.api.brightspace.com/rels/actor-activ
 export const alignmentsRel = 'https://alignments.api.brightspace.com/rels/alignments';
 export const attachmentListRel = 'https://assignments.api.brightspace.com/rels/attachment-list';
 export const editSpecialAccessApplicationRel = 'https://assignments.api.brightspace.com/rels/edit-special-access-application';
+export const editActivityRel = 'https://assessments.api.brightspace.com/rels/activity-usage-edit-application';
 export const assessmentRubricApplicationRel = 'https://assessments.api.brightspace.com/rels/assessment-rubric-application';
 export const assignmentSubmissionListRel = 'https://assignments.api.brightspace.com/rels/assignment-submission-list';
 export const userProgressOutcomeRel = 'user-progress-outcome';

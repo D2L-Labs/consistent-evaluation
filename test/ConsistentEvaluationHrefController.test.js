@@ -1,5 +1,5 @@
 // import 'd2l-polymer-siren-behaviors/store/entity-store.js';
-import { anonymousMarkingRel, checkedClassName, editSpecialAccessApplicationRel, emailRel,
+import { anonymousMarkingRel, checkedClassName, editActivityRel, editSpecialAccessApplicationRel, emailRel,
 	evaluationRel, nextRel, pagerRel, previousRel, publishedClassName, rubricRel,
 	userProgressAssessmentsRel, viewMembersRel } from '../components/controllers/constants.js';
 import { Classes, Rels } from 'd2l-hypermedia-constants';
@@ -222,6 +222,33 @@ describe('ConsistentEvaluationHrefController', () => {
 			assert.equal(enrolledUser.userProfilePath, userProfilePath);
 			assert.equal(enrolledUser.emailPath, emailPath);
 			assert.equal(enrolledUser.displayName, displayName);
+		});
+	});
+
+	describe('getEditActivityPath gets correct enrolled path', () => {
+		it('sets the edit activity path', async() => {
+			const activityUsageHref = 'activity-usage-href';
+			const editActivityPath = 'editActivityPath';
+
+			const controller = new ConsistentEvaluationHrefController('href', 'token');
+
+			sinon.stub(controller, '_getRootEntity').returns({
+				entity: {
+					hasLinkByRel: (r) => r === Rels.Activities.activityUsage,
+					getLinkByRel: (r) => (r === Rels.Activities.activityUsage ? { href: activityUsageHref } : undefined)
+				}
+			});
+
+			const getHrefStub = sinon.stub(controller, '_getEntityFromHref');
+
+			getHrefStub.withArgs(activityUsageHref, false).returns({
+				entity: {
+					getSubEntityByRel: (r) => (r === editActivityRel ? { properties: {path: editActivityPath}} : undefined)
+				}
+			});
+
+			const actualActivityPath = await controller.getEditActivityPath();
+			assert.equal(actualActivityPath, editActivityPath);
 		});
 	});
 

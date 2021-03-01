@@ -1,7 +1,7 @@
 import 'd2l-polymer-siren-behaviors/store/entity-store.js';
 import { actorRel, alignmentsRel, anonymousMarkingRel, assessmentRel,
 	assessmentRubricApplicationRel, assessorUserRel, assignmentRel, assignmentSubmissionListRel,
-	checkedClassName, demonstrationRel, editSpecialAccessApplicationRel, emailRel,
+	checkedClassName, demonstrationRel, editActivityRel, editSpecialAccessApplicationRel, emailRel,
 	enrolledUserRel, evaluationRel, groupRel, nextRel, pagerRel, previousRel, publishedClassName,
 	rubricRel, userProgressAssessmentsRel, userProgressOutcomeRel, userRel,  viewMembersRel } from './constants.js';
 import { Classes, Rels } from 'd2l-hypermedia-constants';
@@ -421,6 +421,22 @@ export class ConsistentEvaluationHrefController {
 		}
 
 		return rubricInfos.filter(rubricInfo => rubricInfo !== undefined);
+	}
+
+	async getEditActivityPath() {
+		const root = await this._getRootEntity(false);
+		let editActivityPath = undefined;
+		if (root && root.entity) {
+			if (root.entity.hasLinkByRel(Rels.Activities.activityUsage)) {
+				const activityUsageLink = root.entity.getLinkByRel(Rels.Activities.activityUsage).href;
+				const activityUsageResponse = await this._getEntityFromHref(activityUsageLink, false);
+				if (activityUsageResponse && activityUsageResponse.entity) {
+					const editAcitivityEntity = activityUsageResponse.entity.getSubEntityByRel(editActivityRel);
+					editActivityPath = editAcitivityEntity ? editAcitivityEntity.properties.path : undefined;
+				}
+			}
+		}
+		return editActivityPath;
 	}
 
 	async _refreshRubricAssessment(assessmentEntity) {
