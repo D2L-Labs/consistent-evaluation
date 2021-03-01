@@ -1,7 +1,7 @@
 import 'd2l-polymer-siren-behaviors/store/entity-store.js';
 import { actorRel, alignmentsRel, anonymousMarkingRel, assessmentRel,
 	assessmentRubricApplicationRel, assessorUserRel, assignmentRel, assignmentSubmissionListRel,
-	checkedClassName, demonstrationRel, editSpecialAccessApplicationRel, emailRel,
+	checkedClassName, demonstrationRel, editActivityRel, editSpecialAccessApplicationRel, emailRel,
 	enrolledUserRel, evaluationRel, groupRel, nextRel, pagerRel, previousRel, publishedClassName,
 	rubricRel, userProgressAssessmentsRel, userProgressOutcomeRel, userRel,  viewMembersRel } from './constants.js';
 import { Classes, Rels } from 'd2l-hypermedia-constants';
@@ -431,8 +431,8 @@ export class ConsistentEvaluationHrefController {
 				const activityUsageLink = root.entity.getLinkByRel(Rels.Activities.activityUsage).href;
 				const activityUsageResponse = await this._getEntityFromHref(activityUsageLink, false);
 				if (activityUsageResponse && activityUsageResponse.entity) {
-					const displayEntity = activityUsageResponse.entity.getSubEntityByRel('https://assessments.api.brightspace.com/rels/activity-usage-edit-application');
-					editActivityPath = displayEntity ? displayEntity.properties.path : undefined;
+					const editAcitivityEntity = activityUsageResponse.entity.getSubEntityByRel(editActivityRel);
+					editActivityPath = editAcitivityEntity ? editAcitivityEntity.properties.path : undefined;
 				}
 			}
 		}
