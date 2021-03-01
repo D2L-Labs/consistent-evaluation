@@ -127,6 +127,10 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 				attribute: false,
 				type: Number
 			},
+			editActivityPath: {
+				attribute: 'edit-activity-path',
+				type: String
+			},
 			token: {
 				type: Object
 			},
@@ -867,6 +871,7 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 						.feedbackText=${this._feedbackText}
 						.rubricInfos=${this.rubricInfos}
 						active-scoring-rubric=${ifDefined(this._activeScoringRubric)}
+						edit-activity-path=${ifDefined(this.editActivityPath)}
 						.feedbackAttachments=${attachments}
 						rubric-assessment-href=${ifDefined(this.rubricAssessmentHref)}
 						outcomes-href=${ifDefined(this.outcomesHref)}

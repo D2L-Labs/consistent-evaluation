@@ -423,6 +423,22 @@ export class ConsistentEvaluationHrefController {
 		return rubricInfos.filter(rubricInfo => rubricInfo !== undefined);
 	}
 
+	async getEditActivityPath() {
+		const root = await this._getRootEntity(false);
+		let editActivityPath = undefined;
+		if (root && root.entity) {
+			if (root.entity.hasLinkByRel(Rels.Activities.activityUsage)) {
+				const activityUsageLink = root.entity.getLinkByRel(Rels.Activities.activityUsage).href;
+				const activityUsageResponse = await this._getEntityFromHref(activityUsageLink, false);
+				if (activityUsageResponse && activityUsageResponse.entity) {
+					const displayEntity = activityUsageResponse.entity.getSubEntityByRel('https://assessments.api.brightspace.com/rels/activity-usage-edit-application');
+					editActivityPath = displayEntity ? displayEntity.properties.path : undefined;
+				}
+			}
+		}
+		return editActivityPath;
+	}
+
 	async _refreshRubricAssessment(assessmentEntity) {
 		if (assessmentEntity && assessmentEntity.entity) {
 			const criterion = assessmentEntity.entity.getSubEntitiesByClass('criterion-assessment-links');

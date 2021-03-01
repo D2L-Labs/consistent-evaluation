@@ -46,6 +46,7 @@ export class ConsistentEvaluation extends LitElement {
 			_userName: { type: String },
 			_iteratorTotal: { type: Number },
 			_iteratorIndex: { type: Number },
+			_editActivityPath: { type: String },
 			fileId: {
 				attribute: 'file-id',
 				type: String
@@ -77,6 +78,7 @@ export class ConsistentEvaluation extends LitElement {
 		this._gradeItemInfo = undefined;
 		this._groupInfo = undefined;
 		this._anonymousInfo = undefined;
+		this._editActivityPath = undefined;
 		this.returnHref = undefined;
 		this.returnHrefText = undefined;
 		this._loading = true;
@@ -105,6 +107,7 @@ export class ConsistentEvaluation extends LitElement {
 			this._anonymousInfo = await controller.getAnonymousInfo();
 			this._iteratorTotal = await controller.getIteratorInfo('total');
 			this._iteratorIndex = await controller.getIteratorInfo('index');
+			this._editActivityPath = await controller.getEditActivityPath();
 			const stripped = this._stripFileIdFromUrl();
 			if (!stripped) {
 				this.shadowRoot.querySelector('d2l-consistent-evaluation-page')._setSubmissionsView();
@@ -218,6 +221,7 @@ export class ConsistentEvaluation extends LitElement {
 				logging-endpoint=${ifDefined(this.loggingEndpoint)}
 				rubric-popout-location=${ifDefined(this._childHrefs && this._childHrefs.rubricPopoutLocation)}
 				download-all-submissions-location=${ifDefined(this._childHrefs && this._childHrefs.downloadAllSubmissionLink)}
+				edit-activity-path=${ifDefined(this._editActivityPath)}
 				.rubricInfos=${this._rubricInfos}
 				.submissionInfo=${this._submissionInfo}
 				.gradeItemInfo=${this._gradeItemInfo}

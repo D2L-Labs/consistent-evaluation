@@ -105,6 +105,10 @@ export class ConsistentEvaluationRightPanel extends LocalizeConsistentEvaluation
 				attribute: false,
 				type: String
 			},
+			editActivityPath: {
+				attribute: 'edit-activity-path',
+				type: String
+			},
 			_editActivityId: {
 				attribute: false,
 				type: String
@@ -215,7 +219,7 @@ export class ConsistentEvaluationRightPanel extends LocalizeConsistentEvaluation
 		return html`
 			<d2l-dropdown-menu>
 				<d2l-menu @d2l-menu-item-select=${this._onOverflowOptionSelect} label=${this.localize('moreOptions')}>
-					<d2l-menu-item id=${this._editActivityId} text=${this.localize('editActivity')}></d2l-menu-item>
+					<d2l-menu-item id=${this._editActivityId} text=${this.localize('editActivity')} ?hidden=${!this.editActivityPath}></d2l-menu-item>
 					<d2l-menu-item id=${this._specialAccessId} text=${this.localize('specialAccessDates')} ?hidden=${!this.specialAccessHref}></d2l-menu-item>
 				</d2l-menu>
 			</d2l-dropdown-menu>
@@ -252,7 +256,7 @@ export class ConsistentEvaluationRightPanel extends LocalizeConsistentEvaluation
 	}
 
 	_openEditActivity() {
-		console.warn('Edit Activity has not yet been implemented');
+		window.open(this.editActivityPath);
 	}
 
 	_openSpecialAccessDialog() {
