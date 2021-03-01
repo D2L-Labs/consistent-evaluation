@@ -68,6 +68,14 @@ export class ConsistentEvaluationLeftPanel extends SkeletonMixin(LocalizeConsist
 			dataTelemetryEndpoint: {
 				attribute: 'data-telemetry-endpoint',
 				type: String
+			},
+			fileExtension: {
+				attribute: false,
+				type: String
+			},
+			displayConversionWarning: {
+				attribute: 'display-conversion-warning',
+				type: Boolean
 			}
 		};
 	}
@@ -150,6 +158,7 @@ export class ConsistentEvaluationLeftPanel extends SkeletonMixin(LocalizeConsist
 				// file is viewable
 				this.fileEvidenceUrl = currentFile.properties.fileViewer;
 				this.fileNonViewable = undefined;
+				this.fileExtension = currentFile.properties.extension;
 			} else {
 				// file is unviewable
 				this.fileEvidenceUrl = undefined;
@@ -178,6 +187,8 @@ export class ConsistentEvaluationLeftPanel extends SkeletonMixin(LocalizeConsist
 		return html`
 		<d2l-consistent-evaluation-evidence-file
 			url=${this.fileEvidenceUrl}
+			fileExtension=${this.fileExtension}
+			?display-conversion-warning=${this.displayConversionWarning}
 			.token=${this.token}
 		></d2l-consistent-evaluation-evidence-file>`;
 	}

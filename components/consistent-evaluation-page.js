@@ -146,6 +146,10 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 				attribute: 'use-new-html-editor',
 				type: Boolean
 			},
+			displayConversionWarning: {
+				attribute: 'display-conversion-warning',
+				type: Boolean
+			},
 			_displayToast: {
 				type: Boolean
 			},
@@ -853,6 +857,7 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 						download-all-submissions-location=${ifDefined(this.downloadAllSubmissionLink)}
 						.currentFileId=${this.currentFileId}
 						?hide-use-grade=${this._noGradeComponent()}
+						?display-conversion-warning=${this.displayConversionWarning}
 						@d2l-consistent-eval-annotations-update=${this._transientSaveAnnotations}
 						@d2l-consistent-eval-annotations-will-change=${this._updateAnnotationsViewerEditingStart}
 						@d2l-consistent-evaluation-use-tii-grade=${this._transientSaveGrade}

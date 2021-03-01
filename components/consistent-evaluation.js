@@ -34,6 +34,10 @@ export class ConsistentEvaluation extends LitElement {
 				attribute: 'use-new-html-editor',
 				type: Boolean
 			},
+			displayConversionWarning: {
+				attribute: 'display-conversion-warning',
+				type: Boolean
+			},
 			_rubricReadOnly: { type: Boolean },
 			_childHrefs: { type: Object },
 			_rubricInfos: { type: Array },
@@ -234,6 +238,7 @@ export class ConsistentEvaluation extends LitElement {
 				?rubric-read-only=${this._rubricReadOnly}
 				?hide-learner-context-bar=${this._shouldHideLearnerContextBar()}
 				?use-new-html-editor=${this.useNewHtmlEditor}
+				?display-conversion-warning=${this.displayConversionWarning}
 				@d2l-consistent-evaluation-previous-student-click=${this._onPreviousStudentClick}
 				@d2l-consistent-evaluation-next-student-click=${this._onNextStudentClick}
 				@d2l-consistent-evaluation-loading-finished=${this._finishedLoading}

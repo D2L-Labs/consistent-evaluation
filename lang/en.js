@@ -25,6 +25,7 @@ export default {
 	"emailGroup": "Email Group",
 	"exempt": "Exempt",
 	"fileCannotBePreviewed": "This file can't be previewed",
+	"fileConversionWarning": "This file has been converted and may have inaccuracies.",
 	"fileSubmission": "File Submission",
 	"flag": "Flag",
 	"flagged": "Flagged",
