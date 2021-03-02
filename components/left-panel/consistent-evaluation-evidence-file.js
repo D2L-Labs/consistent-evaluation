@@ -1,15 +1,23 @@
 import './consistent-evaluation-evidence-top-bar.js';
 import { css, html, LitElement } from 'lit-element';
 import { Debouncer } from '@polymer/polymer/lib/utils/debounce.js';
+import { LocalizeConsistentEvaluation } from '../../lang/localize-consistent-evaluation.js';
+import { pdfExtension } from '../controllers/constants';
 import { timeOut } from '@polymer/polymer/lib/utils/async.js';
 
-export class ConsistentEvaluationEvidenceFile extends LitElement {
+export class ConsistentEvaluationEvidenceFile extends LocalizeConsistentEvaluation(LitElement) {
 
 	static get properties() {
 		return {
 			url: { type: String },
 			token: { type: Object },
-			_resizing: { type: Boolean, attribute: false }
+			fileExtension: { type: String },
+			displayConversionWarning: {
+				attribute: 'display-conversion-warning',
+				type: Boolean
+			},
+			_resizing: { type: Boolean, attribute: false },
+			_displayToast: { type: Boolean },
 		};
 	}
 
@@ -38,6 +46,7 @@ export class ConsistentEvaluationEvidenceFile extends LitElement {
 		this.flush = this.flush.bind(this);
 
 		this._debounceJobs = {};
+		this._displayToast = true;
 	}
 
 	connectedCallback() {
@@ -119,6 +128,21 @@ export class ConsistentEvaluationEvidenceFile extends LitElement {
 		this._resizing = false;
 	}
 
+	_onToastClose() {
+		this._displayToast = false;
+	}
+
+	_renderToast() {
+		const toastMessage = this.localize('fileConversionWarning');
+		return html`<d2l-alert-toast
+			?open=${this._shouldDisplayToast()}
+			@d2l-alert-toast-close=${this._onToastClose}>${toastMessage}</d2l-alert-toast>`;
+	}
+
+	_shouldDisplayToast() {
+		return this.fileExtension !== pdfExtension && this.displayConversionWarning && this._displayToast;
+	}
+
 	render() {
 		return html`
 			<d2l-consistent-evaluation-evidence-top-bar></d2l-consistent-evaluation-evidence-top-bar>
@@ -128,6 +152,7 @@ export class ConsistentEvaluationEvidenceFile extends LitElement {
 				scrolling="no"
 				allow="fullscreen"
 			></iframe>
+			${this._renderToast()}
 		`;
 	}
 }
