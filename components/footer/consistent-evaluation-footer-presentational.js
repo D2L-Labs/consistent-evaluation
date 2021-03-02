@@ -24,6 +24,14 @@ export class ConsistentEvaluationFooterPresentational extends LocalizeConsistent
 			showNextStudent: {
 				attribute: 'show-next-student',
 				type: Boolean
+			},
+			currentlySaving: {
+				attribute: 'currently-saving',
+				type: Boolean
+			},
+			_lastClicked:{
+				attribute: false,
+				type: String
 			}
 		};
 	}
@@ -64,14 +72,38 @@ export class ConsistentEvaluationFooterPresentational extends LocalizeConsistent
 		}));
 	}
 
-	_emitPublishEvent()     { this._dispatchButtonClickEvent('d2l-consistent-evaluation-on-publish'); }
-	_emitRetractEvent()     { this._dispatchButtonClickEvent('d2l-consistent-evaluation-on-retract'); }
-	_emitUpdateEvent()      { this._dispatchButtonClickEvent('d2l-consistent-evaluation-on-update'); }
-	_emitSaveDraftEvent()   { this._dispatchButtonClickEvent('d2l-consistent-evaluation-on-save-draft'); }
-	_emitNextStudentEvent() { this._dispatchButtonClickNavigationEvent('next'); }
+	_emitPublishEvent() {
+		this._lastClicked = 'Publish';
+		this._dispatchButtonClickEvent('d2l-consistent-evaluation-on-publish');
+	}
+
+	_emitRetractEvent() {
+		this._lastClicked = 'Retract';
+		this._dispatchButtonClickEvent('d2l-consistent-evaluation-on-retract');
+	}
+
+	_emitUpdateEvent() {
+		this._lastClicked = 'Update';
+		this._dispatchButtonClickEvent('d2l-consistent-evaluation-on-update');
+	}
+
+	_emitSaveDraftEvent() {
+		this._lastClicked = 'Draft';
+		this._dispatchButtonClickEvent('d2l-consistent-evaluation-on-save-draft');
+	}
+
+	_emitNextStudentEvent() {
+		this._dispatchButtonClickNavigationEvent('next');
+	}
 
 	_getPublishOrUpdateButton() {
-		const text = this.published ? this.localize('update') : this.localize('publish');
+		let text;
+		if(this.currentlySaving && (this._lastClicked === 'Publish' || this._lastClicked === 'Update')) {
+			text = this.published ? 'Updating' : 'Publishing';
+		} else {
+			text = this.published ? this.localize('update') : this.localize('publish');
+		}
+
 		const eventEmitter = this.published ? this._emitUpdateEvent : this._emitPublishEvent;
 		const id = `consistent-evaluation-footer-${text.toLowerCase()}`;
 
@@ -96,14 +128,22 @@ export class ConsistentEvaluationFooterPresentational extends LocalizeConsistent
 
 		if (this.published) {
 			if (this.allowEvaluationDelete) {
-				text = this.localize('retract');
+				if(this.currentlySaving && (this._lastClicked === 'Retract')) {
+					text = 'Retracting';
+				} else {
+					text = this.localize('retract');
+				}
 				eventEmitter =  this._emitRetractEvent;
 			} else {
 				return html ``;
 			}
 		} else {
 			if (this.allowEvaluationWrite) {
-				text = this.localize('saveDraft');
+				if(this.currentlySaving && (this._lastClicked === 'Draft')) {
+					text = 'Saving';
+				} else {
+					text = this.localize('saveDraft');
+				}
 				eventEmitter =  this._emitSaveDraftEvent;
 			} else {
 				return html ``;
