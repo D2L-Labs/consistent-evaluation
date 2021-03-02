@@ -53,6 +53,7 @@ export default {
 	"onPaperSubmission": "On Paper Submission",
 	"openGroupOptions": "Open Group Options",
 	"ok": "OK",
+	"openPopoutRubric": "Open popout rubric",
 	"outcomes": "Outcomes",
 	"outcomesSummary" : "Outcomes aligned",
 	"overallAchievement": "Overall Achievement",
