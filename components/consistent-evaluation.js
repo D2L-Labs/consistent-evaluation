@@ -1,7 +1,9 @@
 import './consistent-evaluation-page.js';
+import { attachmentClassName, attachmentListRel } from './controllers/constants';
 import { css, html, LitElement } from 'lit-element';
 import { ConsistentEvalTelemetry } from './helpers/consistent-eval-telemetry.js';
 import { ConsistentEvaluationHrefController } from './controllers/ConsistentEvaluationHrefController.js';
+import { getSubmissions } from './helpers/submissionsAndFilesHelpers.js';
 import { ifDefined } from 'lit-html/directives/if-defined.js';
 
 export class ConsistentEvaluation extends LitElement {
@@ -109,7 +111,9 @@ export class ConsistentEvaluation extends LitElement {
 			this._iteratorIndex = await controller.getIteratorInfo('index');
 			this._editActivityPath = await controller.getEditActivityPath();
 			const stripped = this._stripFileIdFromUrl();
-			if (!stripped) {
+			const hasOneFileAndSubmission = await this._hasOneFileAndOneSubmission();
+			if (!stripped && !hasOneFileAndSubmission) {
+				this.currentFileId = undefined;
 				this.shadowRoot.querySelector('d2l-consistent-evaluation-page')._setSubmissionsView();
 			} else {
 				this._loadingComponents.submissions = false;
@@ -122,6 +126,20 @@ export class ConsistentEvaluation extends LitElement {
 			this._loadingComponents.main = false;
 			this._finishedLoading();
 		}
+	}
+
+	async _hasOneFileAndOneSubmission() {
+		if (this._submissionInfo && this._submissionInfo.submissionList && this._submissionInfo.submissionList.length === 1) {
+			const submissions = await getSubmissions(this._submissionInfo, this.token);
+			const attachmentList = submissions[0].entity.getSubEntityByRel(attachmentListRel);
+			const numberOfSubmittedFiles = attachmentList.entities.length;
+			if (numberOfSubmittedFiles === 1) {
+				const fileId = attachmentList.getSubEntityByClass(attachmentClassName).properties.id;
+				this.currentFileId = fileId;
+				return true;
+			}
+		}
+		return false;
 	}
 
 	_stripFileIdFromUrl() {
@@ -216,12 +234,12 @@ export class ConsistentEvaluation extends LitElement {
 				special-access-href=${ifDefined(this._childHrefs && this._childHrefs.specialAccessHref)}
 				return-href=${ifDefined(this.returnHref)}
 				return-href-text=${ifDefined(this.returnHrefText)}
-				current-file-id=${ifDefined(this.currentFileId)}
 				data-telemetry-endpoint=${ifDefined(this.dataTelemetryEndpoint)}
 				logging-endpoint=${ifDefined(this.loggingEndpoint)}
 				rubric-popout-location=${ifDefined(this._childHrefs && this._childHrefs.rubricPopoutLocation)}
 				download-all-submissions-location=${ifDefined(this._childHrefs && this._childHrefs.downloadAllSubmissionLink)}
 				edit-activity-path=${ifDefined(this._editActivityPath)}
+				.currentFileId=${this.currentFileId}
 				.rubricInfos=${this._rubricInfos}
 				.submissionInfo=${this._submissionInfo}
 				.gradeItemInfo=${this._gradeItemInfo}
