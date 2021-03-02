@@ -303,10 +303,24 @@ class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(RtlMixin(L
 		window.close();
 	}
 
+	_openRubricPopoutKeyboardEvent(e) {
+		if (e.key === 'Enter' || e.key === ' ') {
+			this._openRubricPopout();
+		}
+	}
+
 	_renderPopoutIcon() {
 		return this.isPopout ?
 			html`` :
-			html` <d2l-icon class='d2l-consistent-evaluation-open-rubrics' icon="tier1:new-window" @click=${this._openRubricPopout}></d2l-icon>`;
+			html` <d2l-icon
+					class='d2l-consistent-evaluation-open-rubrics'
+					icon="tier1:new-window"
+					@keydown=${this._openRubricPopoutKeyboardEvent}
+					@click=${this._openRubricPopout}
+					role="button"
+					aria-label=${this.localize('openPopoutRubric')}
+					tabindex=0>
+				</d2l-icon>`;
 	}
 
 	_renderRubricTitle(rubricTitle) {
