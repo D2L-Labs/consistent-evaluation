@@ -84,7 +84,7 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 				type: Boolean
 			},
 			currentFileId: {
-				attribute: 'current-file-id',
+				attribute: false,
 				type: String
 			},
 			submissionInfo: {
